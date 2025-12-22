@@ -1,4 +1,4 @@
-import { ChevronDown, Mail, Github, Linkedin } from 'lucide-react';
+import { ChevronDown, Mail, Github, Linkedin, Code2 } from 'lucide-react';
 
 const Hero = () => {
   const scrollToAbout = () => {
