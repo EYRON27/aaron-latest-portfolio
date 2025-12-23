@@ -9,7 +9,7 @@ const Hero = () => {
   };
 
   return (
-    <section id="home" className="min-h-screen flex items-center justify-center bg-gradient-to-br from-gray-50 via-white to-gray-100 dark:from-slate-900 dark:via-slate-800 dark:to-slate-900 relative">
+    <section id="home" className="min-h-screen flex items-center justify-center bg-gradient-to-br from-gray-50 via-white to-gray-100 dark:from-slate-900 dark:via-slate-800 dark:to-slate-900 relative pb-16 sm:pb-0">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 sm:py-24">
         <div className="grid md:grid-cols-2 gap-8 md:gap-12 items-center">
           <div className="text-center md:text-left space-y-4 sm:space-y-6 animate-fade-in-up">
@@ -82,11 +82,11 @@ const Hero = () => {
 
       <button
         onClick={scrollToAbout}
-        className="absolute bottom-8 left-1/2 transform -translate-x-1/2 text-cyan-500 dark:text-cyan-400 hover:text-cyan-600 dark:hover:text-cyan-300 transition-colors animate-bounce"
+        className="absolute bottom-6 sm:bottom-8 left-0 right-0 mx-auto w-fit text-cyan-500 dark:text-cyan-400 hover:text-cyan-600 dark:hover:text-cyan-300 transition-colors animate-bounce"
       >
         <div className="flex flex-col items-center">
-          <span className="text-sm mb-2">Scroll Down</span>
-          <ChevronDown className="w-6 h-6" />
+          <span className="text-xs sm:text-sm mb-1 sm:mb-2">Scroll Down</span>
+          <ChevronDown className="w-5 h-5 sm:w-6 sm:h-6" />
         </div>
       </button>
     </section>
