@@ -8,13 +8,13 @@ import Contact from './components/Contact';
 
 function App() {
   return (
-    <div className="min-h-screen bg-slate-900">
+    <div className="min-h-screen bg-white dark:bg-slate-900 transition-colors duration-300">
       <Navigation />
       <Hero />
       <About />
+      <Education />
       <Skills />
       <Projects />
-      <Education />
       <Contact />
     </div>
   );
