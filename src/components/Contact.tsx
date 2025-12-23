@@ -12,7 +12,13 @@ const Contact = () => {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    console.log('Form submitted:', formData);
+    
+    // Create Gmail compose URL with form data
+    const gmailBody = `Name: ${formData.name}%0D%0AEmail: ${formData.email}%0D%0A%0D%0AMessage:%0D%0A${encodeURIComponent(formData.message)}`;
+    const gmailUrl = `https://mail.google.com/mail/?view=cm&fs=1&to=canada.aaron.mulat@gmail.com&su=${encodeURIComponent(formData.subject)}&body=${gmailBody}`;
+    
+    // Open Gmail in a new tab
+    window.open(gmailUrl, '_blank');
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
