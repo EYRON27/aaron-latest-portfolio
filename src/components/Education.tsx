@@ -28,6 +28,13 @@ const Education = () => {
 
   const certifications = [
     {
+      name: 'Technical Support Fundamentals',
+      issuer: 'Google',
+      date: 'Dec 2025',
+      credentialId: 'N3GKNJ12GDRM',
+      icon: Award,
+    },
+    {
       name: 'Build Dynamic User Interfaces (UI) for Websites',
       issuer: 'Google',
       date: 'Apr 2025',
