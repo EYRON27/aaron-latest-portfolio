@@ -7,7 +7,7 @@ const Projects = () => {
       description: 'A personal finance web app that helps users monitor their income and expenses. It provides daily, weekly, and monthly insights to understand spending habits and manage budgets effectively.',
       technologies: ['PHP', 'HTML', 'CSS', 'MySQL', 'JavaScript'],
       github: 'https://github.com/EYRON27',
-      demo: 'https://demo.com',
+      demo: '',
       image: 'gradient-1',
     },
     {
@@ -17,6 +17,14 @@ const Projects = () => {
       github: 'https://github.com/EYRON27/OneForAll',
       demo: 'https://all-for-one-theta.vercel.app/',
       image: 'gradient-2',
+    },
+    {
+      title: 'MySuperSystem2025',
+      description: 'Full-stack ASP.NET Core MVC application featuring expense tracking, task management, and a secure password manager. Built with Clean Architecture, Entity Framework Core, SQL Server, and ASP.NET Identity focused on security, scalability, and maintainable enterprise design.',
+      technologies: ['C#', 'ASP.NET Core MVC', 'EF Core', 'SQL Server'],
+      github: 'https://github.com/EYRON27/MySuperSystem2025',
+      demo: '',
+      image: 'gradient-4',
     },
     {
       title: 'Weather Dashboard',
@@ -91,15 +99,17 @@ const Projects = () => {
                     <Github className="w-4 h-4" />
                     <span>Code</span>
                   </a>
-                  <a
-                    href={project.demo}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="flex items-center space-x-2 text-gray-600 dark:text-gray-400 hover:text-cyan-500 dark:hover:text-cyan-400 transition-colors text-sm"
-                  >
-                    <ExternalLink className="w-4 h-4" />
-                    <span>Live Demo</span>
-                  </a>
+                  {project.demo && (
+                    <a
+                      href={project.demo}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="flex items-center space-x-2 text-gray-600 dark:text-gray-400 hover:text-cyan-500 dark:hover:text-cyan-400 transition-colors text-sm"
+                    >
+                      <ExternalLink className="w-4 h-4" />
+                      <span>Live Demo</span>
+                    </a>
+                  )}
                 </div>
               </div>
             </div>
