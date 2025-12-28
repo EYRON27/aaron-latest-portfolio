@@ -272,10 +272,13 @@ const Contact = () => {
         </div>
 
         {/* Footer */}
-        <div className="mt-16 pt-8 border-t border-gray-200 dark:border-slate-700/50 text-center">
-          <p className="text-gray-600 dark:text-gray-400">
-            © 2025 Aaron M. Cañada. Built with React & Tailwind CSS.
-          </p>
+        <div className="mt-16 pt-8 border-t border-gray-200 dark:border-slate-700/50">
+          <div className="flex items-center justify-center space-x-4">
+            <p className="text-gray-600 dark:text-gray-400">
+              © 2025 Aaron M. Cañada. Built with React & Tailwind CSS.
+            </p>
+            <img src="/aarvievewatermark.png" alt="Aarvieve watermark" className="w-16 opacity-30 dark:opacity-20" />
+          </div>
         </div>
       </div>
     </section>
