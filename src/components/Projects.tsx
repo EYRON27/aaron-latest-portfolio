@@ -13,7 +13,7 @@ const Projects = () => {
     {
       title: 'OneForAll',
       description: 'A comprehensive project that holds your passwords, tasks to do, and money flow tracker all in one place.',
-      technologies: ['React', 'TypeScript', 'Node.js', 'MongoDB', 'Tailwind CSS'],
+      technologies: ['React', 'TypeScript', 'Node.js', 'Tailwind CSS'],
       github: 'https://github.com/EYRON27/OneForAll',
       demo: 'https://all-for-one-theta.vercel.app/',
       image: 'gradient-2',
