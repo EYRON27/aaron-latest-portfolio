@@ -25,7 +25,6 @@ const Skills = () => {
       icon: Database,
       title: 'Databases',
       skills: [
-        { name: 'MongoDB', level: 70 },
         { name: 'MySQL', level: 96 },
         { name: 'MSSQL', level: 80 },
       ],

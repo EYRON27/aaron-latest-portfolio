@@ -13,7 +13,7 @@ const Projects = () => {
     {
       title: 'OneForAll',
       description: 'A comprehensive project that holds your passwords, tasks to do, and money flow tracker all in one place.',
-      technologies: ['React', 'TypeScript', 'Node.js', 'MongoDB', 'Tailwind CSS'],
+      technologies: ['React', 'TypeScript', 'Node.js', 'Tailwind CSS'],
       github: 'https://github.com/EYRON27/OneForAll',
       demo: 'https://all-for-one-theta.vercel.app/',
       image: 'gradient-2',
@@ -27,11 +27,12 @@ const Projects = () => {
       image: 'gradient-4',
     },
     {
-      title: 'Weather Dashboard',
-      description: 'A responsive weather dashboard with location-based forecasts, interactive maps, and detailed weather analytics.',
-      technologies: ['React', 'Chart.js', 'OpenWeather API', 'Leaflet'],
-      github: 'https://github.com/EYRON27',
-      demo: 'https://demo.com',
+      title: 'RL Phil Construction – Business Website',
+      description:
+        'A responsive static website designed and developed to represent a professional construction company brand. The site emphasizes clarity, trust, and usability, ensuring visitors can easily understand services, company experience, and contact details.',
+      technologies: ['React', 'TypeScript', 'Tailwind CSS'],
+      github: 'https://github.com/EYRON27/rl-phil',
+      demo: 'https://rl-phil-construction.vercel.app',
       image: 'gradient-3',
     },
   ];
