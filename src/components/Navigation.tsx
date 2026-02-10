@@ -151,41 +151,71 @@ const Navigation = () => {
         </div>
       </div>
 
-      {isMenuOpen && (
-        <div className="md:hidden bg-white/98 dark:bg-slate-900/98 backdrop-blur-sm">
-          <div className="px-2 pt-2 pb-3 space-y-1">
-            {navItems.map((item) => {
-              const isActive = activeSection === item.href.substring(1);
-              return (
-                <a
-                  key={item.name}
-                  href={item.href}
-                  onClick={(e) => scrollToSection(e, item.href)}
-                  className={`block px-3 py-2 rounded-md transition-colors duration-200 ${
-                    isActive
-                      ? 'text-cyan-500 dark:text-cyan-400 bg-cyan-500/10'
-                      : 'text-gray-700 dark:text-gray-300 hover:text-cyan-500 dark:hover:text-cyan-400 hover:bg-gray-100 dark:hover:bg-slate-800/50'
-                  }`}
-                >
-                  {item.name}
-                </a>
-              );
-            })}
-            <div className="px-3 py-2">
-              <a
-                href="/CAÑADA (CV).pdf"
-                download="CAÑADA_CV.pdf"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="w-full flex items-center justify-center space-x-2 bg-cyan-500 hover:bg-cyan-600 text-white px-4 py-2 rounded-lg font-medium transition-all duration-200"
-              >
-                <Download className="w-4 h-4" />
-                <span>Download CV</span>
-              </a>
-            </div>
+      {/* Backdrop overlay */}
+      <div 
+        className={`fixed inset-0 bg-black/60 backdrop-blur-sm md:hidden transition-opacity duration-300 ${
+          isMenuOpen ? 'opacity-100 z-[60]' : 'opacity-0 pointer-events-none -z-10'
+        }`}
+        onClick={() => setIsMenuOpen(false)}
+      />
+
+      {/* Right side sliding menu */}
+      <div 
+        className={`fixed top-0 right-0 h-screen w-64 bg-white dark:bg-slate-900 shadow-2xl md:hidden transform transition-transform duration-300 ease-out ${
+          isMenuOpen ? 'translate-x-0 z-[70]' : 'translate-x-full -z-10'
+        }`}
+      >
+        <div className="flex flex-col h-full">
+          {/* Menu Header */}
+          <div className="flex items-center justify-end px-5 py-5">
+            <button
+              onClick={() => setIsMenuOpen(false)}
+              className="p-2 text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white transition-colors"
+              aria-label="Close menu"
+            >
+              <X className="w-5 h-5" />
+            </button>
+          </div>
+
+          {/* Menu Items */}
+          <nav className="flex-1 px-6 py-2">
+            <ul className="space-y-1">
+              {navItems.map((item) => {
+                const isActive = activeSection === item.href.substring(1);
+                return (
+                  <li key={item.name}>
+                    <a
+                      href={item.href}
+                      onClick={(e) => scrollToSection(e, item.href)}
+                      className={`block px-4 py-3 text-sm font-medium rounded-lg transition-colors duration-200 ${
+                        isActive
+                          ? 'text-cyan-500 dark:text-cyan-400 bg-cyan-500/5'
+                          : 'text-gray-700 dark:text-gray-300 hover:text-cyan-500 dark:hover:text-cyan-400'
+                      }`}
+                    >
+                      {item.name}
+                    </a>
+                  </li>
+                );
+              })}
+            </ul>
+          </nav>
+
+          {/* Menu Footer */}
+          <div className="px-6 pb-6 pt-4">
+            <a
+              href="/CAÑADA (CV).pdf"
+              download="CAÑADA_CV.pdf"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="w-full flex items-center justify-center space-x-2 bg-cyan-500 hover:bg-cyan-600 text-white px-4 py-2.5 rounded-lg text-sm font-medium transition-colors duration-200"
+            >
+              <Download className="w-4 h-4" />
+              <span>Download CV</span>
+            </a>
           </div>
         </div>
-      )}
+      </div>
     </nav>
   );
 };
