@@ -66,15 +66,57 @@ const Hero = () => {
           </div>
 
           <div className="flex justify-center animate-fade-in-up animation-delay-200 mt-8 md:mt-0">
-            <div className="relative">
-              <div className="absolute inset-0 bg-cyan-500/20 blur-3xl rounded-full"></div>
-              <div className="relative w-56 h-56 sm:w-64 sm:h-64 md:w-72 md:h-72 lg:w-80 lg:h-80 xl:w-96 xl:h-96 rounded-full overflow-hidden border-4 border-cyan-500/30 shadow-2xl shadow-cyan-500/20">
-                <img 
-                  src="/aaron.jpg" 
-                  alt="Aaron M. Cañada" 
-                  className="w-full h-full object-cover"
-                />
+            <div className="relative" style={{ perspective: '1000px' }}>
+              {/* Ambient glow */}
+              <div className="absolute inset-[-30%] bg-cyan-500/15 blur-[80px] rounded-full animate-pulse-slow"></div>
+
+              {/* Outer orbital ring */}
+              <div className="absolute inset-[-18%] rounded-full border border-cyan-500/20 animate-spin-slow"></div>
+              <div className="absolute inset-[-18%] rounded-full">
+                <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 w-3 h-3 bg-cyan-400 rounded-full shadow-lg shadow-cyan-400/60 animate-spin-slow"></div>
               </div>
+
+              {/* Middle orbital ring */}
+              <div className="absolute inset-[-10%] rounded-full border border-cyan-400/15 animate-spin-reverse"></div>
+              <div className="absolute inset-[-10%] rounded-full animate-spin-reverse">
+                <div className="absolute bottom-0 right-0 w-2 h-2 bg-blue-400 rounded-full shadow-lg shadow-blue-400/60"></div>
+              </div>
+
+              {/* 3D floating container */}
+              <div className="relative animate-float-3d" style={{ transformStyle: 'preserve-3d' }}>
+                {/* Reflection/shadow underneath */}
+                <div className="absolute -bottom-8 left-1/2 -translate-x-1/2 w-[70%] h-6 bg-cyan-500/20 blur-xl rounded-full"></div>
+
+                {/* Outer glow ring */}
+                <div className="absolute inset-[-4px] rounded-full bg-gradient-to-br from-cyan-400 via-blue-500 to-cyan-400 p-[2px] shadow-[0_0_40px_rgba(6,182,212,0.3)]">
+                  <div className="w-full h-full rounded-full bg-slate-900"></div>
+                </div>
+
+                {/* Inner glow ring */}
+                <div className="absolute inset-[2px] rounded-full bg-gradient-to-tr from-cyan-500/50 via-transparent to-blue-500/50 p-[2px]">
+                  <div className="w-full h-full rounded-full bg-slate-900"></div>
+                </div>
+
+                {/* Main image */}
+                <div className="relative w-56 h-56 sm:w-64 sm:h-64 md:w-72 md:h-72 lg:w-80 lg:h-80 xl:w-96 xl:h-96 rounded-full overflow-hidden border-2 border-cyan-400/40 shadow-[0_0_60px_rgba(6,182,212,0.25),inset_0_0_30px_rgba(6,182,212,0.1)]" style={{ transform: 'translateZ(40px)' }}>
+                  <img 
+                    src="/aaron.jpg" 
+                    alt="Aaron M. Cañada" 
+                    className="w-full h-full object-cover"
+                  />
+                  {/* Cinematic light overlay */}
+                  <div className="absolute inset-0 bg-gradient-to-tr from-cyan-500/10 via-transparent to-blue-500/5 pointer-events-none"></div>
+                  <div className="absolute inset-0 bg-gradient-to-b from-white/5 via-transparent to-slate-900/20 pointer-events-none"></div>
+                </div>
+
+                {/* Top-left light accent */}
+                <div className="absolute top-[10%] left-[5%] w-8 h-8 bg-cyan-400/20 blur-lg rounded-full"></div>
+              </div>
+
+              {/* Decorative dots */}
+              <div className="absolute -right-4 top-1/4 w-2 h-2 bg-cyan-400/60 rounded-full animate-pulse"></div>
+              <div className="absolute -left-6 bottom-1/3 w-1.5 h-1.5 bg-blue-400/50 rounded-full animate-pulse animation-delay-400"></div>
+              <div className="absolute right-1/4 -bottom-6 w-1 h-1 bg-cyan-300/40 rounded-full animate-pulse animation-delay-200"></div>
             </div>
           </div>
         </div>
