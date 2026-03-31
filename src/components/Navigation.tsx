@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Menu, X, Moon, Sun, Download } from 'lucide-react';
+import { Menu, X, Moon, Sun, ArrowUpRight } from 'lucide-react';
 
 const Navigation = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -14,12 +14,8 @@ const Navigation = () => {
     const handleScroll = () => {
       setIsScrolled(window.scrollY > 20);
     };
-    
     window.addEventListener('scroll', handleScroll, { passive: true });
-    
-    return () => {
-      window.removeEventListener('scroll', handleScroll);
-    };
+    return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
   useEffect(() => {
@@ -28,7 +24,6 @@ const Navigation = () => {
       rootMargin: '-50% 0px -50% 0px',
       threshold: 0
     };
-
     const observerCallback = (entries: IntersectionObserverEntry[]) => {
       entries.forEach((entry) => {
         if (entry.isIntersecting) {
@@ -36,12 +31,9 @@ const Navigation = () => {
         }
       });
     };
-
     const observer = new IntersectionObserver(observerCallback, observerOptions);
-
     const sections = document.querySelectorAll('section[id]');
     sections.forEach((section) => observer.observe(section));
-
     return () => {
       sections.forEach((section) => observer.unobserve(section));
     };
@@ -75,21 +67,18 @@ const Navigation = () => {
   };
 
   return (
-    <nav
-      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-        isScrolled 
-          ? 'bg-white/80 dark:bg-slate-900/80 backdrop-blur-md shadow-lg' 
-          : 'bg-white/60 dark:bg-slate-900/60 backdrop-blur-sm'
-      }`}
-    >
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <nav className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${
+      isScrolled
+        ? 'bg-stone-50/90 dark:bg-neutral-950/90 backdrop-blur-lg border-b border-neutral-200 dark:border-neutral-800'
+        : ''
+    }`}>
+      <div className="max-w-6xl mx-auto px-6">
         <div className="flex items-center justify-between h-16">
-          <a href="#home" className="flex items-center space-x-1 text-xl font-bold transition-colors" onClick={(e) => scrollToSection(e, '#home')}>
-            <span className="text-gray-900 dark:text-white">Aaron</span>
-            <span className="text-cyan-500 dark:text-cyan-400">Portfolio</span>
+          <a href="#home" onClick={(e) => scrollToSection(e, '#home')} className="text-2xl font-bold tracking-tight">
+            A<span className="text-amber-500">.</span>
           </a>
 
-          <div className="hidden md:flex items-center space-x-8">
+          <div className="hidden md:flex items-center gap-1">
             {navItems.map((item) => {
               const isActive = activeSection === item.href.substring(1);
               return (
@@ -97,88 +86,76 @@ const Navigation = () => {
                   key={item.name}
                   href={item.href}
                   onClick={(e) => scrollToSection(e, item.href)}
-                  className={`text-sm font-medium transition-all duration-200 relative ${
-                    isActive 
-                      ? 'text-cyan-500 dark:text-cyan-400' 
-                      : 'text-gray-700 dark:text-gray-300 hover:text-cyan-500 dark:hover:text-cyan-400'
+                  className={`px-3 py-1.5 text-[13px] font-medium rounded-full transition-all duration-200 ${
+                    isActive
+                      ? 'bg-neutral-900 dark:bg-neutral-100 text-white dark:text-neutral-900'
+                      : 'text-neutral-500 hover:text-neutral-900 dark:hover:text-neutral-100'
                   }`}
                 >
                   {item.name}
-                  {isActive && (
-                    <span className="absolute -bottom-1 left-0 right-0 h-0.5 bg-cyan-500 dark:bg-cyan-400 rounded-full"></span>
-                  )}
                 </a>
               );
             })}
-            
+          </div>
+
+          <div className="hidden md:flex items-center gap-3">
             <button
               onClick={() => setIsDarkMode(!isDarkMode)}
-              className="p-2 text-gray-700 dark:text-gray-300 hover:text-cyan-500 dark:hover:text-cyan-400 transition-colors rounded-lg hover:bg-gray-100 dark:hover:bg-slate-800/50"
+              className="p-2 text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-100 transition-colors"
               aria-label="Toggle dark mode"
             >
-              {isDarkMode ? <Moon className="w-5 h-5" /> : <Sun className="w-5 h-5" />}
+              {isDarkMode ? <Moon className="w-4 h-4" /> : <Sun className="w-4 h-4" />}
             </button>
-
             <a
               href="/CAÑADA (CV).pdf"
               download="CAÑADA_CV.pdf"
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center space-x-2 bg-cyan-500 hover:bg-cyan-600 text-white px-4 py-2 rounded-lg font-medium transition-all duration-200 text-sm"
+              className="flex items-center gap-1.5 text-[13px] font-medium border border-neutral-300 dark:border-neutral-700 px-3.5 py-1.5 rounded-full hover:bg-neutral-900 hover:text-white dark:hover:bg-neutral-100 dark:hover:text-neutral-900 transition-all duration-200"
             >
-              <Download className="w-4 h-4" />
-              <span>Download CV</span>
+              Resume
+              <ArrowUpRight className="w-3.5 h-3.5" />
             </a>
           </div>
 
-          <div className="flex items-center space-x-3 md:hidden">
+          <div className="flex items-center gap-2 md:hidden">
             <button
               onClick={() => setIsDarkMode(!isDarkMode)}
-              className="p-2 text-gray-700 dark:text-gray-300 hover:text-cyan-500 dark:hover:text-cyan-400 transition-colors rounded-lg"
+              className="p-2 text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-100 transition-colors"
               aria-label="Toggle dark mode"
             >
-              {isDarkMode ? <Moon className="w-5 h-5" /> : <Sun className="w-5 h-5" />}
+              {isDarkMode ? <Moon className="w-4 h-4" /> : <Sun className="w-4 h-4" />}
             </button>
-            
             <button
               onClick={() => setIsMenuOpen(!isMenuOpen)}
-              className="p-2 text-gray-700 dark:text-gray-300 hover:text-cyan-500 dark:hover:text-cyan-400 transition-colors rounded-lg"
+              className="p-2 text-neutral-600 dark:text-neutral-400"
               aria-label="Toggle menu"
             >
-              {isMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+              {isMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
             </button>
           </div>
         </div>
       </div>
 
-      {/* Backdrop overlay */}
-      <div 
+      {/* Mobile overlay */}
+      <div
         className={`fixed inset-0 bg-black/60 backdrop-blur-sm md:hidden transition-opacity duration-300 ${
           isMenuOpen ? 'opacity-100 z-[60]' : 'opacity-0 pointer-events-none -z-10'
         }`}
         onClick={() => setIsMenuOpen(false)}
       />
 
-      {/* Right side sliding menu */}
-      <div 
-        className={`fixed top-0 right-0 h-screen w-64 bg-white dark:bg-slate-900 shadow-2xl md:hidden transform transition-transform duration-300 ease-out ${
-          isMenuOpen ? 'translate-x-0 z-[70]' : 'translate-x-full -z-10'
-        }`}
-      >
+      {/* Mobile slide menu */}
+      <div className={`fixed top-0 right-0 h-screen w-72 bg-stone-50 dark:bg-neutral-950 md:hidden transform transition-transform duration-300 ease-out ${
+        isMenuOpen ? 'translate-x-0 z-[70]' : 'translate-x-full -z-10'
+      }`}>
         <div className="flex flex-col h-full">
-          {/* Menu Header */}
-          <div className="flex items-center justify-end px-5 py-5">
-            <button
-              onClick={() => setIsMenuOpen(false)}
-              className="p-2 text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white transition-colors"
-              aria-label="Close menu"
-            >
+          <div className="flex items-center justify-end p-5">
+            <button onClick={() => setIsMenuOpen(false)} className="p-2 text-neutral-400" aria-label="Close menu">
               <X className="w-5 h-5" />
             </button>
           </div>
-
-          {/* Menu Items */}
-          <nav className="flex-1 px-6 py-2">
+          <nav className="flex-1 px-6">
             <ul className="space-y-1">
               {navItems.map((item) => {
                 const isActive = activeSection === item.href.substring(1);
@@ -187,10 +164,10 @@ const Navigation = () => {
                     <a
                       href={item.href}
                       onClick={(e) => scrollToSection(e, item.href)}
-                      className={`block px-4 py-3 text-sm font-medium rounded-lg transition-colors duration-200 ${
+                      className={`block px-4 py-3 text-sm font-medium rounded-lg transition-colors ${
                         isActive
-                          ? 'text-cyan-500 dark:text-cyan-400 bg-cyan-500/5'
-                          : 'text-gray-700 dark:text-gray-300 hover:text-cyan-500 dark:hover:text-cyan-400'
+                          ? 'bg-neutral-900 dark:bg-neutral-100 text-white dark:text-neutral-900'
+                          : 'text-neutral-500 hover:text-neutral-900 dark:hover:text-neutral-100'
                       }`}
                     >
                       {item.name}
@@ -200,18 +177,16 @@ const Navigation = () => {
               })}
             </ul>
           </nav>
-
-          {/* Menu Footer */}
-          <div className="px-6 pb-6 pt-4">
+          <div className="px-6 pb-8">
             <a
               href="/CAÑADA (CV).pdf"
               download="CAÑADA_CV.pdf"
               target="_blank"
               rel="noopener noreferrer"
-              className="w-full flex items-center justify-center space-x-2 bg-cyan-500 hover:bg-cyan-600 text-white px-4 py-2.5 rounded-lg text-sm font-medium transition-colors duration-200"
+              className="w-full flex items-center justify-center gap-2 border border-neutral-300 dark:border-neutral-700 px-4 py-2.5 rounded-full text-sm font-medium hover:bg-neutral-900 hover:text-white dark:hover:bg-neutral-100 dark:hover:text-neutral-900 transition-colors"
             >
-              <Download className="w-4 h-4" />
-              <span>Download CV</span>
+              Resume
+              <ArrowUpRight className="w-4 h-4" />
             </a>
           </div>
         </div>

@@ -1,4 +1,4 @@
-import { ExternalLink, Github, FolderGit2 } from 'lucide-react';
+import { ExternalLink, Github } from 'lucide-react';
 
 const Projects = () => {
   const projects = [
@@ -8,7 +8,6 @@ const Projects = () => {
       technologies: ['PHP', 'HTML', 'CSS', 'MySQL', 'JavaScript'],
       github: 'https://github.com/EYRON27',
       demo: '',
-      image: 'gradient-1',
     },
     {
       title: 'OneForAll',
@@ -16,117 +15,102 @@ const Projects = () => {
       technologies: ['React', 'TypeScript', 'Node.js', 'Tailwind CSS'],
       github: 'https://github.com/EYRON27/OneForAll',
       demo: 'https://all-for-one-theta.vercel.app/',
-      image: 'gradient-2',
     },
     {
       title: 'MySuperSystem2025',
-      description: 'Full-stack ASP.NET Core MVC application featuring expense tracking, task management, and a secure password manager. Built with Clean Architecture, Entity Framework Core, SQL Server, and ASP.NET Identity focused on security, scalability, and maintainable enterprise design.',
+      description: 'Full-stack ASP.NET Core MVC application featuring expense tracking, task management, and a secure password manager with Clean Architecture.',
       technologies: ['C#', 'ASP.NET Core MVC', 'EF Core', 'SQL Server'],
       github: 'https://github.com/EYRON27/MySuperSystem2025',
       demo: '',
-      image: 'gradient-4',
     },
     {
-      title: 'RL Phil Construction – Business Website',
-      description:
-        'A responsive static website designed and developed to represent a professional construction company brand. The site emphasizes clarity, trust, and usability, ensuring visitors can easily understand services, company experience, and contact details.',
+      title: 'RL Phil Construction',
+      description: 'A responsive static website designed to represent a professional construction company brand, emphasizing clarity, trust, and usability.',
       technologies: ['React', 'TypeScript', 'Tailwind CSS'],
       github: 'https://github.com/EYRON27/rl-phil',
       demo: 'https://rl-phil-construction.vercel.app',
-      image: 'gradient-3',
     },
   ];
 
-  const gradients = {
-    'gradient-1': 'from-cyan-500 to-blue-500',
-    'gradient-2': 'from-blue-500 to-teal-500',
-    'gradient-3': 'from-teal-500 to-green-500',
-    'gradient-4': 'from-green-500 to-emerald-500',
-    'gradient-5': 'from-emerald-500 to-cyan-500',
-    'gradient-6': 'from-cyan-500 to-blue-600',
-  };
-
   return (
-    <section id="projects" className="py-20 bg-gray-50 dark:bg-slate-800">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="text-center mb-12 sm:mb-16 animate-fade-in-up">
-          <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-gray-900 dark:text-white mb-3 sm:mb-4">
-            Featured <span className="text-cyan-500 dark:text-cyan-400">Projects</span>
+    <section id="projects" className="py-24 border-t border-neutral-200 dark:border-neutral-800">
+      <div className="max-w-6xl mx-auto px-6">
+        <div className="flex items-center gap-3 mb-12">
+          <div className="h-px w-12 bg-amber-500"></div>
+          <span className="text-amber-500 text-sm font-medium tracking-wider uppercase">Projects</span>
+        </div>
+
+        <div className="flex flex-col sm:flex-row sm:items-end justify-between mb-16 gap-4">
+          <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold tracking-tight">
+            Selected work<span className="text-amber-500">.</span>
           </h2>
-          <p className="text-gray-600 dark:text-gray-400 text-base sm:text-lg max-w-2xl mx-auto px-4">
-            A selection of my recent work and personal projects showcasing my skills and creativity
-          </p>
-        </div>
-
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
-          {projects.map((project, index) => (
-            <div
-              key={index}
-              className="bg-white dark:bg-slate-900/50 rounded-xl border border-gray-200 dark:border-slate-700/50 overflow-hidden hover:border-cyan-500/50 transition-all duration-300 hover:transform hover:-translate-y-2 hover:shadow-xl hover:shadow-cyan-500/10 group"
-            >
-              <div className={`h-48 bg-gradient-to-br ${gradients[project.image as keyof typeof gradients]} relative overflow-hidden`}>
-                <div className="absolute inset-0 bg-slate-900/20 group-hover:bg-slate-900/40 transition-colors duration-300"></div>
-                <div className="absolute inset-0 flex items-center justify-center">
-                  <FolderGit2 className="w-16 h-16 text-white/50 group-hover:text-white/70 transition-colors duration-300" />
-                </div>
-              </div>
-
-              <div className="p-6">
-                <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-3 group-hover:text-cyan-500 dark:group-hover:text-cyan-400 transition-colors">
-                  {project.title}
-                </h3>
-                <p className="text-gray-600 dark:text-gray-400 text-sm leading-relaxed mb-4">
-                  {project.description}
-                </p>
-
-                <div className="flex flex-wrap gap-2 mb-4">
-                  {project.technologies.map((tech, techIndex) => (
-                    <span
-                      key={techIndex}
-                      className="px-3 py-1 bg-cyan-500/10 text-cyan-400 text-xs font-medium rounded-full border border-cyan-500/20"
-                    >
-                      {tech}
-                    </span>
-                  ))}
-                </div>
-
-                <div className="flex items-center space-x-4 pt-4 border-t border-gray-200 dark:border-slate-700/50">
-                  <a
-                    href={project.github}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="flex items-center space-x-2 text-gray-600 dark:text-gray-400 hover:text-cyan-500 dark:hover:text-cyan-400 transition-colors text-sm"
-                  >
-                    <Github className="w-4 h-4" />
-                    <span>Code</span>
-                  </a>
-                  {project.demo && (
-                    <a
-                      href={project.demo}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="flex items-center space-x-2 text-gray-600 dark:text-gray-400 hover:text-cyan-500 dark:hover:text-cyan-400 transition-colors text-sm"
-                    >
-                      <ExternalLink className="w-4 h-4" />
-                      <span>Live Demo</span>
-                    </a>
-                  )}
-                </div>
-              </div>
-            </div>
-          ))}
-        </div>
-
-        <div className="mt-12 text-center">
           <a
             href="https://github.com/EYRON27"
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex items-center space-x-2 bg-transparent hover:bg-gray-100 dark:hover:bg-slate-900 text-cyan-500 dark:text-cyan-400 px-6 py-3 rounded-lg font-medium border-2 border-cyan-500/50 hover:border-cyan-500 transition-all duration-200"
+            className="text-neutral-400 hover:text-amber-500 text-sm font-medium transition-colors flex items-center gap-1.5"
           >
-            <Github className="w-5 h-5" />
-            <span>View More on GitHub</span>
+            View all on GitHub
+            <ExternalLink className="w-3.5 h-3.5" />
           </a>
+        </div>
+
+        {/* Featured project */}
+        <div className="mb-8 group">
+          <div className="p-8 sm:p-10 rounded-2xl bg-neutral-100 dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 hover:border-amber-500/30 transition-colors">
+            <div className="flex items-start justify-between mb-6">
+              <span className="text-amber-500 text-xs font-mono tracking-wider">01</span>
+              <div className="flex gap-3">
+                <a href={projects[0].github} target="_blank" rel="noopener noreferrer" className="text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-100 transition-colors">
+                  <Github className="w-5 h-5" />
+                </a>
+                {projects[0].demo && (
+                  <a href={projects[0].demo} target="_blank" rel="noopener noreferrer" className="text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-100 transition-colors">
+                    <ExternalLink className="w-5 h-5" />
+                  </a>
+                )}
+              </div>
+            </div>
+            <h3 className="text-2xl sm:text-3xl font-bold mb-3 group-hover:text-amber-500 transition-colors">{projects[0].title}</h3>
+            <p className="text-neutral-500 dark:text-neutral-400 leading-relaxed mb-6 max-w-2xl">{projects[0].description}</p>
+            <div className="flex flex-wrap gap-2">
+              {projects[0].technologies.map((tech, i) => (
+                <span key={i} className="px-3 py-1 text-xs font-medium bg-neutral-200/80 dark:bg-neutral-800 text-neutral-600 dark:text-neutral-400 rounded-full">
+                  {tech}
+                </span>
+              ))}
+            </div>
+          </div>
+        </div>
+
+        {/* Other projects */}
+        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+          {projects.slice(1).map((project, index) => (
+            <div key={index} className="group p-6 rounded-2xl bg-neutral-100 dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 hover:border-amber-500/30 transition-colors flex flex-col">
+              <div className="flex items-start justify-between mb-4">
+                <span className="text-amber-500 text-xs font-mono tracking-wider">0{index + 2}</span>
+                <div className="flex gap-3">
+                  <a href={project.github} target="_blank" rel="noopener noreferrer" className="text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-100 transition-colors">
+                    <Github className="w-4 h-4" />
+                  </a>
+                  {project.demo && (
+                    <a href={project.demo} target="_blank" rel="noopener noreferrer" className="text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-100 transition-colors">
+                      <ExternalLink className="w-4 h-4" />
+                    </a>
+                  )}
+                </div>
+              </div>
+              <h3 className="text-lg font-bold mb-2 group-hover:text-amber-500 transition-colors">{project.title}</h3>
+              <p className="text-neutral-500 dark:text-neutral-400 text-sm leading-relaxed mb-4 flex-1">{project.description}</p>
+              <div className="flex flex-wrap gap-2">
+                {project.technologies.map((tech, i) => (
+                  <span key={i} className="px-2.5 py-1 text-xs font-medium bg-neutral-200/80 dark:bg-neutral-800 text-neutral-600 dark:text-neutral-400 rounded-full">
+                    {tech}
+                  </span>
+                ))}
+              </div>
+            </div>
+          ))}
         </div>
       </div>
     </section>
