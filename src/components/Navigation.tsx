@@ -74,8 +74,8 @@ const Navigation = () => {
     }`}>
       <div className="max-w-6xl mx-auto px-6">
         <div className="flex items-center justify-between h-16">
-          <a href="#home" onClick={(e) => scrollToSection(e, '#home')} className="text-2xl font-bold tracking-tight">
-            A<span className="text-amber-500">.</span>
+          <a href="#home" onClick={(e) => scrollToSection(e, '#home')} className="text-xl font-bold tracking-tight">
+            Aarvieve<span className="text-amber-500">.</span>
           </a>
 
           <div className="hidden md:flex items-center gap-1">

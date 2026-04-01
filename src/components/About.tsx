@@ -1,8 +1,8 @@
 const About = () => {
   const stats = [
-    { number: '4+', label: 'Projects Built' },
-    { number: '9', label: 'Certifications' },
-    { number: '6+', label: 'Courses Taken' },
+    { number: '9+', label: 'Projects Built' },
+    { number: '11+', label: 'Certifications' },
+    { number: '9+', label: 'Courses Taken' },
   ];
 
   return (

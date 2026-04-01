@@ -1,6 +1,11 @@
-import { GraduationCap, Award, Calendar } from 'lucide-react';
+import { useState, useEffect, useCallback } from 'react';
+import { GraduationCap, Award, Calendar, ChevronLeft, ChevronRight, X } from 'lucide-react';
 
 const Education = () => {
+  const [currentSlide, setCurrentSlide] = useState(0);
+  const [isAutoPlaying, setIsAutoPlaying] = useState(true);
+  const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
+
   const education = [
     {
       degree: 'Bachelor of Science in Information Technology',
@@ -27,21 +32,53 @@ const Education = () => {
   ];
 
   const certifications = [
-    { name: 'Technical Support Fundamentals', issuer: 'Google', date: 'Dec 2025' },
-    { name: 'Build Dynamic User Interfaces (UI) for Websites', issuer: 'Google', date: 'Apr 2025' },
-    { name: 'Design a User Experience for Social Good & Prepare for Jobs', issuer: 'Google', date: 'Apr 2025' },
-    { name: 'Google UX Design Specialization', issuer: 'Google', date: 'Apr 2025' },
-    { name: 'Build Wireframes and Low-Fidelity Prototypes', issuer: 'Google', date: 'Mar 2025' },
-    { name: 'Conduct UX Research and Test Early Concepts', issuer: 'Google', date: 'Mar 2025' },
-    { name: 'Create High-Fidelity Designs and Prototypes in Figma', issuer: 'Google', date: 'Mar 2025' },
-    { name: 'Foundations of User Experience (UX) Design', issuer: 'Google', date: 'Feb 2025' },
-    { name: 'Start the UX Design Process: Empathize, Define, and Ideate', issuer: 'Google', date: 'Feb 2025' },
+    { name: 'Google UX Design Specialization', issuer: 'Google', date: 'Apr 2025', image: '/Certificates/Google UX Specialization.png' },
+    { name: 'Technical Support Fundamentals', issuer: 'Google', date: 'Dec 2025', image: '/Certificates/Technical Support Fundamentals.png' },
+    { name: 'Foundation of Project Management', issuer: 'Google', date: 'Dec 2025', image: '/Certificates/Foundation of Project Management.png' },
+    { name: 'Project Initiation: Starting a Successful Project', issuer: 'Google', date: 'Dec 2025', image: '/Certificates/Project Initiation Starting a Successful Project.png' },
+    { name: 'Build Dynamic User Interfaces (UI) for Websites', issuer: 'Google', date: 'Apr 2025', image: '/Certificates/Build Dynamic User Interfaces (UI) for Websites.png' },
+    { name: 'Design a User Experience for Social Good & Prepare for Jobs', issuer: 'Google', date: 'Apr 2025', image: '/Certificates/Design a User Experience for Social Good.png' },
+    { name: 'Build Wireframes and Low-Fidelity Prototypes', issuer: 'Google', date: 'Mar 2025', image: '/Certificates/Build Wireframes and Low Fidelity Prototypes.png' },
+    { name: 'Conduct UX Research and Test Early Concepts', issuer: 'Google', date: 'Mar 2025', image: '/Certificates/Conduct UX Research .png' },
+    { name: 'Create High-Fidelity Designs and Prototypes in Figma', issuer: 'Google', date: 'Mar 2025', image: '/Certificates/Create High Fidelity Designs and Prototypes.png' },
+    { name: 'Foundations of User Experience (UX) Design', issuer: 'Google', date: 'Feb 2025', image: '/Certificates/Foundation of User Experience.png' },
+    { name: 'Start the UX Design Process: Empathize, Define, and Ideate', issuer: 'Google', date: 'Feb 2025', image: '/Certificates/Start the UX design.png' },
   ];
 
   const courses = [
-    'Web Development', 'Database Management', 'Programming Fundamentals',
-    'Data Structures', 'Software Engineering', 'Computer Networks',
+    'Web Development', 'Programming Fundamentals',
+    'Data Structures', 'Computer Networks',
   ];
+
+  const nextSlide = useCallback(() => {
+    setCurrentSlide((prev) => (prev + 1) % certifications.length);
+  }, [certifications.length]);
+
+  const prevSlide = useCallback(() => {
+    setCurrentSlide((prev) => (prev - 1 + certifications.length) % certifications.length);
+  }, [certifications.length]);
+
+  useEffect(() => {
+    if (!isAutoPlaying) return;
+    const interval = setInterval(nextSlide, 4000);
+    return () => clearInterval(interval);
+  }, [isAutoPlaying, nextSlide]);
+
+  // Keyboard navigation for lightbox
+  useEffect(() => {
+    if (lightboxIndex === null) return;
+    const handleKey = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') setLightboxIndex(null);
+      if (e.key === 'ArrowRight') setLightboxIndex((prev) => prev !== null ? (prev + 1) % certifications.length : null);
+      if (e.key === 'ArrowLeft') setLightboxIndex((prev) => prev !== null ? (prev - 1 + certifications.length) % certifications.length : null);
+    };
+    document.body.style.overflow = 'hidden';
+    window.addEventListener('keydown', handleKey);
+    return () => {
+      document.body.style.overflow = '';
+      window.removeEventListener('keydown', handleKey);
+    };
+  }, [lightboxIndex, certifications.length]);
 
   return (
     <section id="education" className="py-24 border-t border-neutral-200 dark:border-neutral-800">
@@ -82,41 +119,170 @@ const Education = () => {
           </div>
         </div>
 
-        {/* Certs + Coursework */}
-        <div className="grid lg:grid-cols-5 gap-8">
-          <div className="lg:col-span-3">
-            <div className="flex items-center gap-2 mb-6">
+        {/* Certificate Carousel */}
+        <div className="mb-20">
+          <div className="flex items-center justify-between mb-8">
+            <div className="flex items-center gap-2">
               <Award className="w-4 h-4 text-amber-500" />
               <h3 className="font-bold text-lg">Certifications</h3>
+              <span className="text-neutral-400 text-sm ml-2">
+                {currentSlide + 1} / {certifications.length}
+              </span>
             </div>
-            <div className="space-y-3">
+            <div className="flex items-center gap-2">
+              <button
+                onClick={() => { setIsAutoPlaying(false); prevSlide(); }}
+                className="p-2 rounded-full border border-neutral-200 dark:border-neutral-700 text-neutral-500 hover:text-neutral-900 dark:hover:text-neutral-100 hover:border-amber-500 transition-all"
+                aria-label="Previous certificate"
+              >
+                <ChevronLeft className="w-4 h-4" />
+              </button>
+              <button
+                onClick={() => { setIsAutoPlaying(false); nextSlide(); }}
+                className="p-2 rounded-full border border-neutral-200 dark:border-neutral-700 text-neutral-500 hover:text-neutral-900 dark:hover:text-neutral-100 hover:border-amber-500 transition-all"
+                aria-label="Next certificate"
+              >
+                <ChevronRight className="w-4 h-4" />
+              </button>
+            </div>
+          </div>
+
+          {/* Carousel viewport */}
+          <div
+            className="relative overflow-hidden rounded-xl"
+            onMouseEnter={() => setIsAutoPlaying(false)}
+            onMouseLeave={() => setIsAutoPlaying(true)}
+          >
+            <div
+              className="flex transition-transform duration-500 ease-out"
+              style={{ transform: `translateX(-${currentSlide * 100}%)` }}
+            >
               {certifications.map((cert, index) => (
-                <div key={index} className="flex items-start justify-between gap-4 py-3 border-b border-neutral-100 dark:border-neutral-800/50 last:border-0">
-                  <div>
-                    <p className="font-medium text-sm">{cert.name}</p>
-                    <p className="text-neutral-400 text-xs mt-0.5">{cert.issuer}</p>
+                <div key={index} className="w-full flex-shrink-0 px-1">
+                  <div
+                    className="group relative cursor-pointer"
+                    onClick={() => setLightboxIndex(index)}
+                  >
+                    <div className="relative overflow-hidden rounded-xl border border-neutral-200 dark:border-neutral-800 bg-neutral-100 dark:bg-neutral-900">
+                      <img
+                        src={cert.image}
+                        alt={cert.name}
+                        className="w-full h-auto object-contain transition-transform duration-300 group-hover:scale-[1.02]"
+                        loading="lazy"
+                      />
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                      <div className="absolute bottom-0 left-0 right-0 p-5 translate-y-4 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-300">
+                        <p className="text-white font-semibold text-sm">{cert.name}</p>
+                        <p className="text-white/70 text-xs mt-1">{cert.issuer} &middot; {cert.date}</p>
+                      </div>
+                    </div>
                   </div>
-                  <span className="text-amber-500 text-xs font-medium whitespace-nowrap">{cert.date}</span>
                 </div>
               ))}
             </div>
           </div>
 
-          <div className="lg:col-span-2">
-            <div className="flex items-center gap-2 mb-6">
-              <GraduationCap className="w-4 h-4 text-amber-500" />
-              <h3 className="font-bold text-lg">Coursework</h3>
-            </div>
-            <div className="flex flex-wrap gap-2">
-              {courses.map((course, index) => (
-                <span key={index} className="px-4 py-2 bg-neutral-100 dark:bg-neutral-800/80 text-neutral-600 dark:text-neutral-400 text-sm rounded-full border border-neutral-200 dark:border-neutral-700/50">
-                  {course}
+          {/* Dot indicators */}
+          <div className="flex justify-center gap-1.5 mt-5">
+            {certifications.map((_, index) => (
+              <button
+                key={index}
+                onClick={() => { setCurrentSlide(index); setIsAutoPlaying(false); }}
+                className={`h-1.5 rounded-full transition-all duration-300 ${
+                  index === currentSlide
+                    ? 'w-6 bg-amber-500'
+                    : 'w-1.5 bg-neutral-300 dark:bg-neutral-700 hover:bg-neutral-400 dark:hover:bg-neutral-600'
+                }`}
+                aria-label={`Go to certificate ${index + 1}`}
+              />
+            ))}
+          </div>
+
+          {/* Cert name list below carousel */}
+          <div className="mt-8 space-y-2">
+            {certifications.map((cert, index) => (
+              <button
+                key={index}
+                onClick={() => { setCurrentSlide(index); setIsAutoPlaying(false); }}
+                className={`w-full flex items-start justify-between gap-4 py-2.5 px-3 rounded-lg text-left transition-all duration-200 ${
+                  index === currentSlide
+                    ? 'bg-amber-500/10 border border-amber-500/30'
+                    : 'border border-transparent hover:bg-neutral-100 dark:hover:bg-neutral-800/50'
+                }`}
+              >
+                <div className="flex items-start gap-3">
+                  <span className={`text-xs font-mono mt-0.5 ${index === currentSlide ? 'text-amber-500' : 'text-neutral-400'}`}>
+                    {String(index + 1).padStart(2, '0')}
+                  </span>
+                  <div>
+                    <p className={`font-medium text-sm ${index === currentSlide ? 'text-amber-500' : ''}`}>{cert.name}</p>
+                    <p className="text-neutral-400 text-xs mt-0.5">{cert.issuer}</p>
+                  </div>
+                </div>
+                <span className={`text-xs font-medium whitespace-nowrap mt-0.5 ${index === currentSlide ? 'text-amber-500' : 'text-neutral-400'}`}>
+                  {cert.date}
                 </span>
-              ))}
-            </div>
+              </button>
+            ))}
+          </div>
+        </div>
+
+        {/* Coursework */}
+        <div>
+          <div className="flex items-center gap-2 mb-6">
+            <GraduationCap className="w-4 h-4 text-amber-500" />
+            <h3 className="font-bold text-lg">Coursework</h3>
+          </div>
+          <div className="flex flex-wrap gap-2">
+            {courses.map((course, index) => (
+              <span key={index} className="px-4 py-2 bg-neutral-100 dark:bg-neutral-800/80 text-neutral-600 dark:text-neutral-400 text-sm rounded-full border border-neutral-200 dark:border-neutral-700/50">
+                {course}
+              </span>
+            ))}
           </div>
         </div>
       </div>
+
+      {/* Lightbox */}
+      {lightboxIndex !== null && (
+        <div
+          className="fixed inset-0 z-[100] bg-black/90 backdrop-blur-sm flex items-center justify-center p-4"
+          onClick={() => setLightboxIndex(null)}
+        >
+          <button
+            className="absolute top-4 right-4 p-2 text-white/70 hover:text-white transition-colors z-10"
+            onClick={() => setLightboxIndex(null)}
+            aria-label="Close lightbox"
+          >
+            <X className="w-6 h-6" />
+          </button>
+          <button
+            className="absolute left-4 top-1/2 -translate-y-1/2 p-2 text-white/70 hover:text-white transition-colors z-10"
+            onClick={(e) => { e.stopPropagation(); setLightboxIndex((lightboxIndex - 1 + certifications.length) % certifications.length); }}
+            aria-label="Previous"
+          >
+            <ChevronLeft className="w-8 h-8" />
+          </button>
+          <button
+            className="absolute right-4 top-1/2 -translate-y-1/2 p-2 text-white/70 hover:text-white transition-colors z-10"
+            onClick={(e) => { e.stopPropagation(); setLightboxIndex((lightboxIndex + 1) % certifications.length); }}
+            aria-label="Next"
+          >
+            <ChevronRight className="w-8 h-8" />
+          </button>
+          <div className="max-w-5xl max-h-[90vh] w-full" onClick={(e) => e.stopPropagation()}>
+            <img
+              src={certifications[lightboxIndex].image}
+              alt={certifications[lightboxIndex].name}
+              className="w-full h-auto max-h-[85vh] object-contain rounded-lg"
+            />
+            <div className="text-center mt-3">
+              <p className="text-white font-medium text-sm">{certifications[lightboxIndex].name}</p>
+              <p className="text-white/50 text-xs mt-1">{certifications[lightboxIndex].issuer} &middot; {certifications[lightboxIndex].date}</p>
+            </div>
+          </div>
+        </div>
+      )}
     </section>
   );
 };
