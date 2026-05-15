@@ -3,6 +3,14 @@ import { ExternalLink, Github } from 'lucide-react';
 const Projects = () => {
   const projects = [
     {
+      title: 'Schatzies Events',
+      description: 'A professional event planning website showcasing services, portfolio, and client testimonials. Built as a front-end developer, delivering a modern and responsive user experience.',
+      technologies: ['React', 'TypeScript', 'Tailwind CSS', 'Vite'],
+      github: 'https://github.com/batdimoiprint/schatzies-events',
+      demo: 'https://www.schatziesevents.com/',
+      role: 'Front-End Developer',
+    },
+    {
       title: 'MoneyFlow Tracker',
       description: 'A personal finance web app that helps users monitor their income and expenses. It provides daily, weekly, and monthly insights to understand spending habits and manage budgets effectively.',
       technologies: ['PHP', 'HTML', 'CSS', 'MySQL', 'JavaScript'],
