@@ -107,7 +107,7 @@ const Navigation = () => {
               {isDarkMode ? <Moon className="w-4 h-4" /> : <Sun className="w-4 h-4" />}
             </button>
             <a
-              href="/CAÑADA (CV).pdf"
+              href="/CAÑADA CV (3).pdf"
               download="CAÑADA_CV.pdf"
               target="_blank"
               rel="noopener noreferrer"
@@ -179,7 +179,7 @@ const Navigation = () => {
           </nav>
           <div className="px-6 pb-8">
             <a
-              href="/CAÑADA (CV).pdf"
+              href="/CAÑADA CV (3).pdf"
               download="CAÑADA_CV.pdf"
               target="_blank"
               rel="noopener noreferrer"

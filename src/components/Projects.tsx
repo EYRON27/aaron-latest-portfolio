@@ -11,6 +11,13 @@ const Projects = () => {
       role: 'Front-End Developer',
     },
     {
+      title: 'Algorithm Portfolio',
+      description: 'A comprehensive compilation portfolio showcasing algorithm implementations and problem-solving approaches for academic coursework. Features interactive demonstrations and code examples.',
+      technologies: ['React', 'TypeScript', 'Tailwind CSS', 'Vite'],
+      github: 'https://github.com/EYRON27/aaron-compilation-portfolio',
+      demo: 'https://aaron-compilation-portfolio.vercel.app/',
+    },
+    {
       title: 'MoneyFlow Tracker',
       description: 'A personal finance web app that helps users monitor their income and expenses. It provides daily, weekly, and monthly insights to understand spending habits and manage budgets effectively.',
       technologies: ['PHP', 'HTML', 'CSS', 'MySQL', 'JavaScript'],
