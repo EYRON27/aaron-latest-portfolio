@@ -113,7 +113,7 @@ const Navigation = () => {
               rel="noopener noreferrer"
               className="flex items-center gap-1.5 text-[13px] font-medium border border-neutral-300 dark:border-neutral-700 px-3.5 py-1.5 rounded-full hover:bg-neutral-900 hover:text-white dark:hover:bg-neutral-100 dark:hover:text-neutral-900 transition-all duration-200"
             >
-              Resume
+              CV
               <ArrowUpRight className="w-3.5 h-3.5" />
             </a>
           </div>
@@ -185,7 +185,7 @@ const Navigation = () => {
               rel="noopener noreferrer"
               className="w-full flex items-center justify-center gap-2 border border-neutral-300 dark:border-neutral-700 px-4 py-2.5 rounded-full text-sm font-medium hover:bg-neutral-900 hover:text-white dark:hover:bg-neutral-100 dark:hover:text-neutral-900 transition-colors"
             >
-              Resume
+              CV
               <ArrowUpRight className="w-4 h-4" />
             </a>
           </div>
