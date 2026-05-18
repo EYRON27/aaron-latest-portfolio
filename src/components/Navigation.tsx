@@ -1,7 +1,9 @@
 import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Menu, X, Moon, Sun, ArrowUpRight } from 'lucide-react';
 
 const Navigation = () => {
+  const navigate = useNavigate();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
   const [activeSection, setActiveSection] = useState('home');
@@ -106,6 +108,12 @@ const Navigation = () => {
             >
               {isDarkMode ? <Moon className="w-4 h-4" /> : <Sun className="w-4 h-4" />}
             </button>
+            <button
+              onClick={() => navigate('/macos')}
+              className="flex items-center gap-1.5 text-[13px] font-medium text-neutral-600 dark:text-neutral-400 hover:text-amber-500 dark:hover:text-amber-500 transition-colors"
+            >
+              macOS Mode
+            </button>
             <a
               href="/CAÑADA CV (3).pdf"
               download="CAÑADA_CV.pdf"
@@ -177,7 +185,13 @@ const Navigation = () => {
               })}
             </ul>
           </nav>
-          <div className="px-6 pb-8">
+          <div className="px-6 pb-8 space-y-3">
+            <button
+              onClick={() => navigate('/macos')}
+              className="w-full flex items-center justify-center gap-2 text-neutral-600 dark:text-neutral-400 px-4 py-2.5 rounded-full text-sm font-medium hover:text-amber-500 dark:hover:text-amber-500 transition-colors border border-neutral-300 dark:border-neutral-700"
+            >
+              macOS Mode
+            </button>
             <a
               href="/CAÑADA CV (3).pdf"
               download="CAÑADA_CV.pdf"

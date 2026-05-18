@@ -53,4 +53,13 @@
   .animation-delay-400 {
     animation-delay: 400ms;
   }
+
+  @keyframes loading-bar {
+    0% { width: 0%; }
+    100% { width: 100%; }
+  }
+
+  .animate-loading-bar {
+    animation: loading-bar 1.5s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+  }
 }

@@ -12,7 +12,7 @@ const Projects = () => {
     },
     {
       title: 'Algorithm Portfolio',
-      description: 'A comprehensive compilation portfolio showcasing algorithm implementations and problem-solving approaches for academic coursework. Features interactive demonstrations and code examples.',
+      description: 'A comprehensive compilation portfolio showcasing algorithm implementations and problem-solving approaches for academic coursework. Features a beautiful macOS-inspired UI with interactive demonstrations, code examples, and a dynamic theme switcher for different interface experiences.',
       technologies: ['React', 'TypeScript', 'Tailwind CSS', 'Vite'],
       github: 'https://github.com/EYRON27/aaron-compilation-portfolio',
       demo: 'https://aaron-compilation-portfolio.vercel.app/',
