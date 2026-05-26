@@ -1,5 +1,17 @@
 import { useEffect, useRef, useState } from 'react';
 
+// ─── Mobile Detection Hook ───────────────────────────────────────────────────
+const useIsMobile = () => {
+  const [isMobile, setIsMobile] = useState(false);
+  useEffect(() => {
+    const check = () => setIsMobile(window.innerWidth < 768 || ('ontouchstart' in window));
+    check();
+    window.addEventListener('resize', check);
+    return () => window.removeEventListener('resize', check);
+  }, []);
+  return isMobile;
+};
+
 // ─── Types ─────────────────────────────────────────────────────────────────────
 type Spark = { x:number; y:number; vx:number; vy:number; life:number; maxLife:number; size:number; R:number; G:number; B:number };
 type Wave  = { x:number; y:number; r:number; maxR:number; life:number; R:number; G:number; B:number };
@@ -21,6 +33,7 @@ const THEMES: Record<string, {
 
 // ─── Cursor ────────────────────────────────────────────────────────────────────
 export const Cursor = () => {
+  const isMobile = useIsMobile();
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const labelRef  = useRef<HTMLDivElement>(null);
   const [activeSection, setActiveSection] = useState('home');
@@ -56,40 +69,56 @@ export const Cursor = () => {
     };
     window.addEventListener('resize', onResize);
 
-    // ── Section observer ────────────────────────────────────────────────────
+    // ── Section Tracker (Instant) ───────────────────────────────────────────
     const sections = Array.from(document.querySelectorAll('section[id]'));
-    const secObs = new IntersectionObserver(entries => {
-      entries.forEach(e => {
-        if (e.isIntersecting && e.intersectionRatio >= 0.25) {
-          const id = e.target.id;
-          if (id !== activeSectionRef.current) {
-            activeSectionRef.current = id;
-            setActiveSection(id);
-            const newTheme = THEMES[id] ?? THEMES.home;
-            targetTheme = newTheme;
-            themeBlend = 0;
-            // Impact wave burst
-            const { gR, gG, gB } = newTheme;
-            for (let i = 0; i < 3; i++) {
-              waves.push({ x: mx, y: my, r: 5, maxR: 180 + i * 60, life: 55 - i * 10, R: gR, G: gG, B: gB });
-            }
-            // Spark burst on section change
-            for (let i = 0; i < 24; i++) {
-              const a = (i / 24) * Math.PI * 2;
-              const sp = Math.random() * 6 + 3;
-              sparks.push({
-                x: mx, y: my,
-                vx: Math.cos(a) * sp, vy: Math.sin(a) * sp - 2,
-                life: 35 + Math.random() * 20, maxLife: 55,
-                size: Math.random() * 4 + 1.5,
-                R: gR, G: gG, B: gB,
-              });
-            }
+    const checkSection = () => {
+      const middle = window.innerHeight * 0.4;
+      let newSectionId = activeSectionRef.current;
+      
+      for (let i = sections.length - 1; i >= 0; i--) {
+        const rect = sections[i].getBoundingClientRect();
+        if (rect.top <= middle) {
+          newSectionId = sections[i].id;
+          break;
+        }
+      }
+      
+      if (window.scrollY < 100 && sections.length > 0) {
+        newSectionId = sections[0].id;
+      }
+
+      if (newSectionId !== activeSectionRef.current) {
+        const id = newSectionId;
+        activeSectionRef.current = id;
+        setActiveSection(id);
+        const newTheme = THEMES[id] ?? THEMES.home;
+        targetTheme = newTheme;
+        themeBlend = 0;
+        
+        // Impact wave burst (only if mouse is on screen)
+        if (mx > 0) {
+          const { gR, gG, gB } = newTheme;
+          for (let i = 0; i < 3; i++) {
+            waves.push({ x: mx, y: my, r: 5, maxR: 180 + i * 60, life: 55 - i * 10, R: gR, G: gG, B: gB });
+          }
+          // Spark burst on section change
+          for (let i = 0; i < 24; i++) {
+            const a = (i / 24) * Math.PI * 2;
+            const sp = Math.random() * 6 + 3;
+            sparks.push({
+              x: mx, y: my,
+              vx: Math.cos(a) * sp, vy: Math.sin(a) * sp - 2,
+              life: 35 + Math.random() * 20, maxLife: 55,
+              size: Math.random() * 4 + 1.5,
+              R: gR, G: gG, B: gB,
+            });
           }
         }
-      });
-    }, { threshold: 0.25 });
-    sections.forEach(s => secObs.observe(s));
+      }
+    };
+
+    window.addEventListener('scroll', checkSection, { passive: true });
+    checkSection();
 
     // ── Mouse events ────────────────────────────────────────────────────────
     const onMove = (e: MouseEvent) => {
@@ -300,16 +329,18 @@ export const Cursor = () => {
     draw();
 
     return () => {
+      window.removeEventListener('scroll',    checkSection);
       window.removeEventListener('resize',    onResize);
       window.removeEventListener('mousemove', onMove);
       document.removeEventListener('mouseleave', onLeave);
       document.removeEventListener('mouseenter', onEnter2);
-      secObs.disconnect();
       cancelAnimationFrame(raf);
     };
   }, []);
 
   const theme = THEMES[activeSection] ?? THEMES.home;
+
+  if (isMobile) return null;
 
   return (
     <>
@@ -347,6 +378,7 @@ export const Cursor = () => {
 type Particle = { id:number; x:number; y:number; vx:number; vy:number; color:string; size:number };
 
 export const ClickBurst = () => {
+  const isMobile = useIsMobile();
   const [particles, setParticles] = useState<Particle[]>([]);
   const idRef = useRef(0);
 
@@ -371,6 +403,8 @@ export const ClickBurst = () => {
     window.addEventListener('click', onClick);
     return () => window.removeEventListener('click', onClick);
   }, []);
+
+  if (isMobile) return null;
 
   return (
     <div className="fixed inset-0 pointer-events-none" style={{ zIndex: 9998 }}>
