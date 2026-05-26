@@ -1,102 +1,223 @@
-import { useState } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useScrollReveal } from '../hooks/useScrollReveal';
 
-const StatCard = ({ number, label, delay }: { number: string; label: string; delay: number }) => {
+// ── Count-up ──────────────────────────────────────────────────────────────────
+const CountUp = ({ target, suffix = '' }: { target: number; suffix?: string }) => {
+  const [val, setVal] = useState(0);
+  const ref = useRef<HTMLSpanElement>(null);
+  const [inView, setInView] = useState(false);
+
+  useEffect(() => {
+    const el = ref.current; if (!el) return;
+    const obs = new IntersectionObserver(([e]) => { if (e.isIntersecting) { setInView(true); obs.disconnect(); } }, { threshold: 0.5 });
+    obs.observe(el);
+    return () => obs.disconnect();
+  }, []);
+
+  useEffect(() => {
+    if (!inView) return;
+    let n = 0;
+    const inc = target / 60;
+    const t = setInterval(() => {
+      n += inc;
+      if (n >= target) { setVal(target); clearInterval(t); }
+      else setVal(Math.floor(n));
+    }, 20);
+    return () => clearInterval(t);
+  }, [inView, target]);
+
+  return <span ref={ref}>{val}{suffix}</span>;
+};
+
+// ── 3D Stat Card with wave ripple ─────────────────────────────────────────────
+const StatCard = ({ number, suffix, label, delay, color }: { number: number; suffix: string; label: string; delay: number; color: string }) => {
   const { ref, visible } = useScrollReveal(0.2);
   const [hovered, setHovered] = useState(false);
+  const [ripples, setRipples] = useState<{ id: number; x: number; y: number }[]>([]);
+  const nextId = useRef(0);
+
+  const onMouseEnter = (e: React.MouseEvent<HTMLDivElement>) => {
+    setHovered(true);
+    const rect = e.currentTarget.getBoundingClientRect();
+    setRipples(prev => [
+      ...prev,
+      { id: nextId.current++, x: e.clientX - rect.left, y: e.clientY - rect.top },
+    ]);
+  };
+
+  useEffect(() => {
+    if (ripples.length > 0) {
+      const t = setTimeout(() => setRipples(prev => prev.slice(1)), 600);
+      return () => clearTimeout(t);
+    }
+  }, [ripples]);
 
   return (
     <div
       ref={ref as React.RefObject<HTMLDivElement>}
-      className={`relative group cursor-default transition-all duration-700 ${visible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}
-      style={{ transitionDelay: `${delay}ms` }}
-      onMouseEnter={() => setHovered(true)}
+      className={`relative overflow-hidden rounded-2xl cursor-default transition-all duration-700 ${visible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}
+      style={{
+        transitionDelay: `${delay}ms`,
+        border: `1px solid ${hovered ? color + '50' : 'rgba(128,128,128,0.12)'}`,
+        background: hovered ? color + '08' : 'rgba(128,128,128,0.03)',
+        transform: `${visible ? '' : 'translateY(40px)'} perspective(500px) rotateX(${hovered ? -4 : 0}deg) translateY(${hovered ? -6 : 0}px) scale(${hovered ? 1.04 : 1})`,
+        transition: `transform 0.4s cubic-bezier(0.34,1.56,0.64,1), border-color 0.3s, background 0.3s, opacity 0.7s ${delay}ms`,
+        boxShadow: hovered ? `0 20px 50px ${color}20, 0 0 0 1px ${color}25` : 'none',
+      }}
+      onMouseEnter={onMouseEnter}
       onMouseLeave={() => setHovered(false)}
     >
-      {/* Glow bg */}
+      {/* Ripple on hover enter */}
+      {ripples.map(r => (
+        <div
+          key={r.id}
+          className="absolute rounded-full pointer-events-none"
+          style={{
+            left: r.x, top: r.y,
+            width: 4, height: 4,
+            transform: 'translate(-50%,-50%)',
+            background: color + '40',
+            animation: 'stat-ripple 0.6s ease-out forwards',
+          }}
+        />
+      ))}
+
+      {/* Top accent line */}
       <div
-        className="absolute -inset-3 rounded-2xl transition-opacity duration-500"
+        className="absolute top-0 left-0 right-0 h-0.5 rounded-full"
         style={{
-          background: 'radial-gradient(circle, rgba(245,158,11,0.15), transparent)',
-          opacity: hovered ? 1 : 0,
+          background: `linear-gradient(90deg, transparent, ${color}, transparent)`,
+          transform: hovered ? 'scaleX(1)' : 'scaleX(0)',
+          transition: 'transform 0.4s',
         }}
       />
-      <div
-        className="relative p-6 rounded-2xl border transition-all duration-500"
-        style={{
-          borderColor: hovered ? 'rgba(245,158,11,0.4)' : 'rgba(128,128,128,0.15)',
-          background: hovered ? 'rgba(245,158,11,0.05)' : 'transparent',
-          transform: hovered ? 'translateY(-4px) scale(1.03)' : 'translateY(0) scale(1)',
-          boxShadow: hovered ? '0 20px 40px rgba(245,158,11,0.12)' : 'none',
-        }}
-      >
+
+      <div className="p-6 relative z-10">
         <div
-          className="text-4xl sm:text-5xl font-bold mb-1 transition-all duration-300"
-          style={{ color: hovered ? '#f59e0b' : undefined }}
+          className="text-4xl sm:text-5xl font-black mb-1 transition-all duration-300"
+          style={{ color: hovered ? color : undefined, textShadow: hovered ? `0 0 30px ${color}60` : 'none' }}
         >
-          {number}
+          <CountUp target={number} suffix={suffix} />
         </div>
         <div className="text-neutral-500 text-sm font-medium">{label}</div>
-        <div
-          className="absolute bottom-0 left-4 right-4 h-px rounded-full transition-all duration-500"
-          style={{ background: 'linear-gradient(90deg, transparent, rgba(245,158,11,0.6), transparent)', transform: hovered ? 'scaleX(1)' : 'scaleX(0)' }}
-        />
       </div>
+
+      {/* Glow corner */}
+      <div
+        className="absolute -bottom-4 -right-4 w-16 h-16 rounded-full transition-opacity duration-500"
+        style={{ background: `radial-gradient(circle, ${color}30, transparent)`, opacity: hovered ? 1 : 0 }}
+      />
+      <style>{`@keyframes stat-ripple { to { width: 200px; height: 200px; opacity: 0; } }`}</style>
     </div>
   );
 };
 
+// ── Magnetic tech pill ─────────────────────────────────────────────────────────
+const TechPill = ({ tech, delay, parentVisible }: { tech: string; delay: number; parentVisible: boolean }) => {
+  const [hovered, setHovered] = useState(false);
+  const ref = useRef<HTMLSpanElement>(null);
+  const [offset, setOffset] = useState({ x: 0, y: 0 });
+
+  const onMove = (e: React.MouseEvent) => {
+    const el = ref.current; if (!el) return;
+    const rect = el.getBoundingClientRect();
+    const cx = rect.left + rect.width / 2;
+    const cy = rect.top + rect.height / 2;
+    setOffset({ x: (e.clientX - cx) * 0.3, y: (e.clientY - cy) * 0.3 });
+  };
+
+  return (
+    <span
+      ref={ref}
+      className={`px-3 py-1.5 text-xs font-semibold rounded-full cursor-default select-none transition-all duration-700
+        ${parentVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'}`}
+      style={{
+        transitionDelay: `${delay}ms`,
+        border: `1px solid ${hovered ? 'rgba(245,158,11,0.5)' : 'rgba(128,128,128,0.2)'}`,
+        color: hovered ? '#f59e0b' : undefined,
+        background: hovered ? 'rgba(245,158,11,0.08)' : 'transparent',
+        transform: `translate(${offset.x}px, ${offset.y}px) ${parentVisible ? '' : 'translateY(24px)'}`,
+        boxShadow: hovered ? '0 6px 20px rgba(245,158,11,0.2)' : 'none',
+      }}
+      onMouseEnter={() => setHovered(true)}
+      onMouseLeave={() => { setHovered(false); setOffset({ x: 0, y: 0 }); }}
+      onMouseMove={onMove}
+    >
+      {tech}
+    </span>
+  );
+};
+
+// ── About Section ─────────────────────────────────────────────────────────────
 const About = () => {
   const { ref: headRef, visible: headVisible } = useScrollReveal(0.1);
   const { ref: textRef, visible: textVisible } = useScrollReveal(0.1);
 
   const stats = [
-    { number: '9+', label: 'Projects Built', delay: 100 },
-    { number: '11+', label: 'Certifications', delay: 220 },
-    { number: '9+', label: 'Courses Taken', delay: 340 },
+    { number: 9,  suffix: '+', label: 'Projects Built',   delay: 100, color: '#f59e0b' },
+    { number: 11, suffix: '+', label: 'Certifications',   delay: 220, color: '#8b5cf6' },
+    { number: 9,  suffix: '+', label: 'Courses Taken',    delay: 340, color: '#06b6d4' },
   ];
+
+  const techs = ['React', 'TypeScript', 'Tailwind CSS', 'Flutter', 'Node.js', 'Figma', 'Firebase', 'Git'];
 
   return (
     <section id="about" className="py-24 border-t border-neutral-200 dark:border-neutral-800 relative overflow-hidden">
-      {/* Ambient blob */}
-      <div className="absolute top-0 right-0 w-[500px] h-[500px] rounded-full pointer-events-none"
-        style={{ background: 'radial-gradient(circle, rgba(245,158,11,0.04) 0%, transparent 70%)', transform: 'translate(30%, -30%)' }} />
+      {/* Ambient orbs */}
+      <div className="absolute top-0 right-0 w-[600px] h-[600px] rounded-full pointer-events-none"
+        style={{ background: 'radial-gradient(circle, rgba(245,158,11,0.05) 0%, transparent 65%)', transform: 'translate(30%, -30%)' }} />
+      <div className="absolute bottom-0 left-0 w-[400px] h-[400px] rounded-full pointer-events-none"
+        style={{ background: 'radial-gradient(circle, rgba(139,92,246,0.04) 0%, transparent 65%)', transform: 'translate(-30%, 30%)' }} />
 
       <div className="max-w-6xl mx-auto px-6">
         {/* Label */}
         <div
           ref={headRef as React.RefObject<HTMLDivElement>}
-          className={`flex items-center gap-3 mb-12 transition-all duration-700 ${headVisible ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-6'}`}
+          className={`flex items-center gap-3 mb-12 transition-all duration-700 ${headVisible ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-8'}`}
         >
-          <div className="h-px w-12 bg-amber-500" />
-          <span className="text-amber-500 text-sm font-medium tracking-wider uppercase">About Me</span>
+          <div
+            className="h-px bg-gradient-to-r from-amber-500 to-transparent"
+            style={{ width: headVisible ? '48px' : '0px', transition: 'width 0.8s 0.2s ease-out' }}
+          />
+          <span
+            className="text-amber-500 text-sm font-medium tracking-widest uppercase"
+            style={{
+              opacity: headVisible ? 1 : 0,
+              transform: headVisible ? 'none' : 'translateX(-10px)',
+              transition: 'all 0.6s 0.3s',
+            }}
+          >
+            About Me
+          </span>
         </div>
 
         <div className="grid lg:grid-cols-2 gap-16 lg:gap-24 items-start">
-          {/* Left: headline + stats */}
+          {/* Left */}
           <div>
             <h2
-              className={`text-3xl sm:text-4xl md:text-5xl font-bold tracking-tight mb-10 leading-tight transition-all duration-800 ${headVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}
-              style={{ transitionDelay: '100ms', textShadow: '0 0 40px rgba(245,158,11,0.1)' }}
+              className={`text-3xl sm:text-4xl md:text-5xl font-black tracking-tight mb-10 leading-tight transition-all duration-800 ${headVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}
+              style={{ transitionDelay: '120ms', textShadow: '0 0 50px rgba(245,158,11,0.08)' }}
             >
               I build things<br />for the web<span className="text-amber-500">.</span>
             </h2>
 
-            <div className="grid grid-cols-3 gap-4">
+            <div className="grid grid-cols-3 gap-3">
               {stats.map((s, i) => <StatCard key={i} {...s} />)}
             </div>
 
-            {/* Decorative horizontal rule with glow */}
             <div
-              className={`mt-10 h-px w-full transition-all duration-1000 ${headVisible ? 'opacity-100' : 'opacity-0'}`}
+              className="mt-10 h-px rounded-full"
               style={{
-                transitionDelay: '600ms',
-                background: 'linear-gradient(90deg, rgba(245,158,11,0.6), rgba(245,158,11,0.1), transparent)',
+                background: 'linear-gradient(90deg, rgba(245,158,11,0.7), rgba(139,92,246,0.3), transparent)',
+                opacity: headVisible ? 1 : 0,
+                transform: headVisible ? 'scaleX(1)' : 'scaleX(0)',
+                transformOrigin: 'left',
+                transition: 'transform 1.2s 0.6s cubic-bezier(0.16,1,0.3,1), opacity 0.5s 0.6s',
               }}
             />
           </div>
 
-          {/* Right: text */}
+          {/* Right */}
           <div
             ref={textRef as React.RefObject<HTMLDivElement>}
             className={`space-y-5 text-neutral-600 dark:text-neutral-400 leading-relaxed transition-all duration-700 ${textVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}
@@ -104,30 +225,25 @@ const About = () => {
           >
             {[
               "I'm a web development student who loves learning new technologies and building responsive, accessible, and efficient websites and applications. Currently pursuing a Bachelor of Science in Information Technology at Quezon City University.",
-              "When I'm not coding or studying, I like exploring new tech, building side projects, and connecting with other students who share the same passion for development. I believe in creating digital experiences that matter — balancing functionality with aesthetics.",
-              "I'm particularly passionate about front-end development and UI/UX design, always striving to create web experiences that are not only visually stunning but also fast and accessible to everyone.",
+              "When I'm not coding or studying, I explore new tech, build side projects, and connect with other students who share the same passion for development. I believe in creating digital experiences that matter.",
+              "I'm particularly passionate about front-end development and UI/UX design — always striving to craft web experiences that are not only visually stunning but also fast and accessible.",
             ].map((text, i) => (
               <p
                 key={i}
-                className={`transition-all duration-700 ${textVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}
-                style={{ transitionDelay: `${300 + i * 120}ms` }}
+                className={`transition-all duration-700 ${textVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-5'}`}
+                style={{ transitionDelay: `${300 + i * 130}ms` }}
               >
                 {text}
               </p>
             ))}
 
-            {/* Tech stack pills */}
+            {/* Magnetic tech pills */}
             <div
-              className={`flex flex-wrap gap-2 pt-2 transition-all duration-700 ${textVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}
+              className={`flex flex-wrap gap-2 pt-3 transition-all duration-500 ${textVisible ? 'opacity-100' : 'opacity-0'}`}
               style={{ transitionDelay: '700ms' }}
             >
-              {['React', 'TypeScript', 'Tailwind CSS', 'Flutter', 'Node.js', 'Figma'].map(tech => (
-                <span
-                  key={tech}
-                  className="px-3 py-1 text-xs font-medium rounded-full border border-neutral-200 dark:border-neutral-700 text-neutral-600 dark:text-neutral-400 hover:border-amber-500/60 hover:text-amber-500 transition-all duration-300 cursor-default hover:scale-105"
-                >
-                  {tech}
-                </span>
+              {techs.map((tech, i) => (
+                <TechPill key={tech} tech={tech} delay={720 + i * 50} parentVisible={textVisible} />
               ))}
             </div>
           </div>

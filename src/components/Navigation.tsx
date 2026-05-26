@@ -119,29 +119,67 @@ const Navigation = () => {
       </div>
       <div className="max-w-6xl mx-auto px-6">
         <div className="flex items-center justify-between h-16">
-          <a href="#home" onClick={(e) => scrollToSection(e, '#home')} className="text-xl font-bold tracking-tight">
-            Aarvieve<span className="text-amber-500">.</span>
+          <a
+            href="#home"
+            onClick={(e) => scrollToSection(e, '#home')}
+            className="text-xl font-black tracking-tight group relative"
+          >
+            <span className="group-hover:text-amber-500 transition-colors duration-300">Aarvieve</span>
+            <span
+              className="text-amber-500 inline-block group-hover:scale-125 group-hover:rotate-12 transition-transform duration-300 origin-center"
+              style={{ display: 'inline-block' }}
+            >.</span>
+            {/* Underline shimmer on hover */}
+            <span
+              className="absolute -bottom-0.5 left-0 h-px w-0 group-hover:w-full bg-gradient-to-r from-amber-500 to-amber-300 transition-all duration-400 rounded-full"
+            />
           </a>
 
           <div className="hidden md:flex items-center gap-1">
-            {navItems.map((item) => {
+            {navItems.map((item, idx) => {
               const isActive = activeSection === item.href.substring(1);
               return (
                 <a
                   key={item.name}
                   href={item.href}
                   onClick={(e) => scrollToSection(e, item.href)}
-                  className={`px-3 py-1.5 text-[13px] font-medium rounded-full transition-all duration-200 ${
+                  className={`relative px-3 py-1.5 text-[13px] font-medium rounded-full transition-all duration-300 ${
                     isActive
-                      ? 'bg-neutral-900 dark:bg-neutral-100 text-white dark:text-neutral-900'
+                      ? 'text-white'
                       : 'text-neutral-500 hover:text-neutral-900 dark:hover:text-neutral-100'
                   }`}
+                  style={{ transitionDelay: `${idx * 30}ms` }}
                 >
-                  {item.name}
+                  {/* Active background — amber glow pill */}
+                  {isActive && (
+                    <span
+                      className="absolute inset-0 rounded-full"
+                      style={{
+                        background: 'linear-gradient(135deg, rgba(245,158,11,0.9), rgba(217,119,6,0.85))',
+                        boxShadow: '0 0 16px rgba(245,158,11,0.4), inset 0 1px 0 rgba(255,255,255,0.15)',
+                      }}
+                    />
+                  )}
+                  {/* Hover glow */}
+                  {!isActive && (
+                    <span
+                      className="absolute inset-0 rounded-full opacity-0 hover:opacity-100 transition-opacity duration-300"
+                      style={{ background: 'rgba(245,158,11,0.07)' }}
+                    />
+                  )}
+                  <span className="relative z-10">{item.name}</span>
+                  {/* Active glow dot below */}
+                  {isActive && (
+                    <span
+                      className="absolute -bottom-1.5 left-1/2 -translate-x-1/2 w-1 h-1 rounded-full bg-amber-400"
+                      style={{ boxShadow: '0 0 8px rgba(245,158,11,1)', animation: 'dot-glow 2s ease-in-out infinite' }}
+                    />
+                  )}
                 </a>
               );
             })}
           </div>
+          <style>{`@keyframes dot-glow { 0%,100%{opacity:1;transform:translateX(-50%) scale(1);} 50%{opacity:0.5;transform:translateX(-50%) scale(1.8);} }`}</style>
 
           <div className="hidden md:flex items-center gap-3">
             <button

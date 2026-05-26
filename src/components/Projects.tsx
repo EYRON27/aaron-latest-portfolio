@@ -1,5 +1,5 @@
 import { useRef, useState } from 'react';
-import { ExternalLink, Github } from 'lucide-react';
+import { ExternalLink, Github, ArrowUpRight } from 'lucide-react';
 import { useScrollReveal } from '../hooks/useScrollReveal';
 
 const projects = [
@@ -15,7 +15,7 @@ const projects = [
   },
   {
     title: 'Algorithm Portfolio',
-    description: 'A comprehensive compilation portfolio showcasing algorithm implementations with a beautiful macOS-inspired UI, interactive demos, and dynamic theme switcher.',
+    description: 'Comprehensive compilation portfolio with algorithm implementations, a macOS-inspired UI, interactive demos, and a dynamic theme switcher.',
     technologies: ['React', 'TypeScript', 'Tailwind CSS', 'Vite'],
     github: 'https://github.com/EYRON27/aaron-compilation-portfolio',
     demo: 'https://aaron-compilation-portfolio.vercel.app/',
@@ -32,16 +32,16 @@ const projects = [
   },
   {
     title: 'AarvieveLifeSync',
-    description: 'All-in-one personal productivity hub: task management, expense tracking, and secure password manager.',
+    description: 'All-in-one personal productivity hub: task management, expense tracking, and secure password manager built solo.',
     technologies: ['React', 'Express', 'TypeScript', 'Firebase'],
     github: 'https://github.com/EYRON27/AarvieveLifeSync',
     demo: 'https://aarvieve-life-sync-website.vercel.app/',
-    role: 'Full Stack (solo dev)',
+    role: 'Full Stack',
     accent: '#10b981',
   },
   {
     title: 'MySuperSystem2025',
-    description: 'Full-stack ASP.NET Core MVC application with expense tracking, task management, and Clean Architecture.',
+    description: 'Full-stack ASP.NET Core MVC app with expense tracking, task management, and secure password manager using Clean Architecture.',
     technologies: ['C#', 'ASP.NET Core MVC', 'EF Core', 'SQL Server'],
     github: 'https://github.com/EYRON27/MySuperSystem2025',
     demo: '',
@@ -49,7 +49,7 @@ const projects = [
   },
   {
     title: 'RL Phil Construction',
-    description: 'Responsive static website for a professional construction company brand emphasizing clarity, trust, and usability.',
+    description: 'Responsive static website for a professional construction company emphasizing clarity, trust, and usability.',
     technologies: ['React', 'TypeScript', 'Tailwind CSS'],
     github: 'https://github.com/EYRON27/rl-phil',
     demo: 'https://rl-phil-construction.vercel.app',
@@ -57,84 +57,103 @@ const projects = [
   },
 ];
 
-// ── Magnetic 3D project card ───────────────────────────────────────────────────
-const ProjectCard = ({ project, index, large = false }: {
-  project: typeof projects[0];
-  index: number;
-  large?: boolean;
-}) => {
-  const { ref, visible } = useScrollReveal(0.1);
+// ─── 3D Magnetic Card ─────────────────────────────────────────────────────────
+const ProjectCard = ({ project, index, large = false }: { project: typeof projects[0]; index: number; large?: boolean }) => {
+  const { ref, visible } = useScrollReveal(0.08);
   const cardRef = useRef<HTMLDivElement>(null);
   const [tilt, setTilt] = useState({ x: 0, y: 0, shine: { x: 50, y: 50 } });
   const [hovered, setHovered] = useState(false);
+  const [exploding, setExploding] = useState(false);
 
-  const handleMouseMove = (e: React.MouseEvent) => {
-    const el = cardRef.current;
-    if (!el) return;
-    const rect = el.getBoundingClientRect();
-    const x = (e.clientX - rect.left) / rect.width;
-    const y = (e.clientY - rect.top) / rect.height;
-    setTilt({
-      x: (y - 0.5) * -10,
-      y: (x - 0.5) * 10,
-      shine: { x: x * 100, y: y * 100 },
-    });
+  const onMove = (e: React.MouseEvent) => {
+    const el = cardRef.current; if (!el) return;
+    const r = el.getBoundingClientRect();
+    const x = (e.clientX - r.left) / r.width;
+    const y = (e.clientY - r.top) / r.height;
+    setTilt({ x: (y - 0.5) * -12, y: (x - 0.5) * 12, shine: { x: x * 100, y: y * 100 } });
   };
 
-  const handleMouseLeave = () => {
-    setTilt({ x: 0, y: 0, shine: { x: 50, y: 50 } });
+  const onEnter = () => {
+    setHovered(true);
+    setExploding(true);
+    setTimeout(() => setExploding(false), 600);
+  };
+
+  const onLeave = () => {
     setHovered(false);
+    setTilt({ x: 0, y: 0, shine: { x: 50, y: 50 } });
   };
 
   return (
     <div
       ref={ref as React.RefObject<HTMLDivElement>}
-      className={`transition-all duration-700 ${visible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}
-      style={{ transitionDelay: `${index * 100}ms`, perspective: '800px' }}
+      className={`transition-all duration-700 ${visible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-14'}`}
+      style={{ transitionDelay: `${index * 90}ms`, perspective: '900px' }}
     >
       <div
         ref={cardRef}
-        className={`relative group ${large ? 'p-8 sm:p-10' : 'p-6'} rounded-2xl flex flex-col cursor-default h-full`}
+        className={`relative group ${large ? 'p-8 sm:p-10' : 'p-6'} rounded-2xl flex flex-col h-full cursor-default overflow-hidden`}
         style={{
-          border: `1px solid ${hovered ? project.accent + '40' : 'rgba(128,128,128,0.15)'}`,
+          border: `1px solid ${hovered ? project.accent + '45' : 'rgba(128,128,128,0.13)'}`,
           background: hovered
-            ? `linear-gradient(135deg, ${project.accent}06, rgba(0,0,0,0))`
-            : 'rgba(128,128,128,0.03)',
-          transform: `perspective(800px) rotateX(${tilt.x}deg) rotateY(${tilt.y}deg) ${hovered ? 'scale(1.01) translateZ(10px)' : 'scale(1) translateZ(0)'}`,
+            ? `linear-gradient(145deg, ${project.accent}07, rgba(0,0,0,0))`
+            : 'rgba(128,128,128,0.025)',
+          transform: `perspective(900px) rotateX(${tilt.x}deg) rotateY(${tilt.y}deg) ${hovered ? 'scale(1.015) translateZ(16px)' : 'scale(1)'}`,
           transition: hovered
-            ? 'transform 0.1s ease-out, border-color 0.3s, background 0.3s, box-shadow 0.3s'
-            : 'transform 0.5s cubic-bezier(0.34,1.56,0.64,1), border-color 0.3s, background 0.3s, box-shadow 0.3s',
-          boxShadow: hovered ? `0 25px 60px ${project.accent}15, 0 0 0 1px ${project.accent}20` : 'none',
+            ? 'transform 0.08s ease-out, border-color 0.3s, background 0.3s, box-shadow 0.3s'
+            : 'transform 0.55s cubic-bezier(0.34,1.56,0.64,1), border-color 0.3s, background 0.3s, box-shadow 0.3s',
+          boxShadow: hovered ? `0 30px 70px ${project.accent}18, 0 0 0 1px ${project.accent}22` : 'none',
         }}
-        onMouseMove={handleMouseMove}
-        onMouseEnter={() => setHovered(true)}
-        onMouseLeave={handleMouseLeave}
+        onMouseMove={onMove}
+        onMouseEnter={onEnter}
+        onMouseLeave={onLeave}
       >
-        {/* Shine overlay */}
+        {/* Corner burst on enter */}
+        {exploding && (
+          <div
+            className="absolute top-0 right-0 w-32 h-32 rounded-full pointer-events-none"
+            style={{
+              background: `radial-gradient(circle, ${project.accent}60, transparent)`,
+              transform: 'translate(30%,-30%)',
+              animation: 'card-burst 0.6s ease-out forwards',
+            }}
+          />
+        )}
+
+        {/* Specular shine */}
         <div
-          className="absolute inset-0 rounded-2xl pointer-events-none transition-opacity duration-300"
+          className="absolute inset-0 rounded-2xl pointer-events-none"
           style={{
-            background: `radial-gradient(circle at ${tilt.shine.x}% ${tilt.shine.y}%, rgba(255,255,255,0.06), transparent 60%)`,
+            background: `radial-gradient(circle at ${tilt.shine.x}% ${tilt.shine.y}%, rgba(255,255,255,0.07), transparent 60%)`,
             opacity: hovered ? 1 : 0,
+            transition: 'opacity 0.3s',
           }}
         />
 
-        {/* Top accent line */}
+        {/* Accent top beam */}
         <div
-          className="absolute top-0 left-6 right-6 h-px rounded-full transition-all duration-500"
+          className="absolute top-0 left-0 right-0 h-[2px] rounded-full"
           style={{
             background: `linear-gradient(90deg, transparent, ${project.accent}, transparent)`,
             opacity: hovered ? 1 : 0,
             transform: hovered ? 'scaleX(1)' : 'scaleX(0)',
+            transition: 'transform 0.4s, opacity 0.4s',
           }}
         />
 
-        {/* Header */}
+        {/* Pulsing dot in corner */}
+        <div
+          className="absolute top-4 right-4 w-1.5 h-1.5 rounded-full"
+          style={{
+            background: project.accent,
+            boxShadow: `0 0 8px ${project.accent}`,
+            animation: hovered ? `dot-pulse 1s ease-in-out infinite` : 'none',
+          }}
+        />
+
+        {/* Header row */}
         <div className="flex items-start justify-between mb-4 relative z-10">
-          <span
-            className="text-xs font-mono tracking-wider transition-colors duration-300"
-            style={{ color: project.accent }}
-          >
+          <span className="text-xs font-mono tracking-widest" style={{ color: project.accent }}>
             {String(index + 1).padStart(2, '0')}
           </span>
           <div className="flex gap-3">
@@ -142,8 +161,7 @@ const ProjectCard = ({ project, index, large = false }: {
               href={project.github}
               target="_blank"
               rel="noopener noreferrer"
-              className="text-neutral-400 transition-all duration-300 hover:scale-110"
-              style={{ '--hover-color': project.accent } as React.CSSProperties}
+              className="text-neutral-400 transition-all duration-300 hover:scale-125"
               onMouseEnter={e => (e.currentTarget.style.color = project.accent)}
               onMouseLeave={e => (e.currentTarget.style.color = '')}
             >
@@ -154,11 +172,11 @@ const ProjectCard = ({ project, index, large = false }: {
                 href={project.demo}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-neutral-400 transition-all duration-300 hover:scale-110"
+                className="text-neutral-400 transition-all duration-300 hover:scale-125"
                 onMouseEnter={e => (e.currentTarget.style.color = project.accent)}
                 onMouseLeave={e => (e.currentTarget.style.color = '')}
               >
-                <ExternalLink className={large ? 'w-5 h-5' : 'w-4 h-4'} />
+                <ArrowUpRight className={large ? 'w-5 h-5' : 'w-4 h-4'} />
               </a>
             )}
           </div>
@@ -166,46 +184,50 @@ const ProjectCard = ({ project, index, large = false }: {
 
         {/* Title */}
         <h3
-          className={`${large ? 'text-2xl sm:text-3xl' : 'text-lg'} font-bold mb-3 transition-colors duration-300 relative z-10`}
+          className={`${large ? 'text-2xl sm:text-3xl' : 'text-lg'} font-bold mb-2 transition-colors duration-300 relative z-10`}
           style={{ color: hovered ? project.accent : undefined }}
         >
           {project.title}
         </h3>
 
-        {/* Role badge */}
+        {/* Role */}
         {project.role && (
           <span
-            className="inline-block px-2 py-0.5 rounded-full text-[10px] font-semibold tracking-wider uppercase mb-3 w-fit"
-            style={{ background: project.accent + '20', color: project.accent }}
+            className="inline-block px-2 py-0.5 rounded-full text-[10px] font-bold tracking-widest uppercase mb-3 w-fit"
+            style={{ background: project.accent + '18', color: project.accent, border: `1px solid ${project.accent}30` }}
           >
             {project.role}
           </span>
         )}
 
         {/* Description */}
-        <p className="text-neutral-500 dark:text-neutral-400 leading-relaxed mb-6 flex-1 relative z-10 text-sm">
+        <p className="text-neutral-500 dark:text-neutral-400 leading-relaxed mb-5 flex-1 relative z-10 text-sm">
           {project.description}
         </p>
 
         {/* Tech tags */}
-        <div className="flex flex-wrap gap-2 relative z-10">
-          {project.technologies.map(tech => (
+        <div className="flex flex-wrap gap-1.5 relative z-10">
+          {project.technologies.map((tech, i) => (
             <span
               key={tech}
-              className="px-2.5 py-1 text-xs font-medium rounded-full transition-all duration-300"
+              className="px-2.5 py-1 text-xs font-medium rounded-full transition-all duration-300 cursor-default"
               style={{
-                border: '1px solid rgba(128,128,128,0.2)',
-                background: 'transparent',
+                border: '1px solid rgba(128,128,128,0.18)',
+                transitionDelay: hovered ? `${i * 30}ms` : '0ms',
               }}
               onMouseEnter={e => {
-                (e.currentTarget as HTMLSpanElement).style.borderColor = project.accent + '60';
-                (e.currentTarget as HTMLSpanElement).style.color = project.accent;
-                (e.currentTarget as HTMLSpanElement).style.background = project.accent + '10';
+                const el = e.currentTarget as HTMLElement;
+                el.style.borderColor = project.accent + '55';
+                el.style.color = project.accent;
+                el.style.background = project.accent + '12';
+                el.style.transform = 'translateY(-2px)';
               }}
               onMouseLeave={e => {
-                (e.currentTarget as HTMLSpanElement).style.borderColor = '';
-                (e.currentTarget as HTMLSpanElement).style.color = '';
-                (e.currentTarget as HTMLSpanElement).style.background = '';
+                const el = e.currentTarget as HTMLElement;
+                el.style.borderColor = '';
+                el.style.color = '';
+                el.style.background = '';
+                el.style.transform = '';
               }}
             >
               {tech}
@@ -213,35 +235,45 @@ const ProjectCard = ({ project, index, large = false }: {
           ))}
         </div>
       </div>
+
+      <style>{`
+        @keyframes card-burst { from { opacity: 0.8; transform: translate(30%,-30%) scale(0.5); } to { opacity: 0; transform: translate(30%,-30%) scale(2); } }
+        @keyframes dot-pulse { 0%,100% { transform: scale(1); opacity: 1; } 50% { transform: scale(2); opacity: 0.4; } }
+      `}</style>
     </div>
   );
 };
 
-// ── Section ───────────────────────────────────────────────────────────────────
+// ─── Section ──────────────────────────────────────────────────────────────────
 const Projects = () => {
   const { ref: headRef, visible: headVisible } = useScrollReveal(0.1);
 
   return (
     <section id="projects" className="py-24 border-t border-neutral-200 dark:border-neutral-800 relative overflow-hidden">
-      {/* Background gradient */}
-      <div
-        className="absolute inset-0 pointer-events-none"
-        style={{ background: 'radial-gradient(ellipse 80% 40% at 50% 100%, rgba(245,158,11,0.03) 0%, transparent 100%)' }}
+      {/* Background */}
+      <div className="absolute inset-0 pointer-events-none"
+        style={{ background: 'radial-gradient(ellipse 80% 50% at 50% 110%, rgba(245,158,11,0.04), transparent)' }} />
+
+      {/* Animated grid accent */}
+      <div className="absolute inset-0 pointer-events-none opacity-[0.015] dark:opacity-[0.04]"
+        style={{
+          backgroundImage: 'linear-gradient(rgba(245,158,11,0.5) 1px, transparent 1px), linear-gradient(90deg, rgba(245,158,11,0.5) 1px, transparent 1px)',
+          backgroundSize: '60px 60px',
+        }}
       />
 
       <div className="max-w-6xl mx-auto px-6">
         {/* Header */}
         <div
           ref={headRef as React.RefObject<HTMLDivElement>}
-          className={`transition-all duration-700 ${headVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'}`}
+          className={`transition-all duration-700 ${headVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}
         >
           <div className="flex items-center gap-3 mb-12">
             <div className="h-px w-12 bg-amber-500" />
-            <span className="text-amber-500 text-sm font-medium tracking-wider uppercase">Projects</span>
+            <span className="text-amber-500 text-sm font-medium tracking-widest uppercase">Projects</span>
           </div>
-
           <div className="flex flex-col sm:flex-row sm:items-end justify-between mb-16 gap-4">
-            <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold tracking-tight">
+            <h2 className="text-3xl sm:text-4xl md:text-5xl font-black tracking-tight">
               Selected work<span className="text-amber-500">.</span>
             </h2>
             <a
@@ -257,14 +289,14 @@ const Projects = () => {
         </div>
 
         {/* Featured */}
-        <div className="mb-8">
+        <div className="mb-6">
           <ProjectCard project={projects[0]} index={0} large />
         </div>
 
         {/* Grid */}
-        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
-          {projects.slice(1).map((project, i) => (
-            <ProjectCard key={project.title} project={project} index={i + 1} />
+        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
+          {projects.slice(1).map((p, i) => (
+            <ProjectCard key={p.title} project={p} index={i + 1} />
           ))}
         </div>
       </div>
