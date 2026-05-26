@@ -28,9 +28,14 @@ const Navigation = () => {
     return saved !== null ? JSON.parse(saved) : true;
   });
 
+  const [scrollProgress, setScrollProgress] = useState(0);
+
   useEffect(() => {
     const handleScroll = () => {
       setIsScrolled(window.scrollY > 20);
+      const scrollTop = window.scrollY;
+      const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+      setScrollProgress(docHeight > 0 ? (scrollTop / docHeight) * 100 : 0);
     };
     window.addEventListener('scroll', handleScroll, { passive: true });
     return () => window.removeEventListener('scroll', handleScroll);
@@ -101,6 +106,17 @@ const Navigation = () => {
         ? 'bg-stone-50/90 dark:bg-neutral-950/90 backdrop-blur-lg border-b border-neutral-200 dark:border-neutral-800'
         : ''
     }`}>
+      {/* Cinematic scroll progress bar */}
+      <div className="absolute top-0 left-0 right-0 h-[2px] z-10 overflow-hidden">
+        <div
+          className="h-full transition-all duration-150 ease-out"
+          style={{
+            width: `${scrollProgress}%`,
+            background: 'linear-gradient(90deg, #f59e0b, #d97706, #f59e0b)',
+            boxShadow: '0 0 8px rgba(245,158,11,0.8)',
+          }}
+        />
+      </div>
       <div className="max-w-6xl mx-auto px-6">
         <div className="flex items-center justify-between h-16">
           <a href="#home" onClick={(e) => scrollToSection(e, '#home')} className="text-xl font-bold tracking-tight">
