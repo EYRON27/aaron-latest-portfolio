@@ -17,6 +17,7 @@ interface WinTaskbarProps {
   setShowStart: React.Dispatch<React.SetStateAction<boolean>>;
   setShowQuickSettings: React.Dispatch<React.SetStateAction<boolean>>;
   setShowCalendar: React.Dispatch<React.SetStateAction<boolean>>;
+  setShowHiddenIcons: React.Dispatch<React.SetStateAction<boolean>>;
   setIsDark: React.Dispatch<React.SetStateAction<boolean>>;
   closeContextMenu: () => void;
 }
@@ -24,7 +25,7 @@ interface WinTaskbarProps {
 const WinTaskbar = ({
   isDark, taskbarBg, taskText, showStart, currentTime, allApps, activeWindow, isMinimized,
   openWindow, closeWindow, restoreWindow, minimizeWindow,
-  setShowStart, setShowQuickSettings, setShowCalendar, setIsDark, closeContextMenu
+  setShowStart, setShowQuickSettings, setShowCalendar, setShowHiddenIcons, setIsDark, closeContextMenu
 }: WinTaskbarProps) => {
 
   const handleAppClick = (appId: string) => {
@@ -100,7 +101,11 @@ const WinTaskbar = ({
           {isDark ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
         </button>
 
-        <button className={`flex items-center justify-center w-6 h-8 ${isDark ? 'hover:bg-white/10' : 'hover:bg-white/40'} rounded-md transition-colors`}>
+        <button
+          id="hidden-icons-btn"
+          className={`flex items-center justify-center w-6 h-8 ${isDark ? 'hover:bg-white/10' : 'hover:bg-white/40'} rounded-md transition-colors`}
+          onClick={(e) => { e.stopPropagation(); setShowHiddenIcons(prev => !prev); setShowQuickSettings(false); setShowCalendar(false); setShowStart(false); closeContextMenu(); }}
+        >
           <ChevronUp className={`w-4 h-4 ${taskText} opacity-80`} />
         </button>
 

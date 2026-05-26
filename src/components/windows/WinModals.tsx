@@ -1,5 +1,5 @@
 import { useRef } from 'react';
-import { Wifi, Battery, Volume2, Moon, Sun, ChevronUp } from 'lucide-react';
+import { Wifi, Battery, Volume2, Moon, Sun, ChevronUp, MessageSquare, Cloud, ShieldCheck, Gamepad2, Video, Speaker } from 'lucide-react';
 
 interface WinQuickSettingsProps {
   isDark: boolean;
@@ -65,3 +65,41 @@ export const WinCalendar = ({ isDark, calendarRef, currentTime }: WinCalendarPro
     </div>
   </div>
 );
+
+interface WinHiddenIconsProps {
+  isDark: boolean;
+  hiddenIconsRef: React.RefObject<HTMLDivElement>;
+}
+
+export const WinHiddenIcons = ({ isDark, hiddenIconsRef }: WinHiddenIconsProps) => {
+  const icons = [
+    { icon: <MessageSquare className="w-4 h-4 text-white" />, bg: "bg-[#5865F2]", dot: true }, // Discord
+    { icon: <Cloud className="w-4 h-4 text-white" />, bg: "bg-[#00a8ff]", dot: false }, // OneDrive
+    { icon: <Gamepad2 className="w-4 h-4 text-white" />, bg: "bg-[#76b900]", dot: false }, // Nvidia
+    { icon: <Gamepad2 className="w-4 h-4 text-white" />, bg: "bg-[#eb0029]", dot: false }, // Riot/Valorant
+    { icon: <Video className="w-4 h-4 text-white" />, bg: "bg-blue-600", dot: false }, // Random app
+    { icon: <Speaker className="w-4 h-4 text-white" />, bg: "bg-red-500", dot: false }, // Audio manager
+    { icon: <ShieldCheck className="w-4 h-4 text-white" />, bg: "bg-[#0078d4]", dot: false }, // Windows Defender
+  ];
+
+  return (
+    <div
+      ref={hiddenIconsRef}
+      className={`fixed bottom-[60px] right-[140px] z-[60] w-[180px] ${isDark ? 'bg-[#242424]/95 text-white border-white/10' : 'bg-[#f3f3f3]/95 text-neutral-800 border-neutral-300'} backdrop-blur-3xl rounded-xl border shadow-[0_30px_80px_rgba(0,0,0,0.4)] animate-win-open p-3`}
+      onClick={e => e.stopPropagation()}
+    >
+      <div className="grid grid-cols-4 gap-2">
+        {icons.map((item, i) => (
+          <div key={i} className={`w-8 h-8 rounded hover:${isDark ? 'bg-white/10' : 'bg-black/5'} flex items-center justify-center cursor-pointer relative`}>
+            <div className={`w-5 h-5 rounded flex items-center justify-center ${item.bg}`}>
+              {item.icon}
+            </div>
+            {item.dot && (
+              <div className={`absolute top-1.5 right-1 w-2 h-2 bg-red-500 border-2 ${isDark ? 'border-[#242424]' : 'border-[#f3f3f3]'} rounded-full`} />
+            )}
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+};

@@ -11,7 +11,7 @@ import AppTile from '../components/windows/AppTile';
 import WinContextMenu from '../components/windows/WinContextMenu';
 import WinStartMenu from '../components/windows/WinStartMenu';
 import WinTaskbar from '../components/windows/WinTaskbar';
-import { WinQuickSettings, WinCalendar } from '../components/windows/WinModals';
+import { WinQuickSettings, WinCalendar, WinHiddenIcons } from '../components/windows/WinModals';
 
 // ── Window contents ────────────────────────────────────────────────────────
 import WinAboutContent from '../components/windows/WinAboutContent';
@@ -41,8 +41,10 @@ const WindowsView = () => {
   // ── System Tray ──
   const [showQuickSettings, setShowQuickSettings] = useState(false);
   const [showCalendar, setShowCalendar] = useState(false);
+  const [showHiddenIcons, setShowHiddenIcons] = useState(false);
   const quickSettingsRef = useRef<HTMLDivElement>(null);
   const calendarRef = useRef<HTMLDivElement>(null);
+  const hiddenIconsRef = useRef<HTMLDivElement>(null);
 
   // ── Clock ──
   useEffect(() => {
@@ -57,6 +59,7 @@ const WindowsView = () => {
       if (startRef.current && !startRef.current.contains(target) && !target.closest('#start-btn')) setShowStart(false);
       if (quickSettingsRef.current && !quickSettingsRef.current.contains(target) && !target.closest('#quick-settings-btn')) setShowQuickSettings(false);
       if (calendarRef.current && !calendarRef.current.contains(target) && !target.closest('#calendar-btn')) setShowCalendar(false);
+      if (hiddenIconsRef.current && !hiddenIconsRef.current.contains(target) && !target.closest('#hidden-icons-btn')) setShowHiddenIcons(false);
     };
     document.addEventListener('mousedown', handler);
     return () => document.removeEventListener('mousedown', handler);
@@ -248,6 +251,14 @@ const WindowsView = () => {
         />
       )}
 
+      {/* Hidden Icons */}
+      {showHiddenIcons && (
+        <WinHiddenIcons
+          isDark={isDark}
+          hiddenIconsRef={hiddenIconsRef}
+        />
+      )}
+
       {/* Taskbar */}
       <WinTaskbar
         isDark={isDark}
@@ -265,6 +276,7 @@ const WindowsView = () => {
         setShowStart={setShowStart}
         setShowQuickSettings={setShowQuickSettings}
         setShowCalendar={setShowCalendar}
+        setShowHiddenIcons={setShowHiddenIcons}
         setIsDark={setIsDark}
         closeContextMenu={closeContextMenu}
       />
