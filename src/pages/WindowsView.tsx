@@ -257,9 +257,13 @@ const WindowsView = () => {
   useEffect(() => {
     const handler = (e: MouseEvent) => {
       const target = e.target as Node;
-      if (startRef.current && !startRef.current.contains(target)) setShowStart(false);
-      if (quickSettingsRef.current && !quickSettingsRef.current.contains(target)) setShowQuickSettings(false);
-      if (calendarRef.current && !calendarRef.current.contains(target)) setShowCalendar(false);
+      const isStartBtn = (target as HTMLElement).closest('#start-btn');
+      const isQuickSettingsBtn = (target as HTMLElement).closest('#quick-settings-btn');
+      const isCalendarBtn = (target as HTMLElement).closest('#calendar-btn');
+
+      if (startRef.current && !startRef.current.contains(target) && !isStartBtn) setShowStart(false);
+      if (quickSettingsRef.current && !quickSettingsRef.current.contains(target) && !isQuickSettingsBtn) setShowQuickSettings(false);
+      if (calendarRef.current && !calendarRef.current.contains(target) && !isCalendarBtn) setShowCalendar(false);
     };
     document.addEventListener('mousedown', handler);
     return () => document.removeEventListener('mousedown', handler);
@@ -354,46 +358,46 @@ const WindowsView = () => {
           onClick={(e) => { e.stopPropagation(); closeContextMenu(); }}
           onContextMenu={e => { e.preventDefault(); e.stopPropagation(); closeContextMenu(); }}
         >
-          <div className={`flex items-center justify-between px-3 py-1.5 mx-1.5 rounded hover:${isDark ? 'bg-white/10' : 'bg-black/5'} cursor-pointer`}>
+          <div onClick={(e) => { e.stopPropagation(); closeContextMenu(); }} className={`flex items-center justify-between px-3 py-1.5 mx-1.5 rounded hover:${isDark ? 'bg-white/10' : 'bg-black/5'} cursor-pointer`}>
             <div className="flex items-center gap-3"><LayoutGrid className="w-4 h-4 opacity-70"/> View</div>
             <ChevronRight className="w-3.5 h-3.5 opacity-50"/>
           </div>
-          <div className={`flex items-center justify-between px-3 py-1.5 mx-1.5 rounded hover:${isDark ? 'bg-white/10' : 'bg-black/5'} cursor-pointer`}>
+          <div onClick={(e) => { e.stopPropagation(); closeContextMenu(); }} className={`flex items-center justify-between px-3 py-1.5 mx-1.5 rounded hover:${isDark ? 'bg-white/10' : 'bg-black/5'} cursor-pointer`}>
             <div className="flex items-center gap-3"><ArrowUpDown className="w-4 h-4 opacity-70"/> Sort by</div>
             <ChevronRight className="w-3.5 h-3.5 opacity-50"/>
           </div>
-          <div className={`flex items-center gap-3 px-3 py-1.5 mx-1.5 rounded hover:${isDark ? 'bg-white/10' : 'bg-black/5'} cursor-pointer`}>
+          <div onClick={(e) => { e.stopPropagation(); window.location.reload(); }} className={`flex items-center gap-3 px-3 py-1.5 mx-1.5 rounded hover:${isDark ? 'bg-white/10' : 'bg-black/5'} cursor-pointer`}>
             <RefreshCw className="w-4 h-4 opacity-70"/> Refresh
           </div>
           
           <div className={`h-px w-full my-1.5 ${isDark ? 'bg-white/10' : 'bg-black/10'}`} />
           
-          <div className={`flex items-center justify-between px-3 py-1.5 mx-1.5 rounded hover:${isDark ? 'bg-white/10' : 'bg-black/5'} cursor-pointer`}>
+          <div onClick={(e) => { e.stopPropagation(); closeContextMenu(); }} className={`flex items-center justify-between px-3 py-1.5 mx-1.5 rounded hover:${isDark ? 'bg-white/10' : 'bg-black/5'} cursor-pointer`}>
             <div className="flex items-center gap-3"><PlusCircle className="w-4 h-4 opacity-70"/> New</div>
             <ChevronRight className="w-3.5 h-3.5 opacity-50"/>
           </div>
 
           <div className={`h-px w-full my-1.5 ${isDark ? 'bg-white/10' : 'bg-black/10'}`} />
           
-          <div className={`flex items-center gap-3 px-3 py-1.5 mx-1.5 rounded hover:${isDark ? 'bg-white/10' : 'bg-black/5'} cursor-pointer`}>
+          <div onClick={(e) => { e.stopPropagation(); closeContextMenu(); openWindow('about'); }} className={`flex items-center gap-3 px-3 py-1.5 mx-1.5 rounded hover:${isDark ? 'bg-white/10' : 'bg-black/5'} cursor-pointer`}>
             <Monitor className="w-4 h-4 opacity-70 text-blue-500"/> Display settings
           </div>
-          <div className={`flex items-center gap-3 px-3 py-1.5 mx-1.5 rounded hover:${isDark ? 'bg-white/10' : 'bg-black/5'} cursor-pointer`}>
+          <div onClick={(e) => { e.stopPropagation(); setIsDark(!isDark); closeContextMenu(); }} className={`flex items-center gap-3 px-3 py-1.5 mx-1.5 rounded hover:${isDark ? 'bg-white/10' : 'bg-black/5'} cursor-pointer`}>
             <Paintbrush className="w-4 h-4 opacity-70 text-blue-500"/> Personalize
           </div>
 
           <div className={`h-px w-full my-1.5 ${isDark ? 'bg-white/10' : 'bg-black/10'}`} />
           
-          <div className={`flex items-center gap-3 px-3 py-1.5 mx-1.5 rounded hover:${isDark ? 'bg-white/10' : 'bg-black/5'} cursor-pointer`}>
+          <div onClick={(e) => { e.stopPropagation(); closeContextMenu(); openWindow('projects'); }} className={`flex items-center gap-3 px-3 py-1.5 mx-1.5 rounded hover:${isDark ? 'bg-white/10' : 'bg-black/5'} cursor-pointer`}>
             <TerminalSquare className="w-4 h-4 opacity-70"/> Open in Terminal
           </div>
-          <div className={`flex items-center gap-3 px-3 py-1.5 mx-1.5 rounded hover:${isDark ? 'bg-white/10' : 'bg-black/5'} cursor-pointer`}>
+          <div onClick={(e) => { e.stopPropagation(); closeContextMenu(); openWindow('skills'); }} className={`flex items-center gap-3 px-3 py-1.5 mx-1.5 rounded hover:${isDark ? 'bg-white/10' : 'bg-black/5'} cursor-pointer`}>
             <Code2 className="w-4 h-4 opacity-70"/> Open with Zed
           </div>
 
           <div className={`h-px w-full my-1.5 ${isDark ? 'bg-white/10' : 'bg-black/10'}`} />
 
-          <div className={`flex items-center gap-3 px-3 py-1.5 mx-1.5 rounded hover:${isDark ? 'bg-white/10' : 'bg-black/5'} cursor-pointer`}>
+          <div onClick={(e) => { e.stopPropagation(); closeContextMenu(); }} className={`flex items-center gap-3 px-3 py-1.5 mx-1.5 rounded hover:${isDark ? 'bg-white/10' : 'bg-black/5'} cursor-pointer`}>
             <ExternalLink className="w-4 h-4 opacity-70"/> Show more options
           </div>
         </div>
@@ -579,6 +583,7 @@ const WindowsView = () => {
 
           {/* Start button */}
           <button
+            id="start-btn"
             onClick={e => { e.stopPropagation(); setShowStart(s => !s); }}
             className={`w-10 h-10 rounded-md flex items-center justify-center transition-all ${showStart ? (isDark ? 'bg-white/20' : 'bg-white/50') : (isDark ? 'hover:bg-white/10' : 'hover:bg-white/40')}`}
           >
@@ -628,6 +633,7 @@ const WindowsView = () => {
           </button>
 
           <button 
+            id="quick-settings-btn"
             className={`flex items-center gap-1.5 px-2 h-8 ${taskText} opacity-90 ${isDark ? 'hover:bg-white/10' : 'hover:bg-white/40'} rounded-md transition-colors`}
             onClick={(e) => { e.stopPropagation(); setShowQuickSettings(prev => !prev); setShowCalendar(false); setShowStart(false); closeContextMenu(); }}
           >
@@ -637,6 +643,7 @@ const WindowsView = () => {
           </button>
 
           <button 
+            id="calendar-btn"
             className={`flex flex-col items-end justify-center px-2 h-8 leading-none cursor-default ${taskText} ${isDark ? 'hover:bg-white/10' : 'hover:bg-white/40'} rounded-md transition-colors`}
             onClick={(e) => { e.stopPropagation(); setShowCalendar(prev => !prev); setShowQuickSettings(false); setShowStart(false); closeContextMenu(); }}
           >
