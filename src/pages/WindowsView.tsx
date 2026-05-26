@@ -2,7 +2,7 @@ import { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
   User, Code, Briefcase, MessageSquare, Award,
-  X, Minus, Maximize2, Github, Linkedin, FileText, Sun, Moon,
+  X, Minus, Maximize2, Minimize2, Github, Linkedin, FileText,
 } from 'lucide-react';
 
 // ── Windows sub-components ─────────────────────────────────────────────────
@@ -27,6 +27,7 @@ const WindowsView = () => {
   const navigate = useNavigate();
   const [currentTime, setCurrentTime] = useState(new Date());
   const [activeWindow, setActiveWindow] = useState<string | null>(null);
+  const [isMinimized, setIsMinimized] = useState(false);
   const [showStart, setShowStart] = useState(false);
   const [isDark, setIsDark] = useState(true);
   const [windowKey, setWindowKey] = useState(0);
@@ -61,8 +62,15 @@ const WindowsView = () => {
     return () => document.removeEventListener('mousedown', handler);
   }, []);
 
-  const openWindow = (name: string) => { setActiveWindow(name); setWindowKey(k => k + 1); setShowStart(false); };
-  const closeWindow = () => setActiveWindow(null);
+  const openWindow = (name: string) => {
+    setActiveWindow(name);
+    setIsMinimized(false);
+    setWindowKey(k => k + 1);
+    setShowStart(false);
+  };
+  const closeWindow = () => { setActiveWindow(null); setIsMinimized(false); };
+  const minimizeWindow = () => setIsMinimized(true);
+  const restoreWindow = () => setIsMinimized(false);
   const closeContextMenu = () => { if (contextMenu) setContextMenu(null); };
   const handleRefresh = () => { closeContextMenu(); setIsRefreshing(true); setTimeout(() => setIsRefreshing(false), 150); };
 
@@ -163,7 +171,10 @@ const WindowsView = () => {
 
       {/* Window overlay */}
       {activeWin && (
-        <div className="fixed inset-0 z-40 flex items-center justify-center p-6 bg-black/20 backdrop-blur-sm" onClick={closeWindow}>
+        <div
+          className={`fixed inset-0 z-40 flex items-center justify-center p-6 bg-black/20 backdrop-blur-sm transition-all duration-300 ${isMinimized ? 'opacity-0 pointer-events-none scale-75 translate-y-8' : 'opacity-100 scale-100 translate-y-0'}`}
+          onClick={closeWindow}
+        >
           <div
             key={windowKey}
             className={`w-full max-w-5xl animate-win-open rounded-xl overflow-hidden shadow-[0_30px_80px_rgba(0,0,0,0.5)] border ${isDark ? 'bg-[#1f1f1f] border-white/10' : 'bg-[#f3f3f3] border-white/60'}`}
@@ -178,9 +189,26 @@ const WindowsView = () => {
                 <span className={`text-xs font-semibold ${isDark ? 'text-white/80' : 'text-neutral-600'}`}>{activeWin.title}</span>
               </div>
               <div className="flex -mr-2">
-                <button className={`w-11 h-8 flex items-center justify-center transition-colors rounded-sm ${isDark ? 'text-white/50 hover:bg-white/10' : 'text-neutral-500 hover:bg-black/5'}`} onClick={closeWindow}><Minus className="w-3.5 h-3.5" /></button>
-                <button className={`w-11 h-8 flex items-center justify-center transition-colors rounded-sm ${isDark ? 'text-white/50 hover:bg-white/10' : 'text-neutral-500 hover:bg-black/5'}`}><Maximize2 className="w-3 h-3" /></button>
-                <button className={`w-11 h-8 flex items-center justify-center transition-colors hover:bg-red-500 hover:text-white rounded-tr-xl ${isDark ? 'text-white/50' : 'text-neutral-500'}`} onClick={closeWindow}><X className="w-3.5 h-3.5" /></button>
+                <button
+                  className={`w-11 h-8 flex items-center justify-center transition-colors rounded-sm ${isDark ? 'text-white/50 hover:bg-white/10 hover:text-white' : 'text-neutral-500 hover:bg-black/5'}`}
+                  onClick={(e) => { e.stopPropagation(); minimizeWindow(); }}
+                  title="Minimize"
+                >
+                  <Minus className="w-3.5 h-3.5" />
+                </button>
+                <button
+                  className={`w-11 h-8 flex items-center justify-center transition-colors rounded-sm ${isDark ? 'text-white/50 hover:bg-white/10 hover:text-white' : 'text-neutral-500 hover:bg-black/5'}`}
+                  title="Maximize"
+                >
+                  <Maximize2 className="w-3 h-3" />
+                </button>
+                <button
+                  className={`w-11 h-8 flex items-center justify-center transition-colors hover:bg-red-500 hover:text-white rounded-tr-xl ${isDark ? 'text-white/50' : 'text-neutral-500'}`}
+                  onClick={(e) => { e.stopPropagation(); closeWindow(); }}
+                  title="Close"
+                >
+                  <X className="w-3.5 h-3.5" />
+                </button>
               </div>
             </div>
             {/* Content */}
@@ -229,8 +257,11 @@ const WindowsView = () => {
         currentTime={currentTime}
         allApps={allApps}
         activeWindow={activeWindow}
+        isMinimized={isMinimized}
         openWindow={openWindow}
         closeWindow={closeWindow}
+        restoreWindow={restoreWindow}
+        minimizeWindow={minimizeWindow}
         setShowStart={setShowStart}
         setShowQuickSettings={setShowQuickSettings}
         setShowCalendar={setShowCalendar}
