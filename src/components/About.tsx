@@ -155,7 +155,7 @@ const About = () => {
 
   const stats = [
     { number: 9,  suffix: '+', label: 'Projects Built',   delay: 100, color: '#f59e0b' },
-    { number: 11, suffix: '+', label: 'Certifications',   delay: 220, color: '#8b5cf6' },
+    { number: 9, suffix: '+', label: 'Certifications',   delay: 220, color: '#8b5cf6' },
     { number: 9,  suffix: '+', label: 'Courses Taken',    delay: 340, color: '#06b6d4' },
   ];
 

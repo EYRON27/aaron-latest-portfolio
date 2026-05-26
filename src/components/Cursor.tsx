@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from 'react';
 const useIsMobile = () => {
   const [isMobile, setIsMobile] = useState(false);
   useEffect(() => {
-    const check = () => setIsMobile(window.innerWidth < 768 || ('ontouchstart' in window));
+    const check = () => setIsMobile(window.innerWidth < 768 || window.matchMedia('(hover: none) and (pointer: coarse)').matches);
     check();
     window.addEventListener('resize', check);
     return () => window.removeEventListener('resize', check);
