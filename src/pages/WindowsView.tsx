@@ -88,25 +88,25 @@ const WindowsView = () => {
 
   // ── Window definitions ──
   const windows: Record<string, { title: string; icon: React.ReactNode; color: string; content: React.ReactNode }> = {
-    about:     { title: 'About Me',               icon: <User className="w-5 h-5 text-white" />,         color: 'bg-teal-500',   content: <WinAboutContent /> },
-    skills:    { title: 'Skills & Technologies',   icon: <Code className="w-5 h-5 text-white" />,         color: 'bg-purple-500', content: <WinSkillsContent /> },
-    projects:  { title: 'Featured Projects',       icon: <Briefcase className="w-5 h-5 text-white" />,    color: 'bg-orange-500', content: <WinProjectsContent /> },
-    education: { title: 'Education & Certificates',icon: <Award className="w-5 h-5 text-white" />,        color: 'bg-yellow-500', content: <WinEducationContent /> },
-    contact:   { title: 'Get In Touch',            icon: <MessageSquare className="w-5 h-5 text-white" />,color: 'bg-green-500',  content: <WinContactContent /> },
+    about: { title: 'About Me', icon: <User className="w-5 h-5 text-white" />, color: 'bg-teal-500', content: <WinAboutContent /> },
+    skills: { title: 'Skills & Technologies', icon: <Code className="w-5 h-5 text-white" />, color: 'bg-purple-500', content: <WinSkillsContent /> },
+    projects: { title: 'Featured Projects', icon: <Briefcase className="w-5 h-5 text-white" />, color: 'bg-orange-500', content: <WinProjectsContent /> },
+    education: { title: 'Education & Certificates', icon: <Award className="w-5 h-5 text-white" />, color: 'bg-yellow-500', content: <WinEducationContent /> },
+    contact: { title: 'Get In Touch', icon: <MessageSquare className="w-5 h-5 text-white" />, color: 'bg-green-500', content: <WinContactContent /> },
   };
 
   const activeWin = activeWindow ? windows[activeWindow] : null;
 
   // ── Apps list ──
   const allApps = [
-    { id: 'about',    icon: <User className="w-5 h-5 text-white" />,        color: 'bg-teal-500',    label: 'About' },
-    { id: 'skills',   icon: <Code className="w-5 h-5 text-white" />,        color: 'bg-purple-500',  label: 'Skills' },
-    { id: 'projects', icon: <Briefcase className="w-5 h-5 text-white" />,   color: 'bg-orange-500',  label: 'Projects' },
-    { id: 'education',icon: <Award className="w-5 h-5 text-white" />,       color: 'bg-yellow-500',  label: 'Education' },
-    { id: 'contact',  icon: <MessageSquare className="w-5 h-5 text-white" />,color: 'bg-green-500',  label: 'Contact' },
-    { id: 'github',   icon: <Github className="w-5 h-5 text-white" />,      color: 'bg-neutral-800', label: 'GitHub',     href: 'https://github.com/EYRON27' },
-    { id: 'linkedin', icon: <Linkedin className="w-5 h-5 text-white" />,    color: 'bg-blue-600',    label: 'LinkedIn',   href: 'https://linkedin.com' },
-    { id: 'cv',       icon: <FileText className="w-5 h-5 text-white" />,    color: 'bg-red-500',     label: 'Download CV',href: '/CAÑADA CV (3).pdf', download: true },
+    { id: 'about', icon: <User className="w-5 h-5 text-white" />, color: 'bg-teal-500', label: 'About' },
+    { id: 'skills', icon: <Code className="w-5 h-5 text-white" />, color: 'bg-purple-500', label: 'Skills' },
+    { id: 'projects', icon: <Briefcase className="w-5 h-5 text-white" />, color: 'bg-orange-500', label: 'Projects' },
+    { id: 'education', icon: <Award className="w-5 h-5 text-white" />, color: 'bg-yellow-500', label: 'Education' },
+    { id: 'contact', icon: <MessageSquare className="w-5 h-5 text-white" />, color: 'bg-green-500', label: 'Contact' },
+    { id: 'github', icon: <Github className="w-5 h-5 text-white" />, color: 'bg-neutral-800', label: 'GitHub', href: 'https://github.com/EYRON27' },
+    { id: 'linkedin', icon: <Linkedin className="w-5 h-5 text-white" />, color: 'bg-blue-600', label: 'LinkedIn', href: 'https://linkedin.com' },
+    { id: 'cv', icon: <FileText className="w-5 h-5 text-white" />, color: 'bg-red-500', label: 'Download CV', href: '/CAÑADA CV (3).pdf', download: true },
   ];
 
   // ── Theme tokens ──

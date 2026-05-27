@@ -1,5 +1,6 @@
 import { useState, useEffect, useCallback } from 'react';
 import { GraduationCap, Award, Calendar, ChevronLeft, ChevronRight, X } from 'lucide-react';
+import { useScrollReveal } from '../hooks/useScrollReveal';
 
 const Education = () => {
   const [currentSlide, setCurrentSlide] = useState(0);
@@ -80,40 +81,82 @@ const Education = () => {
     };
   }, [lightboxIndex, certifications.length]);
 
+  // Scroll reveal for header
+  const { ref: headRef, visible: headVisible } = useScrollReveal(0.1);
+
   return (
-    <section id="education" className="py-24 border-t border-neutral-200 dark:border-neutral-800">
+    <section id="education" className="py-24 border-t border-neutral-200 dark:border-neutral-800 relative overflow-hidden">
+      {/* Background ambience */}
+      <div className="absolute top-0 left-0 w-[600px] h-[400px] pointer-events-none"
+        style={{ background: 'radial-gradient(ellipse, rgba(245,158,11,0.04) 0%, transparent 70%)', transform: 'translate(-30%, -20%)' }} />
+
       <div className="max-w-6xl mx-auto px-6">
-        <div className="flex items-center gap-3 mb-12">
+        {/* Label */}
+        <div
+          ref={headRef as React.RefObject<HTMLDivElement>}
+          className={`flex items-center gap-3 mb-12 transition-all duration-700 ${headVisible ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-6'}`}
+        >
           <div className="h-px w-12 bg-amber-500"></div>
           <span className="text-amber-500 text-sm font-medium tracking-wider uppercase">Experience</span>
         </div>
 
-        <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold tracking-tight mb-16">
-          Education & certs<span className="text-amber-500">.</span>
+        <h2
+          className={`text-3xl sm:text-4xl md:text-5xl font-bold tracking-tight mb-16 transition-all duration-700 ${headVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}
+          style={{ transitionDelay: '100ms' }}
+        >
+          Education &amp; certs<span className="text-amber-500">.</span>
         </h2>
 
         {/* Timeline */}
         <div className="relative mb-20">
-          <div className="absolute left-[7px] top-2 bottom-2 w-px bg-neutral-200 dark:bg-neutral-800"></div>
+          {/* Animated timeline line */}
+          <div className="absolute left-[7px] top-2 bottom-2 w-px overflow-hidden">
+            <div className="w-full bg-neutral-200 dark:bg-neutral-800 absolute inset-0" />
+            <div
+              className={`w-full bg-gradient-to-b from-amber-500 to-amber-500/20 absolute top-0 transition-all duration-1500 ${headVisible ? 'h-full' : 'h-0'}`}
+              style={{ transitionDelay: '400ms' }}
+            />
+          </div>
           <div className="space-y-12">
             {education.map((edu, index) => (
-              <div key={index} className="relative pl-10">
-                <div className="absolute left-0 top-1.5 w-[15px] h-[15px] rounded-full border-2 border-amber-500 bg-stone-50 dark:bg-neutral-950"></div>
-                <div className="flex items-center gap-2 text-neutral-400 text-sm mb-2">
-                  <Calendar className="w-3.5 h-3.5" />
-                  {edu.period}
+              <div key={index} className="relative pl-10 group">
+                {/* Glowing dot */}
+                <div
+                  className="absolute left-0 top-1.5 w-[15px] h-[15px] rounded-full border-2 border-amber-500 bg-stone-50 dark:bg-neutral-950 transition-all duration-300 group-hover:shadow-[0_0_12px_rgba(245,158,11,0.6)] group-hover:scale-125"
+                />
+                {/* Card */}
+                <div
+                  className={`p-5 rounded-xl border transition-all duration-500 ${headVisible ? 'opacity-100 translate-x-0' : 'opacity-0 translate-x-8'}`}
+                  style={{
+                    transitionDelay: `${200 + index * 150}ms`,
+                    borderColor: 'rgba(128,128,128,0.12)',
+                    background: 'rgba(128,128,128,0.02)',
+                  }}
+                  onMouseEnter={e => {
+                    (e.currentTarget as HTMLDivElement).style.borderColor = 'rgba(245,158,11,0.25)';
+                    (e.currentTarget as HTMLDivElement).style.background = 'rgba(245,158,11,0.03)';
+                  }}
+                  onMouseLeave={e => {
+                    (e.currentTarget as HTMLDivElement).style.borderColor = 'rgba(128,128,128,0.12)';
+                    (e.currentTarget as HTMLDivElement).style.background = 'rgba(128,128,128,0.02)';
+                  }}
+                >
+                  <div className="flex items-center gap-2 text-neutral-400 text-sm mb-2">
+                    <Calendar className="w-3.5 h-3.5" />
+                    {edu.period}
+                  </div>
+                  <h3 className="text-xl sm:text-2xl font-bold mb-1">{edu.degree}</h3>
+                  <p className="text-amber-500 font-medium text-sm mb-3">{edu.institution}</p>
+                  <p className="text-neutral-500 dark:text-neutral-400 mb-4">{edu.description}</p>
+                  <ul className="space-y-1.5">
+                    {edu.highlights.map((h, i) => (
+                      <li key={i} className="flex items-start gap-2 text-neutral-500 dark:text-neutral-400 text-sm">
+                        <span className="w-1 h-1 bg-amber-500 rounded-full mt-2 flex-shrink-0"></span>
+                        {h}
+                      </li>
+                    ))}
+                  </ul>
                 </div>
-                <h3 className="text-xl sm:text-2xl font-bold mb-1">{edu.degree}</h3>
-                <p className="text-amber-500 font-medium text-sm mb-3">{edu.institution}</p>
-                <p className="text-neutral-500 dark:text-neutral-400 mb-4">{edu.description}</p>
-                <ul className="space-y-1.5">
-                  {edu.highlights.map((h, i) => (
-                    <li key={i} className="flex items-start gap-2 text-neutral-500 dark:text-neutral-400 text-sm">
-                      <span className="w-1 h-1 bg-amber-500 rounded-full mt-2 flex-shrink-0"></span>
-                      {h}
-                    </li>
-                  ))}
-                </ul>
               </div>
             ))}
           </div>
