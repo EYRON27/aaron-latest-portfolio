@@ -1,6 +1,6 @@
 const WinAboutContent = () => (
   <div className="p-8 sm:p-10 flex flex-col md:flex-row items-center md:items-start gap-8 min-h-[50vh]">
-    <img src="/ME YARN.jpg" alt="Aaron Cañada" className="w-36 h-36 rounded-3xl object-cover shadow-xl border-4 border-white dark:border-neutral-800 shrink-0 hover:scale-105 transition-transform duration-500" />
+    <img src="/3d-avatar.png" alt="Aaron Cañada" className="w-36 h-36 rounded-3xl object-cover shadow-xl border-4 border-white dark:border-neutral-800 shrink-0 hover:scale-105 transition-transform duration-500" />
     <div className="text-center md:text-left flex-1">
       <div className="flex items-center justify-center md:justify-start gap-2 mb-3">
         <div className="w-2.5 h-2.5 rounded-full bg-green-500 animate-pulse shadow-[0_0_8px_rgba(34,197,94,0.6)]" />

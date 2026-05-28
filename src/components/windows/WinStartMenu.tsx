@@ -82,7 +82,7 @@ const WinStartMenu = ({ isDark, allApps, openWindow, onExit, startRef }: WinStar
       {/* Footer */}
       <div className={`mt-6 pt-4 border-t ${isDark ? 'border-white/10' : 'border-black/10'} flex items-center justify-between -mx-8 px-8 -mb-4 pb-4`}>
         <div className={`flex items-center gap-3 ${isDark ? 'hover:bg-white/10' : 'hover:bg-black/5'} px-3 py-2 -ml-3 rounded-lg transition-colors cursor-pointer`}>
-          <img src="/ME YARN.jpg" alt="Aaron" className="w-8 h-8 rounded-full object-cover" />
+          <img src="/3d-avatar.png" alt="Aaron" className="w-8 h-8 rounded-full object-cover" />
           <span className={`text-xs font-semibold ${isDark ? 'text-white' : 'text-neutral-800'}`}>Aaron Cañada</span>
         </div>
         <button onClick={onExit} className={`p-2.5 ${isDark ? 'hover:bg-white/10' : 'hover:bg-black/5'} rounded-lg transition-colors`} title="Power / Exit Mode">

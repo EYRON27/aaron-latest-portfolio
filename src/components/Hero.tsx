@@ -576,7 +576,7 @@ const Hero = () => {
                   transition: 'transform 0.12s ease-out',
                 }}
               >
-                <img src="/ME YARN.jpg" alt="Aaron M. Cañada" className="w-full h-full object-cover" />
+                <img src="/3d-avatar.png" alt="Aaron M. Cañada" className="w-full h-full object-cover" />
                 {/* Color grade overlay */}
                 <div
                   className="absolute inset-0"
