@@ -132,29 +132,55 @@ const WindowsView = () => {
         </div>
       )}
 
-      {/* Desktop icons */}
-      <div className={`absolute top-4 left-4 flex flex-col gap-2 z-10 ${isRefreshing ? 'hidden' : 'block'}`}>
-        <button
-          onClick={() => navigate('/')}
-          className={`flex flex-col items-center gap-1.5 group rounded-lg hover:bg-white/10 transition-colors ${iconSize === 'small' ? 'w-16 p-1.5' : iconSize === 'large' ? 'w-24 p-3' : 'w-20 p-2'}`}
-        >
-          <div className={`flex items-center justify-center drop-shadow-md group-hover:scale-105 transition-transform ${iconSize === 'small' ? 'w-8 h-8 text-3xl' : iconSize === 'large' ? 'w-16 h-16 text-5xl' : 'w-12 h-12 text-4xl'}`}>
-            🗑️
-          </div>
-          <span className={`text-white font-medium drop-shadow-md text-center leading-tight ${iconSize === 'small' ? 'text-[10px]' : iconSize === 'large' ? 'text-xs' : 'text-[11px]'}`}>Exit Mode</span>
-        </button>
-
-        {allApps.map(app => (
-          <AppTile
-            key={app.id}
-            icon={app.icon}
-            label={app.label}
-            color={app.color}
-            onClick={() => app.href ? window.open(app.href, '_blank') : openWindow(app.id)}
-            isDesktop={true}
-            size={iconSize}
-          />
-        ))}
+      {/* Desktop icons — vertical column on desktop, horizontal strip on mobile */}
+      <div className={`absolute z-10 ${isRefreshing ? 'hidden' : 'block'}`}
+        style={{
+          top: '1rem',
+          left: '1rem',
+        }}
+      >
+        {/* Mobile: horizontal row at top */}
+        <div className="flex sm:hidden flex-row flex-wrap gap-1.5">
+          <button
+            onClick={() => navigate('/')}
+            className={`flex flex-col items-center gap-1 group rounded-lg hover:bg-white/10 transition-colors w-14 p-1.5`}
+          >
+            <div className="w-9 h-9 text-3xl flex items-center justify-center drop-shadow-md group-hover:scale-105 transition-transform">🗑️</div>
+            <span className="text-white font-medium drop-shadow-md text-center leading-tight text-[9px]">Exit</span>
+          </button>
+          {allApps.slice(0, 5).map(app => (
+            <AppTile
+              key={app.id}
+              icon={app.icon}
+              label={app.label}
+              color={app.color}
+              onClick={() => app.href ? window.open(app.href, '_blank') : openWindow(app.id)}
+              isDesktop={true}
+              size="small"
+            />
+          ))}
+        </div>
+        {/* Desktop: vertical column */}
+        <div className="hidden sm:flex flex-col gap-2">
+          <button
+            onClick={() => navigate('/')}
+            className={`flex flex-col items-center gap-1.5 group rounded-lg hover:bg-white/10 transition-colors ${iconSize === 'small' ? 'w-16 p-1.5' : iconSize === 'large' ? 'w-24 p-3' : 'w-20 p-2'}`}
+          >
+            <div className={`flex items-center justify-center drop-shadow-md group-hover:scale-105 transition-transform ${iconSize === 'small' ? 'w-8 h-8 text-3xl' : iconSize === 'large' ? 'w-16 h-16 text-5xl' : 'w-12 h-12 text-4xl'}`}>🗑️</div>
+            <span className={`text-white font-medium drop-shadow-md text-center leading-tight ${iconSize === 'small' ? 'text-[10px]' : iconSize === 'large' ? 'text-xs' : 'text-[11px]'}`}>Exit Mode</span>
+          </button>
+          {allApps.map(app => (
+            <AppTile
+              key={app.id}
+              icon={app.icon}
+              label={app.label}
+              color={app.color}
+              onClick={() => app.href ? window.open(app.href, '_blank') : openWindow(app.id)}
+              isDesktop={true}
+              size={iconSize}
+            />
+          ))}
+        </div>
       </div>
 
       {/* Context menu */}
@@ -172,19 +198,20 @@ const WindowsView = () => {
         />
       )}
 
-      {/* Window overlay */}
+      {/* Window overlay — full-screen on mobile, centered modal on desktop */}
       {activeWin && (
         <div
-          className={`fixed inset-0 z-40 flex items-center justify-center p-6 bg-black/20 backdrop-blur-sm transition-all duration-300 ${isMinimized ? 'opacity-0 pointer-events-none scale-75 translate-y-8' : 'opacity-100 scale-100 translate-y-0'}`}
+          className={`fixed inset-0 z-40 flex items-center justify-center sm:p-6 bg-black/20 backdrop-blur-sm transition-all duration-300 ${isMinimized ? 'opacity-0 pointer-events-none scale-75 translate-y-8' : 'opacity-100 scale-100 translate-y-0'}`}
           onClick={closeWindow}
         >
           <div
             key={windowKey}
-            className={`w-full max-w-5xl animate-win-open rounded-xl overflow-hidden shadow-[0_30px_80px_rgba(0,0,0,0.5)] border ${isDark ? 'bg-[#1f1f1f] border-white/10' : 'bg-[#f3f3f3] border-white/60'}`}
+            className={`w-full animate-win-open rounded-xl overflow-hidden shadow-[0_30px_80px_rgba(0,0,0,0.5)] border sm:max-w-5xl ${isDark ? 'bg-[#1f1f1f] border-white/10' : 'bg-[#f3f3f3] border-white/60'}`}
+            style={{ maxHeight: 'calc(100vh - 64px)', display: 'flex', flexDirection: 'column' }}
             onClick={e => e.stopPropagation()}
           >
             {/* Title bar */}
-            <div className={`flex items-center justify-between px-4 py-2 select-none ${isDark ? 'bg-[#2b2b2b]' : 'bg-[#e8e8e8]'}`}>
+            <div className={`flex items-center justify-between px-4 py-2 select-none shrink-0 ${isDark ? 'bg-[#2b2b2b]' : 'bg-[#e8e8e8]'}`}>
               <div className="flex items-center gap-2.5">
                 <div className={`w-5 h-5 rounded ${activeWin.color} flex items-center justify-center shadow-sm`}>
                   <div className="scale-[0.5]">{activeWin.icon}</div>
@@ -214,8 +241,8 @@ const WindowsView = () => {
                 </button>
               </div>
             </div>
-            {/* Content */}
-            <div className={isDark ? 'bg-[#1a1a1a] text-white' : 'bg-white text-black'}>
+            {/* Content — scrollable */}
+            <div className={`overflow-y-auto flex-1 ${isDark ? 'bg-[#1a1a1a] text-white' : 'bg-white text-black'}`}>
               {activeWin.content}
             </div>
           </div>
