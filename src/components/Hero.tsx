@@ -1,5 +1,6 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState, useCallback, lazy, Suspense } from 'react';
 import { Mail, Github, Linkedin } from 'lucide-react';
+const Avatar3DViewer = lazy(() => import('./Avatar3DViewer'));
 
 // ── Detect mobile / low-end device ────────────────────────────────────────────
 function useIsMobile() {
@@ -398,6 +399,359 @@ function useInView() {
   return { ref, inView };
 }
 
+// ── Particle Canvas (orbiting sparks around avatar) ───────────────────────────
+const AvatarParticles = ({ accent = '#f59e0b' }: { accent?: string }) => {
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d')!;
+    const W = 420, H = 420;
+    canvas.width = W; canvas.height = H;
+    let raf: number;
+    let t = 0;
+
+    type Particle = { angle: number; speed: number; radius: number; size: number; opacity: number; hue: number; layer: number };
+    const particles: Particle[] = Array.from({ length: 55 }, (_, i) => ({
+      angle: (i / 55) * Math.PI * 2 + Math.random() * 0.5,
+      speed: (Math.random() * 0.004 + 0.002) * (Math.random() < 0.5 ? 1 : -1),
+      radius: 130 + Math.random() * 70,
+      size: Math.random() * 2.5 + 0.5,
+      opacity: Math.random() * 0.7 + 0.2,
+      hue: Math.random() < 0.6 ? 36 : 270,
+      layer: Math.random(),
+    }));
+
+    const draw = () => {
+      t += 0.008;
+      ctx.clearRect(0, 0, W, H);
+      const cx = W / 2, cy = H / 2;
+
+      // Outer glow ring
+      const ringGrad = ctx.createRadialGradient(cx, cy, 90, cx, cy, 200);
+      ringGrad.addColorStop(0, 'rgba(0,0,0,0)');
+      ringGrad.addColorStop(0.7, `hsla(36,95%,55%,0.04)`);
+      ringGrad.addColorStop(0.85, `hsla(36,95%,55%,0.10)`);
+      ringGrad.addColorStop(1, 'rgba(0,0,0,0)');
+      ctx.fillStyle = ringGrad;
+      ctx.beginPath(); ctx.arc(cx, cy, 200, 0, Math.PI * 2); ctx.fill();
+
+      // Particles
+      particles.forEach(p => {
+        p.angle += p.speed;
+        const x = cx + Math.cos(p.angle + Math.sin(t * 0.5) * 0.3) * (p.radius + Math.sin(t * 1.2 + p.angle) * 8);
+        const y = cy + Math.sin(p.angle + Math.cos(t * 0.4) * 0.3) * (p.radius * 0.55 + Math.cos(t * 0.9 + p.angle) * 6);
+        const twinkle = Math.abs(Math.sin(t * 2 + p.angle * 3)) * 0.5 + 0.5;
+        ctx.beginPath();
+        ctx.arc(x, y, p.size * twinkle, 0, Math.PI * 2);
+        const col = p.hue === 36 ? `rgba(245,158,11,${p.opacity * twinkle})` : `rgba(167,139,250,${p.opacity * twinkle * 0.8})`;
+        ctx.fillStyle = col;
+        ctx.fill();
+        // glow halo on bigger particles
+        if (p.size > 1.8) {
+          const g = ctx.createRadialGradient(x, y, 0, x, y, p.size * 4);
+          g.addColorStop(0, p.hue === 36 ? `rgba(245,158,11,0.4)` : `rgba(167,139,250,0.3)`);
+          g.addColorStop(1, 'rgba(0,0,0,0)');
+          ctx.fillStyle = g;
+          ctx.beginPath(); ctx.arc(x, y, p.size * 4, 0, Math.PI * 2); ctx.fill();
+        }
+      });
+
+      // Shooting sparks (rare)
+      if (Math.random() < 0.02) {
+        const sa = Math.random() * Math.PI * 2;
+        const sr = 130 + Math.random() * 60;
+        const sx = cx + Math.cos(sa) * sr;
+        const sy = cy + Math.sin(sa) * sr * 0.55;
+        const ex = cx + Math.cos(sa + 0.4) * (sr + 40);
+        const ey = cy + Math.sin(sa + 0.4) * ((sr + 40) * 0.55);
+        const sg = ctx.createLinearGradient(sx, sy, ex, ey);
+        sg.addColorStop(0, 'rgba(245,158,11,0)');
+        sg.addColorStop(0.5, 'rgba(245,158,11,0.9)');
+        sg.addColorStop(1, 'rgba(245,158,11,0)');
+        ctx.strokeStyle = sg;
+        ctx.lineWidth = 1;
+        ctx.beginPath(); ctx.moveTo(sx, sy); ctx.lineTo(ex, ey); ctx.stroke();
+      }
+
+      raf = requestAnimationFrame(draw);
+    };
+
+    draw();
+    return () => cancelAnimationFrame(raf);
+  }, [accent]);
+
+  return (
+    <canvas
+      ref={canvasRef}
+      style={{
+        position: 'absolute',
+        top: '50%', left: '50%',
+        width: 420, height: 420,
+        transform: 'translate(-50%, -50%)',
+        pointerEvents: 'none',
+        zIndex: 0,
+      }}
+    />
+  );
+};
+
+// ── Animated 3D Avatar Scene ──────────────────────────────────────────────────
+const Avatar3D = ({
+  mouse,
+  isMobile,
+  px,
+  py,
+}: {
+  mouse: { x: number; y: number };
+  isMobile: boolean;
+  px: number;
+  py: number;
+}) => {
+  const wrapRef = useRef<HTMLDivElement>(null);
+  const [tilt, setTilt] = useState({ rx: 0, ry: 0 });
+  const [hovered, setHovered] = useState(false);
+
+  // Mouse-reactive tilt for the whole scene
+  const onMove = useCallback((e: React.MouseEvent) => {
+    if (isMobile) return;
+    const el = wrapRef.current; if (!el) return;
+    const r = el.getBoundingClientRect();
+    const x = (e.clientX - r.left) / r.width;
+    const y = (e.clientY - r.top) / r.height;
+    setTilt({ rx: (y - 0.5) * -18, ry: (x - 0.5) * 22 });
+  }, [isMobile]);
+
+  const onLeave = useCallback(() => {
+    setTilt({ rx: 0, ry: 0 });
+    setHovered(false);
+  }, []);
+
+  // Global mouse parallax (gentle, for desktop)
+  const gx = isMobile ? 0 : (mouse.x - 0.5) * 14;
+  const gy = isMobile ? 0 : (mouse.y - 0.5) * 10;
+
+  return (
+    <div
+      ref={wrapRef}
+      style={{
+        position: 'relative',
+        width: isMobile ? 280 : 340,
+        height: isMobile ? 340 : 420,
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+      }}
+      onMouseMove={onMove}
+      onMouseEnter={() => setHovered(true)}
+      onMouseLeave={onLeave}
+    >
+      {/* Particle canvas layer */}
+      {!isMobile && <AvatarParticles />}
+
+      {/* 3D scene wrapper — perspective tilt from mouse */}
+      <div
+        style={{
+          position: 'relative',
+          transformStyle: 'preserve-3d',
+          transform: isMobile
+            ? 'none'
+            : `perspective(900px) rotateX(${tilt.rx}deg) rotateY(${tilt.ry}deg)`,
+          transition: hovered
+            ? 'transform 0.08s ease-out'
+            : 'transform 0.7s cubic-bezier(0.34,1.56,0.64,1)',
+          zIndex: 1,
+        }}
+      >
+        {/* ── Spinning holographic rings ── */}
+        {!isMobile && (
+          <>
+            {/* Outer ring */}
+            <div style={{
+              position: 'absolute',
+              top: '50%', left: '50%',
+              width: 320, height: 320,
+              marginTop: -160, marginLeft: -160,
+              borderRadius: '50%',
+              border: '1px solid transparent',
+              backgroundImage: 'conic-gradient(from 0deg, transparent 0%, rgba(245,158,11,0.8) 20%, transparent 40%, rgba(139,92,246,0.6) 60%, transparent 80%, rgba(245,158,11,0.4) 100%)',
+              backgroundOrigin: 'border-box',
+              WebkitMask: 'linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)',
+              WebkitMaskComposite: 'xor',
+              animation: 'spin-slow 8s linear infinite',
+              opacity: 0.7,
+              zIndex: 2,
+            }} />
+            {/* Inner ring — counter spin */}
+            <div style={{
+              position: 'absolute',
+              top: '50%', left: '50%',
+              width: 240, height: 240,
+              marginTop: -120, marginLeft: -120,
+              borderRadius: '50%',
+              border: '1px solid transparent',
+              backgroundImage: 'conic-gradient(from 90deg, rgba(139,92,246,0.7) 0%, transparent 30%, rgba(245,158,11,0.5) 60%, transparent 80%)',
+              backgroundOrigin: 'border-box',
+              WebkitMask: 'linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)',
+              WebkitMaskComposite: 'xor',
+              animation: 'spin-slow-rev 6s linear infinite',
+              opacity: 0.5,
+              zIndex: 2,
+            }} />
+            {/* Innermost ring — glow */}
+            <div style={{
+              position: 'absolute',
+              top: '50%', left: '50%',
+              width: 190, height: 190,
+              marginTop: -95, marginLeft: -95,
+              borderRadius: '50%',
+              boxShadow: '0 0 0 1px rgba(245,158,11,0.25), 0 0 20px rgba(245,158,11,0.15)',
+              animation: 'ring-pulse 3s ease-in-out infinite',
+              zIndex: 2,
+            }} />
+          </>
+        )}
+
+        {/* ── Deep glow behind avatar ── */}
+        {!isMobile && (
+          <div style={{
+            position: 'absolute',
+            top: '50%', left: '50%',
+            width: 260, height: 260,
+            marginTop: -130, marginLeft: -130,
+            borderRadius: '50%',
+            background: 'radial-gradient(circle, rgba(245,158,11,0.22) 0%, rgba(139,92,246,0.14) 50%, transparent 75%)',
+            filter: 'blur(24px)',
+            animation: 'glow-pulse 4s ease-in-out infinite',
+            zIndex: 0,
+          }} />
+        )}
+
+        {/* ── Avatar image with floating animation ── */}
+        <div
+          style={{
+            position: 'relative',
+            width: isMobile ? 240 : 280,
+            height: isMobile ? 280 : 320,
+            animation: isMobile ? undefined : 'float-avatar 6s ease-in-out infinite',
+            zIndex: 3,
+            filter: 'drop-shadow(0 30px 50px rgba(0,0,0,0.5)) drop-shadow(0 0 30px rgba(245,158,11,0.2))',
+            transform: isMobile ? undefined : `translateX(${gx * -0.3}px) translateY(${gy * -0.3}px)`,
+            transition: 'transform 0.15s ease-out',
+          }}
+        >
+          <img
+            src="/3d-avatar.png"
+            alt="Aaron M. Cañada"
+            style={{
+              width: '100%',
+              height: '100%',
+              objectFit: 'contain',
+              borderRadius: 20,
+            }}
+          />
+
+          {/* Holographic overlay on hover */}
+          <div style={{
+            position: 'absolute',
+            inset: 0,
+            borderRadius: 20,
+            background: 'linear-gradient(135deg, rgba(245,158,11,0.08), rgba(139,92,246,0.06), rgba(6,182,212,0.05))',
+            backgroundSize: '200% 200%',
+            animation: hovered ? 'holo-drift 3s linear infinite' : undefined,
+            pointerEvents: 'none',
+          }} />
+
+          {/* Bottom name card */}
+          <div style={{
+            position: 'absolute',
+            bottom: 8, left: 8, right: 8,
+            background: 'rgba(5,5,15,0.75)',
+            backdropFilter: 'blur(12px)',
+            borderRadius: 12,
+            padding: '8px 12px',
+            border: '1px solid rgba(245,158,11,0.2)',
+          }}>
+            <p style={{ color: '#fff', fontSize: '0.7rem', fontWeight: 600, letterSpacing: '0.08em' }}>Aaron M. Cañada</p>
+            <p style={{ color: '#f59e0b', fontSize: '0.6rem', letterSpacing: '0.12em', textTransform: 'uppercase', marginTop: 2 }}>Developer · Designer</p>
+          </div>
+        </div>
+
+        {/* ── Floating stat badges ── */}
+        {isMobile ? (
+          <div style={{ display: 'flex', gap: 12, justifyContent: 'center', marginTop: 16, position: 'absolute', bottom: -56, left: '50%', transform: 'translateX(-50%)', whiteSpace: 'nowrap' }}>
+            <div style={{ background: 'rgba(10,10,20,0.9)', border: '1px solid rgba(245,158,11,0.35)', borderRadius: 12, padding: '8px 14px', backdropFilter: 'blur(12px)' }}>
+              <div style={{ color: '#f59e0b', fontWeight: 700, fontSize: '1.1rem', lineHeight: 1 }}><CountUp target={9} suffix="+" /></div>
+              <div style={{ color: 'rgba(160,160,180,0.8)', fontSize: '0.65rem', marginTop: 3 }}>Projects</div>
+            </div>
+            <div style={{ background: 'rgba(10,10,20,0.9)', border: '1px solid rgba(139,92,246,0.35)', borderRadius: 12, padding: '8px 14px', backdropFilter: 'blur(12px)' }}>
+              <div style={{ color: '#a78bfa', fontWeight: 700, fontSize: '1.1rem', lineHeight: 1 }}><CountUp target={9} suffix="+" /></div>
+              <div style={{ color: 'rgba(160,160,180,0.8)', fontSize: '0.65rem', marginTop: 3 }}>Certs</div>
+            </div>
+          </div>
+        ) : (
+          <>
+            {/* Left badge */}
+            <div style={{
+              position: 'absolute',
+              left: -36, top: '25%',
+              background: 'rgba(8,8,20,0.9)',
+              backdropFilter: 'blur(14px)',
+              border: '1px solid rgba(245,158,11,0.35)',
+              borderRadius: 14,
+              padding: '10px 14px',
+              boxShadow: '0 8px 32px rgba(0,0,0,0.4), 0 0 12px rgba(245,158,11,0.1)',
+              animation: 'badge-float-l 4s 0.5s ease-in-out infinite',
+              zIndex: 5,
+              minWidth: 72,
+            }}>
+              <div style={{ color: '#f59e0b', fontWeight: 700, fontSize: '1.25rem', lineHeight: 1 }}><CountUp target={9} suffix="+" /></div>
+              <div style={{ color: 'rgba(160,160,180,0.75)', fontSize: '0.65rem', marginTop: 4, letterSpacing: '0.05em' }}>Projects</div>
+            </div>
+            {/* Right badge */}
+            <div style={{
+              position: 'absolute',
+              right: -36, top: '55%',
+              background: 'rgba(8,8,20,0.9)',
+              backdropFilter: 'blur(14px)',
+              border: '1px solid rgba(139,92,246,0.35)',
+              borderRadius: 14,
+              padding: '10px 14px',
+              boxShadow: '0 8px 32px rgba(0,0,0,0.4), 0 0 12px rgba(139,92,246,0.1)',
+              animation: 'badge-float-r 5s 1.2s ease-in-out infinite',
+              zIndex: 5,
+              minWidth: 72,
+            }}>
+              <div style={{ color: '#a78bfa', fontWeight: 700, fontSize: '1.25rem', lineHeight: 1 }}><CountUp target={9} suffix="+" /></div>
+              <div style={{ color: 'rgba(160,160,180,0.75)', fontSize: '0.65rem', marginTop: 4, letterSpacing: '0.05em' }}>Certs</div>
+            </div>
+          </>
+        )}
+      </div>
+
+      {/* ── "Available for hire" floating badge ── */}
+      <div style={{
+        position: 'absolute',
+        bottom: isMobile ? -10 : 4,
+        left: '50%',
+        background: 'linear-gradient(135deg, #f59e0b, #d97706)',
+        borderRadius: 999,
+        padding: '7px 18px',
+        fontSize: '0.72rem',
+        fontWeight: 700,
+        color: '#fff',
+        whiteSpace: 'nowrap',
+        boxShadow: '0 6px 28px rgba(245,158,11,0.55), 0 2px 0 rgba(255,255,255,0.15) inset',
+        animation: isMobile ? undefined : 'bottom-badge 3.5s 0.8s ease-in-out infinite',
+        zIndex: 10,
+      }}>
+        ✦ Available for hire
+      </div>
+    </div>
+  );
+};
+
 // ── HERO ─────────────────────────────────────────────────────────────────────
 const Hero = () => {
   const isMobile = useIsMobile();
@@ -582,115 +936,33 @@ const Hero = () => {
             </div>
           </div>
 
-          {/* ── Right: Photo ── */}
+          {/* ── Right: 3D Model Viewer ── */}
           <div
-            className={`lg:col-span-2 flex justify-center lg:justify-end transition-all duration-1000 ${mounted ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-16'}`}
+            className={`lg:col-span-2 flex flex-col items-center gap-4 transition-all duration-1000 ${mounted ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-16'}`}
             style={{ transitionDelay: '400ms' }}
           >
-            <Tilt3D className="relative" disabled={isMobile}>
-              {/* Spinning conic glow ring — desktop only */}
-              {!isMobile && (
-                <div
-                  className="absolute -inset-6 rounded-3xl opacity-50"
-                  style={{
-                    background: 'conic-gradient(from 0deg, transparent 0%, rgba(245,158,11,0.4) 25%, transparent 50%, rgba(139,92,246,0.25) 75%, transparent 100%)',
-                    animation: 'spin-slow 10s linear infinite',
-                    filter: 'blur(12px)',
-                  }}
-                />
-              )}
-              {/* Pulsing glow bg — desktop only */}
-              {!isMobile && (
-                <div
-                  className="absolute -inset-3 rounded-3xl"
-                  style={{
-                    background: 'radial-gradient(ellipse, rgba(245,158,11,0.35), rgba(139,92,246,0.2), transparent)',
-                    filter: 'blur(20px)',
-                    animation: 'glow-pulse 4s ease-in-out infinite',
-                  }}
-                />
-              )}
-
-              {/* Photo frame */}
-              <div
-                className="relative w-64 h-72 sm:w-72 sm:h-80 md:w-80 md:h-96 rounded-2xl overflow-hidden"
-                style={{
-                  border: '1px solid rgba(245,158,11,0.35)',
-                  boxShadow: '0 30px 80px rgba(0,0,0,0.45), inset 0 1px 0 rgba(255,255,255,0.1)',
-                  transform: `translateX(${px * -0.5}px) translateY(${py * -0.5}px)`,
-                  transition: 'transform 0.12s ease-out',
-                }}
-              >
-                <img src="/3d-avatar.png" alt="Aaron M. Cañada" className="w-full h-full object-cover" />
-                {/* Color grade overlay */}
-                <div
-                  className="absolute inset-0"
-                  style={{ background: 'linear-gradient(160deg, rgba(245,158,11,0.04) 0%, transparent 40%, rgba(139,92,246,0.06) 100%)' }}
-                />
-                {/* Bottom name */}
-                <div className="absolute bottom-0 left-0 right-0 p-4" style={{ background: 'linear-gradient(to top, rgba(0,0,0,0.75), transparent)' }}>
-                  <p className="text-white text-xs font-medium tracking-wider">Aaron M. Cañada</p>
-                  <p className="text-amber-400 text-[10px] tracking-widest uppercase mt-0.5">Developer · Designer</p>
-                </div>
+            <Suspense fallback={
+              <div style={{ width: isMobile ? 300 : 420, height: isMobile ? 300 : 420, display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'rgba(10,10,20,0.5)', borderRadius: 20, border: '1px solid rgba(245,158,11,0.15)' }}>
+                <div style={{ color: '#f59e0b', fontSize: '0.7rem', letterSpacing: '0.15em', opacity: 0.6 }}>LOADING 3D MODEL…</div>
               </div>
-
-              {/* Stats floating badges — desktop: floating outside card; mobile: below card */}
-              {isMobile ? (
-                <div className="flex gap-3 justify-center mt-3">
-                  <div className="px-3 py-2 rounded-xl text-xs font-semibold text-white"
-                    style={{ background: 'rgba(10,10,20,0.85)', border: '1px solid rgba(245,158,11,0.3)' }}>
-                    <div className="text-amber-400 font-bold text-lg leading-none"><CountUp target={9} suffix="+" /></div>
-                    <div className="text-neutral-400 text-[10px] mt-0.5">Projects</div>
-                  </div>
-                  <div className="px-3 py-2 rounded-xl text-xs font-semibold text-white"
-                    style={{ background: 'rgba(10,10,20,0.85)', border: '1px solid rgba(139,92,246,0.3)' }}>
-                    <div className="text-purple-400 font-bold text-lg leading-none"><CountUp target={11} suffix="+" /></div>
-                    <div className="text-neutral-400 text-[10px] mt-0.5">Certs</div>
-                  </div>
-                </div>
-              ) : (
-                <>
-                  <div
-                    className="absolute -left-8 top-1/4 px-3 py-2 rounded-xl text-xs font-semibold text-white"
-                    style={{
-                      background: 'rgba(10,10,20,0.85)',
-                      backdropFilter: 'blur(12px)',
-                      border: '1px solid rgba(245,158,11,0.3)',
-                      boxShadow: '0 8px 24px rgba(0,0,0,0.3)',
-                      animation: 'float-soft 4s 0.5s ease-in-out infinite',
-                    }}
-                  >
-                    <div className="text-amber-400 font-bold text-lg leading-none"><CountUp target={9} suffix="+" /></div>
-                    <div className="text-neutral-400 text-[10px] mt-0.5">Projects</div>
-                  </div>
-                  <div
-                    className="absolute -right-8 top-2/3 px-3 py-2 rounded-xl text-xs font-semibold text-white"
-                    style={{
-                      background: 'rgba(10,10,20,0.85)',
-                      backdropFilter: 'blur(12px)',
-                      border: '1px solid rgba(139,92,246,0.3)',
-                      boxShadow: '0 8px 24px rgba(0,0,0,0.3)',
-                      animation: 'float-soft 5s 1.2s ease-in-out infinite',
-                    }}
-                  >
-                    <div className="text-purple-400 font-bold text-lg leading-none"><CountUp target={11} suffix="+" /></div>
-                    <div className="text-neutral-400 text-[10px] mt-0.5">Certs</div>
-                  </div>
-                </>
-              )}
-
-              {/* "Available for hire" bottom badge */}
-              <div
-                className="absolute -bottom-4 left-1/2 -translate-x-1/2 px-4 py-2 rounded-full text-xs font-bold text-white whitespace-nowrap"
-                style={{
-                  background: 'linear-gradient(135deg, #f59e0b, #d97706)',
-                  boxShadow: '0 6px 24px rgba(245,158,11,0.5)',
-                  animation: isMobile ? undefined : 'float-soft 3.5s 0.8s ease-in-out infinite',
-                }}
-              >
-                ✦ Available for hire
+            }>
+              <Avatar3DViewer size={isMobile ? 300 : 420} />
+            </Suspense>
+            {/* Floating stat badges below the viewer */}
+            <div style={{ display: 'flex', gap: 12, alignItems: 'stretch' }}>
+              <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', background: 'rgba(10,10,20,0.9)', border: '1px solid rgba(245,158,11,0.35)', borderRadius: 12, padding: '8px 16px', backdropFilter: 'blur(12px)', textAlign: 'center' }}>
+                <div style={{ color: '#f59e0b', fontWeight: 700, fontSize: '1.15rem', lineHeight: 1 }}><CountUp target={9} suffix="+" /></div>
+                <div style={{ color: 'rgba(160,160,180,0.75)', fontSize: '0.65rem', marginTop: 4 }}>Projects</div>
               </div>
-            </Tilt3D>
+              <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', background: 'rgba(10,10,20,0.9)', border: '1px solid rgba(139,92,246,0.35)', borderRadius: 12, padding: '8px 16px', backdropFilter: 'blur(12px)', textAlign: 'center' }}>
+                <div style={{ color: '#a78bfa', fontWeight: 700, fontSize: '1.15rem', lineHeight: 1 }}><CountUp target={9} suffix="+" /></div>
+                <div style={{ color: 'rgba(160,160,180,0.75)', fontSize: '0.65rem', marginTop: 4 }}>Certs</div>
+              </div>
+              <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', background: 'linear-gradient(135deg, #f59e0b, #d97706)', borderRadius: 12, padding: '8px 20px', textAlign: 'center', boxShadow: '0 4px 20px rgba(245,158,11,0.4)' }}>
+                <div style={{ color: '#fff', fontWeight: 700, fontSize: '0.75rem', letterSpacing: '0.05em', whiteSpace: 'nowrap', lineHeight: 1 }}>✦ Available</div>
+                <div style={{ color: 'rgba(255,255,255,0.9)', fontSize: '0.65rem', marginTop: 4, whiteSpace: 'nowrap', lineHeight: 1 }}>for hire</div>
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -708,14 +980,23 @@ const Hero = () => {
       </button>
 
       <style>{`
-        @keyframes expand-line { from { width: 0; opacity: 0; } to { opacity: 1; } }
-        @keyframes fade-in-up  { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: none; } }
+        @keyframes expand-line   { from { width: 0; opacity: 0; } to { opacity: 1; } }
+        @keyframes fade-in-up    { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: none; } }
         @keyframes fade-in-scale { from { opacity: 0; transform: scale(0.85); } to { opacity: 1; transform: scale(1); } }
-        @keyframes spin-slow   { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
-        @keyframes glow-pulse  { 0%,100% { opacity: 0.6; } 50% { opacity: 1; } }
-        @keyframes float-soft  { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-9px); } }
-        @keyframes scroll-dot  { 0% { transform: translateY(-8px); opacity: 0; } 50% { opacity: 1; } 100% { transform: translateY(8px); opacity: 0; } }
-        @keyframes caret-blink { 0%,100% { opacity: 1; } 50% { opacity: 0; } }
+        @keyframes spin-slow     { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+        @keyframes spin-slow-rev { from { transform: rotate(0deg); } to { transform: rotate(-360deg); } }
+        @keyframes glow-pulse    { 0%,100% { opacity: 0.6; transform: scale(1); } 50% { opacity: 1; transform: scale(1.06); } }
+        @keyframes float-avatar  { 0%,100% { transform: translateY(0px) rotateZ(0deg); } 33% { transform: translateY(-14px) rotateZ(0.5deg); } 66% { transform: translateY(-7px) rotateZ(-0.5deg); } }
+        @keyframes float-soft    { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-9px); } }
+        @keyframes scroll-dot    { 0% { transform: translateY(-8px); opacity: 0; } 50% { opacity: 1; } 100% { transform: translateY(8px); opacity: 0; } }
+        @keyframes caret-blink   { 0%,100% { opacity: 1; } 50% { opacity: 0; } }
+        @keyframes ring-pulse    { 0%,100% { opacity: 0.5; transform: scale(1); } 50% { opacity: 0.9; transform: scale(1.04); } }
+        @keyframes holo-drift    { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
+        @keyframes badge-float-l { 0%,100% { transform: translateY(0) translateX(0); } 50% { transform: translateY(-8px) translateX(3px); } }
+        @keyframes badge-float-r { 0%,100% { transform: translateY(0) translateX(0); } 50% { transform: translateY(-10px) translateX(-3px); } }
+        @keyframes spark-orbit   { from { transform: rotate(0deg) translateX(120px) rotate(0deg); } to { transform: rotate(360deg) translateX(120px) rotate(-360deg); } }
+        @keyframes spark-orbit2  { from { transform: rotate(180deg) translateX(140px) rotate(-180deg); } to { transform: rotate(540deg) translateX(140px) rotate(-540deg); } }
+        @keyframes bottom-badge  { 0%,100% { transform: translateX(-50%) translateY(0); } 50% { transform: translateX(-50%) translateY(-6px); } }
       `}</style>
     </section>
   );
