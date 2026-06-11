@@ -1,5 +1,5 @@
 import { useRef, useState } from 'react';
-import { ExternalLink, Github, ArrowUpRight } from 'lucide-react';
+import { ExternalLink, Github, ArrowUpRight, Globe } from 'lucide-react';
 import { useScrollReveal } from '../hooks/useScrollReveal';
 
 const projects = [
@@ -57,8 +57,111 @@ const projects = [
   },
 ];
 
-// ─── 3D Magnetic Card ─────────────────────────────────────────────────────────
-const ProjectCard = ({ project, index, large = false }: { project: typeof projects[0]; index: number; large?: boolean }) => {
+// ─── Floating Preview ──────────────────────────────────────────────────────────
+interface FloatingPreviewProps {
+  url: string;
+  accent: string;
+  visible: boolean;
+  x: number;
+  y: number;
+}
+
+const FloatingPreview = ({ url, accent, visible, x, y }: FloatingPreviewProps) => (
+  <div
+    style={{
+      position: 'fixed',
+      left: x,
+      top: y,
+      width: 320,
+      pointerEvents: 'none',
+      zIndex: 9999,
+      borderRadius: 12,
+      overflow: 'hidden',
+      border: `1px solid ${accent}50`,
+      background: '#0d0d0d',
+      opacity: visible ? 1 : 0,
+      transform: visible
+        ? 'translate(-50%, calc(-100% - 18px)) scale(1) rotateX(0deg)'
+        : 'translate(-50%, calc(-100% - 18px)) scale(0.88) rotateX(10deg)',
+      boxShadow: visible
+        ? `0 28px 70px rgba(0,0,0,0.5), 0 0 0 1px ${accent}28, 0 0 50px ${accent}12`
+        : 'none',
+      transition: 'opacity 0.3s cubic-bezier(0.22,1,0.36,1), transform 0.3s cubic-bezier(0.22,1,0.36,1), box-shadow 0.3s ease',
+      transformOrigin: 'bottom center',
+    }}
+  >
+    {/* Browser chrome bar */}
+    <div style={{
+      display: 'flex', alignItems: 'center', gap: 6,
+      padding: '6px 10px',
+      background: accent + '15',
+      borderBottom: '1px solid rgba(255,255,255,0.06)',
+    }}>
+      <div style={{ display: 'flex', gap: 4, flexShrink: 0 }}>
+        {['#ff5f57','#febc2e','#28c840'].map(c => (
+          <span key={c} style={{ width: 8, height: 8, borderRadius: '50%', background: c, display: 'block' }} />
+        ))}
+      </div>
+      <div style={{
+        display: 'flex', alignItems: 'center', gap: 4,
+        background: 'rgba(255,255,255,0.06)', borderRadius: 4,
+        padding: '2px 8px', flex: 1, overflow: 'hidden',
+        fontSize: '0.6rem', color: 'rgba(200,200,200,0.5)', whiteSpace: 'nowrap',
+      }}>
+        <Globe size={9} style={{ color: accent, flexShrink: 0 }} />
+        <span style={{ overflow: 'hidden', textOverflow: 'ellipsis' }}>
+          {url.replace(/^https?:\/\//, '').replace(/\/$/, '')}
+        </span>
+      </div>
+    </div>
+
+    {/* iFrame screenshot */}
+    <div style={{ position: 'relative', width: '100%', height: 190, overflow: 'hidden', background: '#111' }}>
+      <iframe
+        src={url}
+        title="site preview"
+        scrolling="no"
+        style={{
+          width: '200%', height: '380px',
+          border: 'none',
+          transform: 'scale(0.5)',
+          transformOrigin: 'top left',
+          pointerEvents: 'none',
+          display: 'block',
+        }}
+        loading="lazy"
+      />
+      {/* Fade overlay at bottom */}
+      <div style={{
+        position: 'absolute', inset: 0, pointerEvents: 'none',
+        background: `linear-gradient(to top, ${accent}20 0%, transparent 60%)`,
+      }} />
+    </div>
+
+    {/* Bottom accent glow line */}
+    <div style={{
+      height: 2,
+      background: `linear-gradient(90deg, transparent, ${accent}, transparent)`,
+    }} />
+  </div>
+);
+
+// ─── 3D Magnetic Card ──────────────────────────────────────────────────────────
+const ProjectCard = ({
+  project,
+  index,
+  large = false,
+  onMouseMove,
+  onMouseEnter,
+  onMouseLeave,
+}: {
+  project: typeof projects[0];
+  index: number;
+  large?: boolean;
+  onMouseMove: (e: React.MouseEvent, p: typeof projects[0]) => void;
+  onMouseEnter: (p: typeof projects[0]) => void;
+  onMouseLeave: () => void;
+}) => {
   const { ref, visible } = useScrollReveal(0.08);
   const cardRef = useRef<HTMLDivElement>(null);
   const [tilt, setTilt] = useState({ x: 0, y: 0, shine: { x: 50, y: 50 } });
@@ -71,17 +174,20 @@ const ProjectCard = ({ project, index, large = false }: { project: typeof projec
     const x = (e.clientX - r.left) / r.width;
     const y = (e.clientY - r.top) / r.height;
     setTilt({ x: (y - 0.5) * -12, y: (x - 0.5) * 12, shine: { x: x * 100, y: y * 100 } });
+    onMouseMove(e, project);
   };
 
   const onEnter = () => {
     setHovered(true);
     setExploding(true);
     setTimeout(() => setExploding(false), 600);
+    onMouseEnter(project);
   };
 
   const onLeave = () => {
     setHovered(false);
     setTilt({ x: 0, y: 0, shine: { x: 50, y: 50 } });
+    onMouseLeave();
   };
 
   return (
@@ -141,7 +247,7 @@ const ProjectCard = ({ project, index, large = false }: { project: typeof projec
           }}
         />
 
-        {/* Pulsing dot in corner */}
+        {/* Pulsing dot */}
         <div
           className="absolute top-4 right-4 w-1.5 h-1.5 rounded-full"
           style={{
@@ -190,7 +296,7 @@ const ProjectCard = ({ project, index, large = false }: { project: typeof projec
           {project.title}
         </h3>
 
-        {/* Role */}
+        {/* Role badge */}
         {project.role && (
           <span
             className="inline-block px-2 py-0.5 rounded-full text-[10px] font-bold tracking-widest uppercase mb-3 w-fit"
@@ -248,8 +354,41 @@ const ProjectCard = ({ project, index, large = false }: { project: typeof projec
 const Projects = () => {
   const { ref: headRef, visible: headVisible } = useScrollReveal(0.1);
 
+  // Floating preview state
+  const [preview, setPreview] = useState<{
+    project: typeof projects[0] | null;
+    x: number;
+    y: number;
+    visible: boolean;
+  }>({ project: null, x: 0, y: 0, visible: false });
+
+  const handleMouseMove = (e: React.MouseEvent, project: typeof projects[0]) => {
+    setPreview(prev => ({ ...prev, x: e.clientX, y: e.clientY, project }));
+  };
+
+  const handleMouseEnter = (project: typeof projects[0]) => {
+    if (!project.demo) return;
+    setPreview(prev => ({ ...prev, project, visible: true }));
+  };
+
+  const handleMouseLeave = () => {
+    setPreview(prev => ({ ...prev, visible: false }));
+  };
+
   return (
     <section id="projects" className="py-24 border-t border-neutral-200 dark:border-neutral-800 relative overflow-hidden">
+
+      {/* Floating preview portal */}
+      {preview.project?.demo && (
+        <FloatingPreview
+          url={preview.project.demo}
+          accent={preview.project.accent}
+          visible={preview.visible}
+          x={preview.x}
+          y={preview.y}
+        />
+      )}
+
       {/* Background */}
       <div className="absolute inset-0 pointer-events-none"
         style={{ background: 'radial-gradient(ellipse 80% 50% at 50% 110%, rgba(245,158,11,0.04), transparent)' }} />
@@ -288,15 +427,29 @@ const Projects = () => {
           </div>
         </div>
 
-        {/* Featured */}
+        {/* Featured card */}
         <div className="mb-6">
-          <ProjectCard project={projects[0]} index={0} large />
+          <ProjectCard
+            project={projects[0]}
+            index={0}
+            large
+            onMouseMove={handleMouseMove}
+            onMouseEnter={handleMouseEnter}
+            onMouseLeave={handleMouseLeave}
+          />
         </div>
 
         {/* Grid */}
         <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
           {projects.slice(1).map((p, i) => (
-            <ProjectCard key={p.title} project={p} index={i + 1} />
+            <ProjectCard
+              key={p.title}
+              project={p}
+              index={i + 1}
+              onMouseMove={handleMouseMove}
+              onMouseEnter={handleMouseEnter}
+              onMouseLeave={handleMouseLeave}
+            />
           ))}
         </div>
       </div>
