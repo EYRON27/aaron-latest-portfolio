@@ -686,7 +686,7 @@ const Avatar3D = ({
               <div style={{ color: 'rgba(160,160,180,0.8)', fontSize: '0.65rem', marginTop: 3 }}>Projects</div>
             </div>
             <div style={{ background: 'rgba(10,10,20,0.9)', border: '1px solid rgba(139,92,246,0.35)', borderRadius: 12, padding: '8px 14px', backdropFilter: 'blur(12px)' }}>
-              <div style={{ color: '#a78bfa', fontWeight: 700, fontSize: '1.1rem', lineHeight: 1 }}><CountUp target={11} suffix="+" /></div>
+              <div style={{ color: '#a78bfa', fontWeight: 700, fontSize: '1.1rem', lineHeight: 1 }}><CountUp target={9} suffix="+" /></div>
               <div style={{ color: 'rgba(160,160,180,0.8)', fontSize: '0.65rem', marginTop: 3 }}>Certs</div>
             </div>
           </div>
@@ -723,7 +723,7 @@ const Avatar3D = ({
               zIndex: 5,
               minWidth: 72,
             }}>
-              <div style={{ color: '#a78bfa', fontWeight: 700, fontSize: '1.25rem', lineHeight: 1 }}><CountUp target={11} suffix="+" /></div>
+              <div style={{ color: '#a78bfa', fontWeight: 700, fontSize: '1.25rem', lineHeight: 1 }}><CountUp target={9} suffix="+" /></div>
               <div style={{ color: 'rgba(160,160,180,0.75)', fontSize: '0.65rem', marginTop: 4, letterSpacing: '0.05em' }}>Certs</div>
             </div>
           </>
@@ -949,18 +949,18 @@ const Hero = () => {
               <Avatar3DViewer size={isMobile ? 300 : 420} />
             </Suspense>
             {/* Floating stat badges below the viewer */}
-            <div style={{ display: 'flex', gap: 12 }}>
-              <div style={{ background: 'rgba(10,10,20,0.9)', border: '1px solid rgba(245,158,11,0.35)', borderRadius: 12, padding: '8px 16px', backdropFilter: 'blur(12px)', textAlign: 'center' }}>
+            <div style={{ display: 'flex', gap: 12, alignItems: 'stretch' }}>
+              <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', background: 'rgba(10,10,20,0.9)', border: '1px solid rgba(245,158,11,0.35)', borderRadius: 12, padding: '8px 16px', backdropFilter: 'blur(12px)', textAlign: 'center' }}>
                 <div style={{ color: '#f59e0b', fontWeight: 700, fontSize: '1.15rem', lineHeight: 1 }}><CountUp target={9} suffix="+" /></div>
                 <div style={{ color: 'rgba(160,160,180,0.75)', fontSize: '0.65rem', marginTop: 4 }}>Projects</div>
               </div>
-              <div style={{ background: 'rgba(10,10,20,0.9)', border: '1px solid rgba(139,92,246,0.35)', borderRadius: 12, padding: '8px 16px', backdropFilter: 'blur(12px)', textAlign: 'center' }}>
-                <div style={{ color: '#a78bfa', fontWeight: 700, fontSize: '1.15rem', lineHeight: 1 }}><CountUp target={11} suffix="+" /></div>
+              <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', background: 'rgba(10,10,20,0.9)', border: '1px solid rgba(139,92,246,0.35)', borderRadius: 12, padding: '8px 16px', backdropFilter: 'blur(12px)', textAlign: 'center' }}>
+                <div style={{ color: '#a78bfa', fontWeight: 700, fontSize: '1.15rem', lineHeight: 1 }}><CountUp target={9} suffix="+" /></div>
                 <div style={{ color: 'rgba(160,160,180,0.75)', fontSize: '0.65rem', marginTop: 4 }}>Certs</div>
               </div>
-              <div style={{ background: 'linear-gradient(135deg, #f59e0b, #d97706)', borderRadius: 12, padding: '8px 16px', textAlign: 'center', boxShadow: '0 4px 20px rgba(245,158,11,0.4)' }}>
-                <div style={{ color: '#fff', fontWeight: 700, fontSize: '0.65rem', letterSpacing: '0.05em' }}>✦ Available</div>
-                <div style={{ color: 'rgba(255,255,255,0.8)', fontSize: '0.6rem', marginTop: 2 }}>for hire</div>
+              <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', background: 'linear-gradient(135deg, #f59e0b, #d97706)', borderRadius: 12, padding: '8px 20px', textAlign: 'center', boxShadow: '0 4px 20px rgba(245,158,11,0.4)' }}>
+                <div style={{ color: '#fff', fontWeight: 700, fontSize: '0.75rem', letterSpacing: '0.05em', whiteSpace: 'nowrap', lineHeight: 1 }}>✦ Available</div>
+                <div style={{ color: 'rgba(255,255,255,0.9)', fontSize: '0.65rem', marginTop: 4, whiteSpace: 'nowrap', lineHeight: 1 }}>for hire</div>
               </div>
             </div>
           </div>
