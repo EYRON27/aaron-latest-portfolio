@@ -42,8 +42,8 @@ const WinTaskbar = ({
   return (
     <div className={`fixed bottom-0 inset-x-0 h-[48px] ${taskbarBg} flex items-center justify-between z-50 transition-all duration-500 px-3`}>
 
-      {/* Left: weather */}
-      <div className={`flex items-center gap-2 ${taskText} hover:bg-white/10 px-2 py-1 rounded-md cursor-pointer transition-colors`}>
+      {/* Left: weather — hidden on mobile */}
+      <div className={`hidden sm:flex items-center gap-2 ${taskText} hover:bg-white/10 px-2 py-1 rounded-md cursor-pointer transition-colors`}>
         <span className="text-xl">☀️</span>
         <div className="leading-tight flex flex-col">
           <span className="font-semibold text-[11px]">32°C</span>
@@ -61,15 +61,16 @@ const WinTaskbar = ({
           <WinLogo size={22} />
         </button>
 
+        {/* Search bar — hidden on mobile */}
         <button
           onClick={e => { e.stopPropagation(); setShowStart(true); }}
-          className={`flex items-center gap-2 px-4 h-9 rounded-full text-[12px] transition-all ${isDark ? 'bg-white/10 text-white/60 hover:bg-white/15 border border-white/10' : 'bg-white text-neutral-500 hover:bg-neutral-50 shadow-sm border border-neutral-200'}`}
+          className={`hidden sm:flex items-center gap-2 px-4 h-9 rounded-full text-[12px] transition-all ${isDark ? 'bg-white/10 text-white/60 hover:bg-white/15 border border-white/10' : 'bg-white text-neutral-500 hover:bg-neutral-50 shadow-sm border border-neutral-200'}`}
           style={{ minWidth: '180px' }}
         >
           <Search className="w-4 h-4 text-blue-500" /> <span className="opacity-80 font-medium">Search</span>
         </button>
 
-        <div className={`w-px h-6 mx-1 ${isDark ? 'bg-white/10' : 'bg-neutral-300/50'}`} />
+        <div className={`hidden sm:block w-px h-6 mx-1 ${isDark ? 'bg-white/10' : 'bg-neutral-300/50'}`} />
 
         {allApps.slice(0, 5).map(app => {
           const isActive = activeWindow === app.id;
@@ -101,17 +102,19 @@ const WinTaskbar = ({
           {isDark ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
         </button>
 
+        {/* Hidden icons — desktop only */}
         <button
           id="hidden-icons-btn"
-          className={`flex items-center justify-center w-6 h-8 ${isDark ? 'hover:bg-white/10' : 'hover:bg-white/40'} rounded-md transition-colors`}
+          className={`hidden sm:flex items-center justify-center w-6 h-8 ${isDark ? 'hover:bg-white/10' : 'hover:bg-white/40'} rounded-md transition-colors`}
           onClick={(e) => { e.stopPropagation(); setShowHiddenIcons(prev => !prev); setShowQuickSettings(false); setShowCalendar(false); setShowStart(false); closeContextMenu(); }}
         >
           <ChevronUp className={`w-4 h-4 ${taskText} opacity-80`} />
         </button>
 
+        {/* Quick settings — desktop only */}
         <button
           id="quick-settings-btn"
-          className={`flex items-center gap-1.5 px-2 h-8 ${taskText} opacity-90 ${isDark ? 'hover:bg-white/10' : 'hover:bg-white/40'} rounded-md transition-colors`}
+          className={`hidden sm:flex items-center gap-1.5 px-2 h-8 ${taskText} opacity-90 ${isDark ? 'hover:bg-white/10' : 'hover:bg-white/40'} rounded-md transition-colors`}
           onClick={(e) => { e.stopPropagation(); setShowQuickSettings(prev => !prev); setShowCalendar(false); setShowStart(false); closeContextMenu(); }}
         >
           <Wifi className="w-4 h-4" />
@@ -127,7 +130,7 @@ const WinTaskbar = ({
           <span className="text-[11px] font-medium mb-1">
             {currentTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
           </span>
-          <span className="text-[10px] opacity-80">
+          <span className="hidden sm:inline text-[10px] opacity-80">
             {currentTime.toLocaleDateString([], { month: 'numeric', day: 'numeric', year: 'numeric' })}
           </span>
         </button>

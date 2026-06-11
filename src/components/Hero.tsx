@@ -1,7 +1,22 @@
 import { useEffect, useRef, useState } from 'react';
 import { Mail, Github, Linkedin } from 'lucide-react';
 
-// ── Canvas: starfield + grid + aurora ─────────────────────────────────────────
+// ── Detect mobile / low-end device ────────────────────────────────────────────
+function useIsMobile() {
+  const [isMobile, setIsMobile] = useState(() => {
+    if (typeof window === 'undefined') return false;
+    return window.matchMedia('(max-width: 768px), (pointer: coarse)').matches;
+  });
+  useEffect(() => {
+    const mq = window.matchMedia('(max-width: 768px), (pointer: coarse)');
+    const handler = (e: MediaQueryListEvent) => setIsMobile(e.matches);
+    mq.addEventListener('change', handler);
+    return () => mq.removeEventListener('change', handler);
+  }, []);
+  return isMobile;
+}
+
+// ── Canvas: starfield + grid + aurora (desktop only) ──────────────────────────
 const CinematicCanvas = () => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
@@ -13,7 +28,7 @@ const CinematicCanvas = () => {
     let w = 0, h = 0, t = 0;
 
     type Star = { x: number; y: number; r: number; speed: number; opacity: number; tOff: number };
-    type Orb  = { x: number; y: number; vx: number; vy: number; r: number; hue: number; alpha: number };
+    type Orb = { x: number; y: number; vx: number; vy: number; r: number; hue: number; alpha: number };
     let stars: Star[] = [];
     let orbs: Orb[] = [];
 
@@ -131,6 +146,17 @@ const CinematicCanvas = () => {
   return <canvas ref={canvasRef} className="absolute inset-0 w-full h-full pointer-events-none" style={{ zIndex: 0 }} />;
 };
 
+// ── Mobile static background (replaces canvas on phones) ──────────────────────
+const MobileBackground = () => (
+  <div
+    className="absolute inset-0 pointer-events-none"
+    style={{
+      background: 'radial-gradient(ellipse 80% 60% at 20% 30%, rgba(245,158,11,0.08) 0%, transparent 60%), radial-gradient(ellipse 60% 50% at 80% 70%, rgba(139,92,246,0.07) 0%, transparent 60%)',
+      zIndex: 0,
+    }}
+  />
+);
+
 // ── Text Scramble / Glitch effect ─────────────────────────────────────────────
 const CHARS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%&*';
 const ScrambleText = ({ text, trigger }: { text: string; trigger: boolean }) => {
@@ -159,11 +185,12 @@ const ScrambleText = ({ text, trigger }: { text: string; trigger: boolean }) => 
   return <>{displayed}</>;
 };
 
-// ── Glitch text (random glitch flicker) ─────────────────────────────────────
-const GlitchText = ({ children }: { children: string }) => {
+// ── Glitch text (random glitch flicker, desktop only) ───────────────────────
+const GlitchText = ({ children, disabled = false }: { children: string; disabled?: boolean }) => {
   const [glitching, setGlitching] = useState(false);
 
   useEffect(() => {
+    if (disabled) return;
     const scheduleGlitch = () => {
       const delay = 2000 + Math.random() * 5000;
       return setTimeout(() => {
@@ -176,12 +203,12 @@ const GlitchText = ({ children }: { children: string }) => {
     };
     const t = scheduleGlitch();
     return () => clearTimeout(t);
-  }, []);
+  }, [disabled]);
 
   return (
     <span className="relative inline-block">
       {children}
-      {glitching && (
+      {glitching && !disabled && (
         <>
           <span
             className="absolute inset-0 text-amber-400"
@@ -209,20 +236,22 @@ const GlitchText = ({ children }: { children: string }) => {
   );
 };
 
-// ── Magnetic Button ───────────────────────────────────────────────────────────
+// ── Magnetic Button (desktop) / plain wrapper (mobile) ────────────────────────
 const MagneticButton = ({
-  children, className, style, onClick, href,
+  children, className, style, onClick, href, disabled = false,
 }: {
   children: React.ReactNode;
   className?: string;
   style?: React.CSSProperties;
   onClick?: React.MouseEventHandler;
   href?: string;
+  disabled?: boolean;
 }) => {
   const ref = useRef<HTMLDivElement>(null);
   const [offset, setOffset] = useState({ x: 0, y: 0 });
 
   const onMove = (e: React.MouseEvent) => {
+    if (disabled) return;
     const el = ref.current;
     if (!el) return;
     const rect = el.getBoundingClientRect();
@@ -244,8 +273,8 @@ const MagneticButton = ({
         className={className}
         style={{
           ...style,
-          transform: `translate(${offset.x}px, ${offset.y}px)`,
-          transition: offset.x === 0 ? 'transform 0.5s cubic-bezier(0.34,1.56,0.64,1)' : 'transform 0.1s ease-out',
+          transform: disabled ? undefined : `translate(${offset.x}px, ${offset.y}px)`,
+          transition: disabled ? undefined : (offset.x === 0 ? 'transform 0.5s cubic-bezier(0.34,1.56,0.64,1)' : 'transform 0.1s ease-out'),
           display: 'inline-flex',
         }}
       >
@@ -288,13 +317,14 @@ const TypewriterText = ({ words }: { words: string[] }) => {
   );
 };
 
-// ── 3D Tilt Photo Card ────────────────────────────────────────────────────────
-const Tilt3D = ({ children, className = '', intensity = 10 }: { children: React.ReactNode; className?: string; intensity?: number }) => {
+// ── 3D Tilt Photo Card (disabled on mobile for performance) ───────────────────
+const Tilt3D = ({ children, className = '', intensity = 10, disabled = false }: { children: React.ReactNode; className?: string; intensity?: number; disabled?: boolean }) => {
   const ref = useRef<HTMLDivElement>(null);
   const [s, setS] = useState({ rx: 0, ry: 0, sx: 50, sy: 50 });
   const [h, setH] = useState(false);
 
   const onMove = (e: React.MouseEvent) => {
+    if (disabled) return;
     const el = ref.current!;
     const r = el.getBoundingClientRect();
     const x = (e.clientX - r.left) / r.width;
@@ -308,25 +338,27 @@ const Tilt3D = ({ children, className = '', intensity = 10 }: { children: React.
     <div
       ref={ref}
       className={className}
-      style={{
+      style={disabled ? undefined : {
         transform: `perspective(900px) rotateX(${s.rx}deg) rotateY(${s.ry}deg) scale(${h ? 1.03 : 1})`,
         transition: h ? 'transform 0.1s ease-out' : 'transform 0.6s cubic-bezier(0.34,1.56,0.64,1)',
         transformStyle: 'preserve-3d',
       }}
       onMouseMove={onMove}
-      onMouseEnter={() => setH(true)}
+      onMouseEnter={() => !disabled && setH(true)}
       onMouseLeave={onLeave}
     >
       {children}
       {/* Specular shine */}
-      <div
-        className="absolute inset-0 rounded-2xl pointer-events-none"
-        style={{
-          background: `radial-gradient(circle at ${s.sx}% ${s.sy}%, rgba(255,255,255,0.12), transparent 65%)`,
-          opacity: h ? 1 : 0,
-          transition: 'opacity 0.3s',
-        }}
-      />
+      {!disabled && (
+        <div
+          className="absolute inset-0 rounded-2xl pointer-events-none"
+          style={{
+            background: `radial-gradient(circle at ${s.sx}% ${s.sy}%, rgba(255,255,255,0.12), transparent 65%)`,
+            opacity: h ? 1 : 0,
+            transition: 'opacity 0.3s',
+          }}
+        />
+      )}
     </div>
   );
 };
@@ -368,6 +400,7 @@ function useInView() {
 
 // ── HERO ─────────────────────────────────────────────────────────────────────
 const Hero = () => {
+  const isMobile = useIsMobile();
   const [mouse, setMouse] = useState({ x: 0.5, y: 0.5 });
   const [mounted, setMounted] = useState(false);
   const [scramble, setScramble] = useState(false);
@@ -375,40 +408,46 @@ const Hero = () => {
   useEffect(() => {
     setMounted(true);
     setTimeout(() => setScramble(true), 600);
+    if (isMobile) return; // skip mouse tracking on mobile
     const m = (e: MouseEvent) => setMouse({ x: e.clientX / window.innerWidth, y: e.clientY / window.innerHeight });
     window.addEventListener('mousemove', m, { passive: true });
     return () => window.removeEventListener('mousemove', m);
-  }, []);
+  }, [isMobile]);
 
-  const px = (mouse.x - 0.5) * 22;
-  const py = (mouse.y - 0.5) * 14;
+  // Zero-out parallax on mobile
+  const px = isMobile ? 0 : (mouse.x - 0.5) * 22;
+  const py = isMobile ? 0 : (mouse.y - 0.5) * 14;
 
   return (
     <section id="home" className="min-h-screen flex items-center relative overflow-hidden">
-      <CinematicCanvas />
+      {/* Canvas only on desktop; static gradient on mobile */}
+      {isMobile ? <MobileBackground /> : <CinematicCanvas />}
 
-      {/* Mouse orb */}
-      <div
-        className="absolute w-[800px] h-[800px] rounded-full pointer-events-none"
-        style={{
-          background: 'radial-gradient(circle, rgba(245,158,11,0.07) 0%, transparent 65%)',
-          left: `${mouse.x * 100}%`, top: `${mouse.y * 100}%`,
-          transform: 'translate(-50%,-50%)',
-          transition: 'left 1s ease-out, top 1s ease-out',
-          zIndex: 1,
-        }}
-      />
-      {/* Secondary purple orb */}
-      <div
-        className="absolute w-[500px] h-[500px] rounded-full pointer-events-none"
-        style={{
-          background: 'radial-gradient(circle, rgba(139,92,246,0.06) 0%, transparent 65%)',
-          left: `${(1 - mouse.x) * 100}%`, top: `${(1 - mouse.y) * 100}%`,
-          transform: 'translate(-50%,-50%)',
-          transition: 'left 1.4s ease-out, top 1.4s ease-out',
-          zIndex: 1,
-        }}
-      />
+      {/* Mouse orbs — desktop only */}
+      {!isMobile && (
+        <>
+          <div
+            className="absolute w-[800px] h-[800px] rounded-full pointer-events-none"
+            style={{
+              background: 'radial-gradient(circle, rgba(245,158,11,0.07) 0%, transparent 65%)',
+              left: `${mouse.x * 100}%`, top: `${mouse.y * 100}%`,
+              transform: 'translate(-50%,-50%)',
+              transition: 'left 1s ease-out, top 1s ease-out',
+              zIndex: 1,
+            }}
+          />
+          <div
+            className="absolute w-[500px] h-[500px] rounded-full pointer-events-none"
+            style={{
+              background: 'radial-gradient(circle, rgba(139,92,246,0.06) 0%, transparent 65%)',
+              left: `${(1 - mouse.x) * 100}%`, top: `${(1 - mouse.y) * 100}%`,
+              transform: 'translate(-50%,-50%)',
+              transition: 'left 1.4s ease-out, top 1.4s ease-out',
+              zIndex: 1,
+            }}
+          />
+        </>
+      )}
 
       <div className="max-w-6xl mx-auto px-6 py-32 w-full relative" style={{ zIndex: 2 }}>
         <div className="grid lg:grid-cols-5 gap-12 lg:gap-16 items-center">
@@ -438,14 +477,14 @@ const Hero = () => {
                   textShadow: '0 0 80px rgba(245,158,11,0.18)',
                 }}
               >
-                <GlitchText>Aaron M.</GlitchText>
+                <GlitchText disabled={isMobile}>Aaron M.</GlitchText>
               </h1>
               <h1
                 className={`text-5xl sm:text-6xl md:text-7xl lg:text-[5.5rem] font-black tracking-tighter leading-[0.88] transition-all duration-700 ${mounted ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}
                 style={{
                   transitionDelay: '320ms',
-                  transform: `perspective(1200px) translateX(${px * 0.4}px) translateY(${py * 0.4}px)`,
-                  transition: 'transform 0.1s linear, opacity 0.7s, translate 0.7s',
+                  transform: isMobile ? undefined : `perspective(1200px) translateX(${px * 0.4}px) translateY(${py * 0.4}px)`,
+                  transition: isMobile ? 'opacity 0.7s' : 'transform 0.1s linear, opacity 0.7s, translate 0.7s',
                   textShadow: '0 0 100px rgba(245,158,11,0.22)',
                 }}
               >
@@ -487,18 +526,20 @@ const Hero = () => {
             >
               <MagneticButton
                 href="#contact"
+                disabled={isMobile}
                 onClick={e => { (e as any).preventDefault(); document.querySelector('#contact')?.scrollIntoView({ behavior: 'smooth' }); }}
                 className="group relative items-center gap-2 px-8 py-4 rounded-full font-semibold text-sm overflow-hidden text-white"
                 style={{ background: 'linear-gradient(135deg, #f59e0b, #d97706)', boxShadow: '0 0 30px rgba(245,158,11,0.3)' }}
               >
                 <div className="absolute inset-0 bg-white/0 group-hover:bg-white/15 transition-colors duration-300 rounded-full" />
-                <div className="absolute -inset-1 bg-amber-500/20 blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-full" />
+                {!isMobile && <div className="absolute -inset-1 bg-amber-500/20 blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-full" />}
                 <Mail className="w-4 h-4 relative z-10 group-hover:rotate-12 transition-transform duration-300" />
                 <span className="relative z-10">Get In Touch</span>
               </MagneticButton>
 
               <MagneticButton
                 href="#projects"
+                disabled={isMobile}
                 onClick={e => { (e as any).preventDefault(); document.querySelector('#projects')?.scrollIntoView({ behavior: 'smooth' }); }}
                 className="group relative items-center gap-2 px-8 py-4 rounded-full font-semibold text-sm overflow-hidden border border-neutral-300 dark:border-neutral-700 hover:border-amber-500/60 transition-all duration-300"
               >
@@ -516,7 +557,7 @@ const Hero = () => {
                 { href: 'https://github.com/EYRON27', Icon: Github, label: 'GitHub' },
                 { href: 'https://www.linkedin.com/in/ca%C3%B1ada-aaron-m-352572352/', Icon: Linkedin, label: 'LinkedIn' },
               ].map(({ href, Icon, label }) => (
-                <MagneticButton key={label} href={href}>
+                <MagneticButton key={label} href={href} disabled={isMobile}>
                   <a
                     href={href} target="_blank" rel="noopener noreferrer"
                     className="group relative p-3 rounded-full text-neutral-400 hover:text-amber-500 transition-colors duration-300"
@@ -546,25 +587,29 @@ const Hero = () => {
             className={`lg:col-span-2 flex justify-center lg:justify-end transition-all duration-1000 ${mounted ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-16'}`}
             style={{ transitionDelay: '400ms' }}
           >
-            <Tilt3D className="relative">
-              {/* Spinning conic glow ring */}
-              <div
-                className="absolute -inset-6 rounded-3xl opacity-50"
-                style={{
-                  background: 'conic-gradient(from 0deg, transparent 0%, rgba(245,158,11,0.4) 25%, transparent 50%, rgba(139,92,246,0.25) 75%, transparent 100%)',
-                  animation: 'spin-slow 10s linear infinite',
-                  filter: 'blur(12px)',
-                }}
-              />
-              {/* Pulsing glow bg */}
-              <div
-                className="absolute -inset-3 rounded-3xl"
-                style={{
-                  background: 'radial-gradient(ellipse, rgba(245,158,11,0.35), rgba(139,92,246,0.2), transparent)',
-                  filter: 'blur(20px)',
-                  animation: 'glow-pulse 4s ease-in-out infinite',
-                }}
-              />
+            <Tilt3D className="relative" disabled={isMobile}>
+              {/* Spinning conic glow ring — desktop only */}
+              {!isMobile && (
+                <div
+                  className="absolute -inset-6 rounded-3xl opacity-50"
+                  style={{
+                    background: 'conic-gradient(from 0deg, transparent 0%, rgba(245,158,11,0.4) 25%, transparent 50%, rgba(139,92,246,0.25) 75%, transparent 100%)',
+                    animation: 'spin-slow 10s linear infinite',
+                    filter: 'blur(12px)',
+                  }}
+                />
+              )}
+              {/* Pulsing glow bg — desktop only */}
+              {!isMobile && (
+                <div
+                  className="absolute -inset-3 rounded-3xl"
+                  style={{
+                    background: 'radial-gradient(ellipse, rgba(245,158,11,0.35), rgba(139,92,246,0.2), transparent)',
+                    filter: 'blur(20px)',
+                    animation: 'glow-pulse 4s ease-in-out infinite',
+                  }}
+                />
+              )}
 
               {/* Photo frame */}
               <div
@@ -576,7 +621,7 @@ const Hero = () => {
                   transition: 'transform 0.12s ease-out',
                 }}
               >
-                <img src="/aaron.jpg" alt="Aaron M. Cañada" className="w-full h-full object-cover" />
+                <img src="/3d-avatar.png" alt="Aaron M. Cañada" className="w-full h-full object-cover" />
                 {/* Color grade overlay */}
                 <div
                   className="absolute inset-0"
@@ -589,34 +634,50 @@ const Hero = () => {
                 </div>
               </div>
 
-              {/* Stats floating badges */}
-              <div
-                className="absolute -left-8 top-1/4 px-3 py-2 rounded-xl text-xs font-semibold text-white"
-                style={{
-                  background: 'rgba(10,10,20,0.85)',
-                  backdropFilter: 'blur(12px)',
-                  border: '1px solid rgba(245,158,11,0.3)',
-                  boxShadow: '0 8px 24px rgba(0,0,0,0.3)',
-                  animation: 'float-soft 4s 0.5s ease-in-out infinite',
-                }}
-              >
-                <div className="text-amber-400 font-bold text-lg leading-none"><CountUp target={9} suffix="+" /></div>
-                <div className="text-neutral-400 text-[10px] mt-0.5">Projects</div>
-              </div>
-
-              <div
-                className="absolute -right-8 top-2/3 px-3 py-2 rounded-xl text-xs font-semibold text-white"
-                style={{
-                  background: 'rgba(10,10,20,0.85)',
-                  backdropFilter: 'blur(12px)',
-                  border: '1px solid rgba(139,92,246,0.3)',
-                  boxShadow: '0 8px 24px rgba(0,0,0,0.3)',
-                  animation: 'float-soft 5s 1.2s ease-in-out infinite',
-                }}
-              >
-                <div className="text-purple-400 font-bold text-lg leading-none"><CountUp target={11} suffix="+" /></div>
-                <div className="text-neutral-400 text-[10px] mt-0.5">Certs</div>
-              </div>
+              {/* Stats floating badges — desktop: floating outside card; mobile: below card */}
+              {isMobile ? (
+                <div className="flex gap-3 justify-center mt-3">
+                  <div className="px-3 py-2 rounded-xl text-xs font-semibold text-white"
+                    style={{ background: 'rgba(10,10,20,0.85)', border: '1px solid rgba(245,158,11,0.3)' }}>
+                    <div className="text-amber-400 font-bold text-lg leading-none"><CountUp target={9} suffix="+" /></div>
+                    <div className="text-neutral-400 text-[10px] mt-0.5">Projects</div>
+                  </div>
+                  <div className="px-3 py-2 rounded-xl text-xs font-semibold text-white"
+                    style={{ background: 'rgba(10,10,20,0.85)', border: '1px solid rgba(139,92,246,0.3)' }}>
+                    <div className="text-purple-400 font-bold text-lg leading-none"><CountUp target={11} suffix="+" /></div>
+                    <div className="text-neutral-400 text-[10px] mt-0.5">Certs</div>
+                  </div>
+                </div>
+              ) : (
+                <>
+                  <div
+                    className="absolute -left-8 top-1/4 px-3 py-2 rounded-xl text-xs font-semibold text-white"
+                    style={{
+                      background: 'rgba(10,10,20,0.85)',
+                      backdropFilter: 'blur(12px)',
+                      border: '1px solid rgba(245,158,11,0.3)',
+                      boxShadow: '0 8px 24px rgba(0,0,0,0.3)',
+                      animation: 'float-soft 4s 0.5s ease-in-out infinite',
+                    }}
+                  >
+                    <div className="text-amber-400 font-bold text-lg leading-none"><CountUp target={9} suffix="+" /></div>
+                    <div className="text-neutral-400 text-[10px] mt-0.5">Projects</div>
+                  </div>
+                  <div
+                    className="absolute -right-8 top-2/3 px-3 py-2 rounded-xl text-xs font-semibold text-white"
+                    style={{
+                      background: 'rgba(10,10,20,0.85)',
+                      backdropFilter: 'blur(12px)',
+                      border: '1px solid rgba(139,92,246,0.3)',
+                      boxShadow: '0 8px 24px rgba(0,0,0,0.3)',
+                      animation: 'float-soft 5s 1.2s ease-in-out infinite',
+                    }}
+                  >
+                    <div className="text-purple-400 font-bold text-lg leading-none"><CountUp target={11} suffix="+" /></div>
+                    <div className="text-neutral-400 text-[10px] mt-0.5">Certs</div>
+                  </div>
+                </>
+              )}
 
               {/* "Available for hire" bottom badge */}
               <div
@@ -624,7 +685,7 @@ const Hero = () => {
                 style={{
                   background: 'linear-gradient(135deg, #f59e0b, #d97706)',
                   boxShadow: '0 6px 24px rgba(245,158,11,0.5)',
-                  animation: 'float-soft 3.5s 0.8s ease-in-out infinite',
+                  animation: isMobile ? undefined : 'float-soft 3.5s 0.8s ease-in-out infinite',
                 }}
               >
                 ✦ Available for hire
