@@ -33,40 +33,52 @@ function Laptop() {
   });
 
   return (
-    // Laptop base center at world [0.08, 0.803, 0.25]
-    // Rotated 180deg so keyboard faces character
-    <group position={[0.08, 0.803, 0.25]} rotation={[0, Math.PI, 0]}>
+    // Rotated 180deg so keyboard faces character (-Z)
+    <group position={[0.08, 0.798, 0.15]} rotation={[0, Math.PI, 0]}>
       {/* Base / keyboard deck */}
-      <RoundedBox args={[0.62, 0.034, 0.44]} radius={0.013} smoothness={4}>
+      <RoundedBox args={[0.56, 0.024, 0.4]} radius={0.01} smoothness={4}>
         <meshStandardMaterial color={C.laptop} roughness={0.2} metalness={0.9} />
       </RoundedBox>
+      {/* Trackpad */}
+      <mesh position={[0, 0.0125, 0.12]}>
+        <boxGeometry args={[0.16, 0.002, 0.1]} />
+        <meshStandardMaterial color="#999" roughness={0.6} metalness={0.4} />
+      </mesh>
       {/* Keys area */}
-      <RoundedBox args={[0.5, 0.004, 0.3]} radius={0.008} position={[0, 0.019, 0.04]}>
-        <meshStandardMaterial color="#aaa" roughness={0.7} metalness={0.2} />
+      <RoundedBox args={[0.48, 0.004, 0.22]} radius={0.008} position={[0, 0.012, -0.06]}>
+        <meshStandardMaterial color="#444" roughness={0.7} metalness={0.2} />
       </RoundedBox>
-      {/* Screen — opens TOWARD camera (+Z), so character behind desk sees it */}
-      {/*  hinge is at local Z = -0.22 (back of base, closest to camera side) */}
-      <group position={[0, 0.017, -0.22]} rotation={[Math.PI * 0.36, 0, 0]}>
-        <RoundedBox args={[0.62, 0.42, 0.024]} radius={0.016} smoothness={4}>
-          <meshStandardMaterial color={C.laptop} roughness={0.2} metalness={0.9} />
-        </RoundedBox>
-        {/* Display face */}
-        <mesh position={[0, 0, 0.014]}>
-          <planeGeometry args={[0.54, 0.35]} />
-          <meshStandardMaterial ref={glowRef} color={C.screen} emissive={C.screenGlow}
-            emissiveIntensity={1} roughness={0.05} />
-        </mesh>
-        {/* Code lines on screen */}
-        {([-0.11, -0.065, -0.02, 0.025, 0.07, 0.115] as number[]).map((y, i) => (
-          <mesh key={i} position={[i%2===0 ? -0.07 : -0.02, y, 0.015]}>
-            <planeGeometry args={[i%3===0 ? 0.16 : i%3===1 ? 0.26 : 0.2, 0.011]} />
-            <meshStandardMaterial
-              color={i%2===0 ? '#f59e0b' : '#a5b4fc'}
-              emissive={i%2===0 ? '#f59e0b' : '#a5b4fc'}
-              emissiveIntensity={1.1} transparent opacity={0.9}
-            />
+      
+      {/* Screen hinge at back edge: Y = 0.012 (half base height), Z = -0.2 (half base depth) */}
+      <group position={[0, 0.012, -0.2]} rotation={[Math.PI * 0.12, 0, 0]}>
+        {/* Shift screen up so bottom edge is at the hinge (Y=0.19 = half screen height) */}
+        <group position={[0, 0.19, 0]}>
+          <RoundedBox args={[0.56, 0.38, 0.016]} radius={0.01} smoothness={4}>
+            <meshStandardMaterial color={C.laptop} roughness={0.2} metalness={0.9} />
+          </RoundedBox>
+          {/* Display face - front of screen */}
+          <mesh position={[0, 0, 0.009]}>
+            <planeGeometry args={[0.52, 0.34]} />
+            <meshStandardMaterial ref={glowRef} color={C.screen} emissive={C.screenGlow}
+              emissiveIntensity={1} roughness={0.05} />
           </mesh>
-        ))}
+          {/* Apple logo on the back */}
+          <mesh position={[0, 0, -0.009]} rotation={[0, Math.PI, 0]}>
+            <circleGeometry args={[0.03, 16]} />
+            <meshStandardMaterial color="#fff" emissive="#fff" emissiveIntensity={0.8} />
+          </mesh>
+          {/* Code lines on screen */}
+          {([-0.11, -0.065, -0.02, 0.025, 0.07, 0.115] as number[]).map((y, i) => (
+            <mesh key={i} position={[i%2===0 ? -0.07 : -0.02, y, 0.01]}>
+              <planeGeometry args={[i%3===0 ? 0.16 : i%3===1 ? 0.26 : 0.2, 0.011]} />
+              <meshStandardMaterial
+                color={i%2===0 ? '#f59e0b' : '#a5b4fc'}
+                emissive={i%2===0 ? '#f59e0b' : '#a5b4fc'}
+                emissiveIntensity={1.1} transparent opacity={0.9}
+              />
+            </mesh>
+          ))}
+        </group>
       </group>
     </group>
   );
@@ -183,8 +195,8 @@ function Character() {
   useFrame(s => {
     const t = s.clock.elapsedTime;
     // Typing animation
-    if (leftHandRef.current)  leftHandRef.current.position.y = 0.775 + Math.sin(t * 7.5) * 0.014;
-    if (rightHandRef.current) rightHandRef.current.position.y = 0.775 + Math.sin(t * 7.5 + Math.PI) * 0.014;
+    if (leftHandRef.current)  leftHandRef.current.position.y = 0.815 + Math.sin(t * 7.5) * 0.014;
+    if (rightHandRef.current) rightHandRef.current.position.y = 0.815 + Math.sin(t * 7.5 + Math.PI) * 0.014;
     // Head subtle movement
     if (headRef.current) {
       headRef.current.rotation.x = -0.05 + Math.sin(t * 0.7) * 0.035;
@@ -252,7 +264,7 @@ function Character() {
         <capsuleGeometry args={[0.036,0.18,4,8]}/>
         <meshStandardMaterial color={C.shirt} roughness={0.8}/></mesh>
       {/* Forearm + hand — at keyboard height */}
-      <group ref={leftHandRef} position={[0.225, 0.775, 0.2]}>
+      <group ref={leftHandRef} position={[0.225, 0.815, 0.2]}>
         <mesh rotation={[1.45, 0, 0.08]}>
           <capsuleGeometry args={[0.029,0.13,4,8]}/>
           <meshStandardMaterial color={C.skin} roughness={0.75}/></mesh>
@@ -269,7 +281,7 @@ function Character() {
       <mesh position={[-0.195, 0.76, 0.01]} rotation={[1.1, 0, -0.18]}>
         <capsuleGeometry args={[0.036,0.18,4,8]}/>
         <meshStandardMaterial color={C.shirt} roughness={0.8}/></mesh>
-      <group ref={rightHandRef} position={[-0.225, 0.775, 0.2]}>
+      <group ref={rightHandRef} position={[-0.225, 0.815, 0.2]}>
         <mesh rotation={[1.45, 0, -0.08]}>
           <capsuleGeometry args={[0.029,0.13,4,8]}/>
           <meshStandardMaterial color={C.skin} roughness={0.75}/></mesh>
