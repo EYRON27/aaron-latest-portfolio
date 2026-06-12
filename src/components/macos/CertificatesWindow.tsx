@@ -91,19 +91,19 @@ const CertificatesWindow = ({ isDark = false }: { isDark?: boolean }) => {
       {/* Lightbox Gallery */}
       {lightboxIndex !== null && (
         <div
-          className="fixed inset-0 z-[100] bg-black/60 backdrop-blur-xl flex items-center justify-center p-4 animate-scale-in"
+          className="fixed inset-0 z-[100] bg-black/75 backdrop-blur-xl flex flex-col items-center justify-center gap-4 p-4 pt-16 pb-8"
           onClick={() => setLightboxIndex(null)}
         >
-          <div className="absolute top-4 right-4 flex gap-2">
-            <button
-              className="p-3 bg-white/20 hover:bg-white/30 rounded-full text-white backdrop-blur-md transition-colors shadow-lg"
-              onClick={() => setLightboxIndex(null)}
-              aria-label="Close lightbox"
-            >
-              <X className="w-6 h-6" />
-            </button>
-          </div>
+          {/* Close button */}
+          <button
+            className="absolute top-4 right-4 p-3 bg-white/20 hover:bg-white/30 rounded-full text-white backdrop-blur-md transition-colors shadow-lg z-10"
+            onClick={() => setLightboxIndex(null)}
+            aria-label="Close lightbox"
+          >
+            <X className="w-6 h-6" />
+          </button>
 
+          {/* Prev / Next */}
           <button
             className="absolute left-4 sm:left-8 top-1/2 -translate-y-1/2 p-3 bg-white/20 hover:bg-white/30 rounded-full text-white backdrop-blur-md transition-colors shadow-lg"
             onClick={(e) => { e.stopPropagation(); setLightboxIndex((lightboxIndex - 1 + certifications.length) % certifications.length); }}
@@ -111,7 +111,6 @@ const CertificatesWindow = ({ isDark = false }: { isDark?: boolean }) => {
           >
             <ChevronLeft className="w-8 h-8" />
           </button>
-
           <button
             className="absolute right-4 sm:right-8 top-1/2 -translate-y-1/2 p-3 bg-white/20 hover:bg-white/30 rounded-full text-white backdrop-blur-md transition-colors shadow-lg"
             onClick={(e) => { e.stopPropagation(); setLightboxIndex((lightboxIndex + 1) % certifications.length); }}
@@ -120,16 +119,24 @@ const CertificatesWindow = ({ isDark = false }: { isDark?: boolean }) => {
             <ChevronRight className="w-8 h-8" />
           </button>
 
-          <div className="max-w-4xl max-h-[90vh] w-full relative flex flex-col items-center bg-white/10 backdrop-blur-3xl p-4 sm:p-8 rounded-[2rem] border border-white/20 shadow-2xl overflow-y-auto custom-scrollbar" onClick={(e) => e.stopPropagation()}>
+          {/* Image card */}
+          <div
+            className="max-w-4xl w-full bg-white/10 backdrop-blur-3xl rounded-[2rem] border border-white/20 shadow-2xl overflow-hidden"
+            style={{ maxHeight: 'calc(100vh - 160px)' }}
+            onClick={(e) => e.stopPropagation()}
+          >
             <img
               src={certifications[lightboxIndex].image}
               alt={certifications[lightboxIndex].name}
-              className="w-full h-auto max-h-[55vh] sm:max-h-[65vh] object-contain rounded-xl shadow-inner bg-white/5 shrink-0"
+              className="w-full h-full object-contain"
+              style={{ maxHeight: 'calc(100vh - 160px)' }}
             />
-            <div className="text-center mt-6 shrink-0 pb-2">
-              <p className="text-white font-bold text-xl tracking-wide">{certifications[lightboxIndex].name}</p>
-              <p className="text-white/70 font-medium mt-1 uppercase tracking-widest text-sm">{certifications[lightboxIndex].issuer} &middot; {certifications[lightboxIndex].date}</p>
-            </div>
+          </div>
+
+          {/* Title — always visible below the card */}
+          <div className="text-center shrink-0" onClick={(e) => e.stopPropagation()}>
+            <p className="text-white font-bold text-base sm:text-lg tracking-wide leading-tight drop-shadow-lg">{certifications[lightboxIndex].name}</p>
+            <p className="text-white/70 font-medium mt-1 uppercase tracking-widest text-[10px] sm:text-xs drop-shadow">{certifications[lightboxIndex].issuer} &middot; {certifications[lightboxIndex].date}</p>
           </div>
         </div>
       )}

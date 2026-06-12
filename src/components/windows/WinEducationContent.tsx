@@ -90,12 +90,14 @@ const WinEducationContent = () => {
       {/* Lightbox with prev/next navigation */}
       {lightboxIndex !== null && (
         <div
-          className="fixed inset-0 z-[200] bg-black/60 backdrop-blur-xl flex items-center justify-center p-4"
+          className="fixed inset-0 z-[200] bg-black/75 backdrop-blur-xl flex flex-col items-center justify-center gap-4 p-4 pt-16 pb-8"
           onClick={() => setLightboxIndex(null)}
         >
-          <button className="absolute top-4 right-4 p-2.5 bg-white/20 hover:bg-white/30 rounded-full text-white" onClick={() => setLightboxIndex(null)}>
+          {/* Close */}
+          <button className="absolute top-4 right-4 p-2.5 bg-white/20 hover:bg-white/30 rounded-full text-white z-10" onClick={() => setLightboxIndex(null)}>
             <X className="w-5 h-5" />
           </button>
+          {/* Prev / Next */}
           <button
             className="absolute left-4 sm:left-8 top-1/2 -translate-y-1/2 p-3 bg-white/20 hover:bg-white/30 rounded-full text-white backdrop-blur-md transition-colors shadow-lg"
             onClick={(e) => { e.stopPropagation(); setLightboxIndex((lightboxIndex - 1 + certifications.length) % certifications.length); }}
@@ -108,12 +110,25 @@ const WinEducationContent = () => {
           >
             <ChevronRight className="w-6 h-6" />
           </button>
-          <div className="max-w-3xl max-h-[90vh] overflow-y-auto custom-scrollbar w-full bg-white/10 backdrop-blur-3xl p-6 rounded-3xl border border-white/20 shadow-2xl flex flex-col items-center" onClick={e => e.stopPropagation()}>
-            <img src={certifications[lightboxIndex].image} alt={certifications[lightboxIndex].name} className="w-full h-auto max-h-[55vh] sm:max-h-[65vh] object-contain rounded-xl shrink-0" />
-            <div className="text-center mt-4 shrink-0 pb-2">
-              <p className="text-white font-bold text-base">{certifications[lightboxIndex].name}</p>
-              <p className="text-white/70 text-sm mt-1 uppercase tracking-widest">{certifications[lightboxIndex].issuer} · {certifications[lightboxIndex].date}</p>
-            </div>
+
+          {/* Image card */}
+          <div
+            className="max-w-3xl w-full bg-white/10 backdrop-blur-3xl rounded-3xl border border-white/20 shadow-2xl overflow-hidden"
+            style={{ maxHeight: 'calc(100vh - 160px)' }}
+            onClick={e => e.stopPropagation()}
+          >
+            <img
+              src={certifications[lightboxIndex].image}
+              alt={certifications[lightboxIndex].name}
+              className="w-full h-full object-contain"
+              style={{ maxHeight: 'calc(100vh - 160px)' }}
+            />
+          </div>
+
+          {/* Title — always visible below card */}
+          <div className="text-center shrink-0" onClick={e => e.stopPropagation()}>
+            <p className="text-white font-bold text-base sm:text-lg leading-tight drop-shadow-lg">{certifications[lightboxIndex].name}</p>
+            <p className="text-white/70 text-xs mt-1 uppercase tracking-widest drop-shadow">{certifications[lightboxIndex].issuer} &middot; {certifications[lightboxIndex].date}</p>
           </div>
         </div>
       )}
