@@ -6,7 +6,6 @@ const CertificatesWindow = ({ isDark = false }: { isDark?: boolean }) => {
 
   const certifications = [
     { name: 'Google UX Design Specialization', issuer: 'Google', date: 'Apr 2025', image: '/Certificates/Google UX Specialization.png' },
-    { name: 'Google UX Design Specialization', issuer: 'Google', date: 'Apr 2025', image: '/Certificates/Google UX Specialization copy.png' },
     { name: 'Google AI Specialization', issuer: 'Google', date: '2025', image: '/Certificates/Google AI Specialization.png' },
     { name: 'Technical Support Fundamentals', issuer: 'Google', date: 'Dec 2025', image: '/Certificates/Technical Support Fundamentals.png' },
     { name: 'Foundation of Project Management', issuer: 'Google', date: 'Dec 2025', image: '/Certificates/Foundation of Project Management.png' },
@@ -64,8 +63,8 @@ const CertificatesWindow = ({ isDark = false }: { isDark?: boolean }) => {
         </h3>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {certifications.map((cert, idx) => (
-            <div 
-              key={idx} 
+            <div
+              key={idx}
               className="bg-white rounded-2xl border border-slate-100 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 cursor-pointer overflow-hidden group flex flex-col"
               onClick={() => setLightboxIndex(idx)}
             >
@@ -104,7 +103,7 @@ const CertificatesWindow = ({ isDark = false }: { isDark?: boolean }) => {
               <X className="w-6 h-6" />
             </button>
           </div>
-          
+
           <button
             className="absolute left-4 sm:left-8 top-1/2 -translate-y-1/2 p-3 bg-white/20 hover:bg-white/30 rounded-full text-white backdrop-blur-md transition-colors shadow-lg"
             onClick={(e) => { e.stopPropagation(); setLightboxIndex((lightboxIndex - 1 + certifications.length) % certifications.length); }}
@@ -112,7 +111,7 @@ const CertificatesWindow = ({ isDark = false }: { isDark?: boolean }) => {
           >
             <ChevronLeft className="w-8 h-8" />
           </button>
-          
+
           <button
             className="absolute right-4 sm:right-8 top-1/2 -translate-y-1/2 p-3 bg-white/20 hover:bg-white/30 rounded-full text-white backdrop-blur-md transition-colors shadow-lg"
             onClick={(e) => { e.stopPropagation(); setLightboxIndex((lightboxIndex + 1) % certifications.length); }}

@@ -34,7 +34,6 @@ const Education = () => {
 
   const certifications = [
     { name: 'Google UX Design Specialization', issuer: 'Google', date: 'Apr 2025', image: '/Certificates/Google UX Specialization.png' },
-    { name: 'Google UX Design Specialization', issuer: 'Google', date: 'Apr 2025', image: '/Certificates/Google UX Specialization copy.png' },
     { name: 'Google AI Specialization', issuer: 'Google', date: '2025', image: '/Certificates/Google AI Specialization.png' },
     { name: 'Technical Support Fundamentals', issuer: 'Google', date: 'Dec 2025', image: '/Certificates/Technical Support Fundamentals.png' },
     { name: 'Foundation of Project Management', issuer: 'Google', date: 'Dec 2025', image: '/Certificates/Foundation of Project Management.png' },
@@ -243,11 +242,10 @@ const Education = () => {
               <button
                 key={index}
                 onClick={() => { setCurrentSlide(index); setIsAutoPlaying(false); }}
-                className={`h-1.5 rounded-full transition-all duration-300 ${
-                  index === currentSlide
+                className={`h-1.5 rounded-full transition-all duration-300 ${index === currentSlide
                     ? 'w-6 bg-amber-500'
                     : 'w-1.5 bg-neutral-300 dark:bg-neutral-700 hover:bg-neutral-400 dark:hover:bg-neutral-600'
-                }`}
+                  }`}
                 aria-label={`Go to certificate ${index + 1}`}
               />
             ))}
@@ -259,11 +257,10 @@ const Education = () => {
               <button
                 key={index}
                 onClick={() => { setCurrentSlide(index); setIsAutoPlaying(false); }}
-                className={`w-full flex items-start justify-between gap-4 py-2.5 px-3 rounded-lg text-left transition-all duration-200 ${
-                  index === currentSlide
+                className={`w-full flex items-start justify-between gap-4 py-2.5 px-3 rounded-lg text-left transition-all duration-200 ${index === currentSlide
                     ? 'bg-amber-500/10 border border-amber-500/30'
                     : 'border border-transparent hover:bg-neutral-100 dark:hover:bg-neutral-800/50'
-                }`}
+                  }`}
               >
                 <div className="flex items-start gap-3">
                   <span className={`text-xs font-mono mt-0.5 ${index === currentSlide ? 'text-amber-500' : 'text-neutral-400'}`}>
