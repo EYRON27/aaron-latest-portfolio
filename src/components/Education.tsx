@@ -183,30 +183,29 @@ const Education = () => {
                 {currentSlide + 1} / {certifications.length}
               </span>
             </div>
-            <div className="flex items-center gap-2">
-              <button
-                onClick={() => { setIsAutoPlaying(false); prevSlide(); }}
-                className="p-2 rounded-full border border-neutral-200 dark:border-neutral-700 text-neutral-500 hover:text-neutral-900 dark:hover:text-neutral-100 hover:border-amber-500 transition-all"
-                aria-label="Previous certificate"
-              >
-                <ChevronLeft className="w-4 h-4" />
-              </button>
-              <button
-                onClick={() => { setIsAutoPlaying(false); nextSlide(); }}
-                className="p-2 rounded-full border border-neutral-200 dark:border-neutral-700 text-neutral-500 hover:text-neutral-900 dark:hover:text-neutral-100 hover:border-amber-500 transition-all"
-                aria-label="Next certificate"
-              >
-                <ChevronRight className="w-4 h-4" />
-              </button>
-            </div>
           </div>
 
           {/* Carousel viewport */}
           <div
-            className="relative overflow-hidden rounded-xl"
+            className="relative overflow-hidden rounded-xl group/carousel"
             onMouseEnter={() => setIsAutoPlaying(false)}
             onMouseLeave={() => setIsAutoPlaying(true)}
           >
+            {/* Navigation buttons inside viewport */}
+            <button
+              onClick={(e) => { e.stopPropagation(); setIsAutoPlaying(false); prevSlide(); }}
+              className="absolute left-3 top-1/2 -translate-y-1/2 z-10 p-2 md:p-3 bg-black/40 hover:bg-black/60 rounded-full text-white backdrop-blur-md border border-white/10 transition-all opacity-0 group-hover/carousel:opacity-100 -translate-x-4 group-hover/carousel:translate-x-0"
+              aria-label="Previous certificate"
+            >
+              <ChevronLeft className="w-5 h-5 md:w-6 md:h-6" />
+            </button>
+            <button
+              onClick={(e) => { e.stopPropagation(); setIsAutoPlaying(false); nextSlide(); }}
+              className="absolute right-3 top-1/2 -translate-y-1/2 z-10 p-2 md:p-3 bg-black/40 hover:bg-black/60 rounded-full text-white backdrop-blur-md border border-white/10 transition-all opacity-0 group-hover/carousel:opacity-100 translate-x-4 group-hover/carousel:translate-x-0"
+              aria-label="Next certificate"
+            >
+              <ChevronRight className="w-5 h-5 md:w-6 md:h-6" />
+            </button>
             <div
               className="flex transition-transform duration-500 ease-out"
               style={{ transform: `translateX(-${currentSlide * 100}%)` }}
