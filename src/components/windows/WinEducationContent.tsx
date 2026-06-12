@@ -35,7 +35,7 @@ const WinEducationContent = () => {
   const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
 
   return (
-    <div className="flex flex-col h-full relative overflow-hidden">
+    <div className="flex flex-col h-[58vh] relative overflow-hidden">
       
       {/* Scrollable Content Area */}
       <div className="p-6 overflow-y-auto custom-scrollbar flex-1 space-y-6">
