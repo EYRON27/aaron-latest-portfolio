@@ -69,11 +69,11 @@ const CertificatesWindow = ({ isDark = false }: { isDark?: boolean }) => {
               onClick={() => setLightboxIndex(idx)}
             >
               <div className="h-40 bg-slate-50 overflow-hidden relative border-b border-slate-100">
-                <img src={cert.image} alt={cert.name} className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" loading="lazy" />
-                <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors duration-300 flex items-center justify-center">
-                  <div className="w-10 h-10 rounded-full bg-white/90 backdrop-blur-sm opacity-0 group-hover:opacity-100 transform translate-y-4 group-hover:translate-y-0 transition-all duration-300 flex items-center justify-center shadow-md">
-                    <span className="text-xl">👁️</span>
-                  </div>
+                <img src={cert.image} alt={cert.name} className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-[1.02]" loading="lazy" />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                <div className="absolute bottom-0 left-0 right-0 p-4 translate-y-4 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-300 flex flex-col justify-end">
+                  <p className="text-white font-bold text-xs line-clamp-2">{cert.name}</p>
+                  <p className="text-white/80 text-[10px] mt-1">{cert.issuer} &middot; {cert.date}</p>
                 </div>
               </div>
               <div className="p-5 flex-1 flex flex-col">
@@ -120,13 +120,13 @@ const CertificatesWindow = ({ isDark = false }: { isDark?: boolean }) => {
             <ChevronRight className="w-8 h-8" />
           </button>
 
-          <div className="max-w-4xl max-h-[85vh] w-full relative flex flex-col items-center bg-white/10 backdrop-blur-3xl p-4 sm:p-8 rounded-[2rem] border border-white/20 shadow-2xl" onClick={(e) => e.stopPropagation()}>
+          <div className="max-w-4xl max-h-[90vh] w-full relative flex flex-col items-center bg-white/10 backdrop-blur-3xl p-4 sm:p-8 rounded-[2rem] border border-white/20 shadow-2xl overflow-y-auto custom-scrollbar" onClick={(e) => e.stopPropagation()}>
             <img
               src={certifications[lightboxIndex].image}
               alt={certifications[lightboxIndex].name}
-              className="w-full h-auto max-h-[65vh] object-contain rounded-xl shadow-inner bg-white/5"
+              className="w-full h-auto max-h-[55vh] sm:max-h-[65vh] object-contain rounded-xl shadow-inner bg-white/5 shrink-0"
             />
-            <div className="text-center mt-6">
+            <div className="text-center mt-6 shrink-0 pb-2">
               <p className="text-white font-bold text-xl tracking-wide">{certifications[lightboxIndex].name}</p>
               <p className="text-white/70 font-medium mt-1 uppercase tracking-widest text-sm">{certifications[lightboxIndex].issuer} &middot; {certifications[lightboxIndex].date}</p>
             </div>

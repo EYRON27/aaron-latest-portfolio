@@ -68,9 +68,11 @@ const WinEducationContent = () => {
               className="bg-white dark:bg-neutral-800 rounded-2xl border border-slate-100 dark:border-neutral-700 shadow-sm hover:shadow-xl hover:-translate-y-0.5 transition-all duration-300 cursor-pointer overflow-hidden group flex flex-col"
             >
               <div className="h-28 bg-slate-50 dark:bg-neutral-900 overflow-hidden border-b border-slate-100 dark:border-neutral-700 relative">
-                <img src={c.image} alt={c.name} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" loading="lazy" />
-                <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors flex items-center justify-center">
-                  <div className="w-8 h-8 rounded-full bg-white/90 opacity-0 group-hover:opacity-100 translate-y-3 group-hover:translate-y-0 transition-all flex items-center justify-center text-sm shadow text-black">👁️</div>
+                <img src={c.image} alt={c.name} className="w-full h-full object-cover group-hover:scale-[1.02] transition-transform duration-500" loading="lazy" />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                <div className="absolute bottom-0 left-0 right-0 p-3 translate-y-4 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-300 flex flex-col justify-end">
+                  <p className="text-white font-semibold text-[10px] line-clamp-2 leading-tight">{c.name}</p>
+                  <p className="text-white/80 text-[9px] mt-0.5">{c.issuer} &middot; {c.date}</p>
                 </div>
               </div>
               <div className="p-3 flex-1 flex flex-col">
@@ -106,9 +108,9 @@ const WinEducationContent = () => {
           >
             <ChevronRight className="w-6 h-6" />
           </button>
-          <div className="max-w-3xl w-full bg-white/10 backdrop-blur-3xl p-6 rounded-3xl border border-white/20 shadow-2xl" onClick={e => e.stopPropagation()}>
-            <img src={certifications[lightboxIndex].image} alt={certifications[lightboxIndex].name} className="w-full h-auto max-h-[65vh] object-contain rounded-xl" />
-            <div className="text-center mt-4">
+          <div className="max-w-3xl max-h-[90vh] overflow-y-auto custom-scrollbar w-full bg-white/10 backdrop-blur-3xl p-6 rounded-3xl border border-white/20 shadow-2xl flex flex-col items-center" onClick={e => e.stopPropagation()}>
+            <img src={certifications[lightboxIndex].image} alt={certifications[lightboxIndex].name} className="w-full h-auto max-h-[55vh] sm:max-h-[65vh] object-contain rounded-xl shrink-0" />
+            <div className="text-center mt-4 shrink-0 pb-2">
               <p className="text-white font-bold text-base">{certifications[lightboxIndex].name}</p>
               <p className="text-white/70 text-sm mt-1 uppercase tracking-widest">{certifications[lightboxIndex].issuer} · {certifications[lightboxIndex].date}</p>
             </div>
