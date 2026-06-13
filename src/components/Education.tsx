@@ -4,7 +4,7 @@ import { useScrollReveal } from '../hooks/useScrollReveal';
 
 const Education = () => {
   const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
-  const [activeIssuer, setActiveIssuer] = useState('All');
+  const [activeFilter, setActiveFilter] = useState<'All' | 'Coursera' | 'Participation'>('All');
 
   const education = [
     {
@@ -32,28 +32,28 @@ const Education = () => {
   ];
 
   const certifications = [
-    { name: 'Google UX Design Specialization', issuer: 'Google', date: 'Apr 2025', image: '/Certificates/Google UX Specialization.png' },
-    { name: 'Google AI Specialization', issuer: 'Google', date: '2025', image: '/Certificates/Google AI Specialization.png' },
-    { name: 'Technical Support Fundamentals', issuer: 'Google', date: 'Dec 2025', image: '/Certificates/Technical Support Fundamentals.png' },
-    { name: 'Foundation of Project Management', issuer: 'Google', date: 'Dec 2025', image: '/Certificates/Foundation of Project Management.png' },
-    { name: 'Project Initiation: Starting a Successful Project', issuer: 'Google', date: 'Dec 2025', image: '/Certificates/Project Initiation Starting a Successful Project.png' },
-    { name: 'Build Dynamic User Interfaces (UI) for Websites', issuer: 'Google', date: 'Apr 2025', image: '/Certificates/Build Dynamic User Interfaces (UI) for Websites.png' },
-    { name: 'Design a User Experience for Social Good & Prepare for Jobs', issuer: 'Google', date: 'Apr 2025', image: '/Certificates/Design a User Experience for Social Good.png' },
-    { name: 'Build Wireframes and Low-Fidelity Prototypes', issuer: 'Google', date: 'Mar 2025', image: '/Certificates/Build Wireframes and Low Fidelity Prototypes.png' },
-    { name: 'Conduct UX Research and Test Early Concepts', issuer: 'Google', date: 'Mar 2025', image: '/Certificates/Conduct UX Research .png' },
-    { name: 'Create High-Fidelity Designs and Prototypes in Figma', issuer: 'Google', date: 'Mar 2025', image: '/Certificates/Create High Fidelity Designs and Prototypes.png' },
-    { name: 'Foundations of User Experience (UX) Design', issuer: 'Google', date: 'Feb 2025', image: '/Certificates/Foundation of User Experience.png' },
-    { name: 'Start the UX Design Process: Empathize, Define, and Ideate', issuer: 'Google', date: 'Feb 2025', image: '/Certificates/Start the UX design.png' },
-    { name: 'AI Fundamentals', issuer: 'Microsoft', date: '2025', image: '/Certificates/AI Fundamentals.png' },
-    { name: 'AI for Writing and Communicating', issuer: 'Microsoft', date: '2025', image: '/Certificates/AI for Writing and Communicating.png' },
-    { name: 'AI for Research and Insights', issuer: 'Microsoft', date: '2025', image: '/Certificates/AI for Research and Insights.png' },
-    { name: 'AI For Data Analysis', issuer: 'Microsoft', date: '2025', image: '/Certificates/AI For Data Analysis.jpg' },
-    { name: 'AI for Content Creation', issuer: 'Microsoft', date: '2025', image: '/Certificates/AI for Content Creation.png' },
-    { name: 'AI For Brainstorming And Planning', issuer: 'Microsoft', date: '2025', image: '/Certificates/AI For Brainstormiing And Planning.png' },
-    { name: 'AI For App Building', issuer: 'Microsoft', date: '2025', image: '/Certificates/AI For App Building.png' },
-    { name: 'IGNITE Summit 2023 (Participation)', issuer: 'IGNITE', date: '2023', image: '/Certificates/IGNITE Summit 2023 (Participation).png' },
-    { name: 'Cybersecure U: Defending The Digital World (Participation)', issuer: 'Cybersecure U', date: '2024', image: '/Certificates/Cybersecure U Defending The Digital World (Participation).png' },
-    { name: 'Alumni Talks (Participation)', issuer: 'Alumni', date: '2024', image: '/Certificates/Alumni Talks (Participation).png' },
+    { name: 'Google UX Design Specialization', issuer: 'Google', date: 'Apr 2025', category: 'Coursera', image: '/Certificates/Google UX Specialization.png' },
+    { name: 'Google AI Specialization', issuer: 'Google', date: '2025', category: 'Coursera', image: '/Certificates/Google AI Specialization.png' },
+    { name: 'Technical Support Fundamentals', issuer: 'Google', date: 'Dec 2025', category: 'Coursera', image: '/Certificates/Technical Support Fundamentals.png' },
+    { name: 'Foundation of Project Management', issuer: 'Google', date: 'Dec 2025', category: 'Coursera', image: '/Certificates/Foundation of Project Management.png' },
+    { name: 'Project Initiation: Starting a Successful Project', issuer: 'Google', date: 'Dec 2025', category: 'Coursera', image: '/Certificates/Project Initiation Starting a Successful Project.png' },
+    { name: 'Build Dynamic User Interfaces (UI) for Websites', issuer: 'Google', date: 'Apr 2025', category: 'Coursera', image: '/Certificates/Build Dynamic User Interfaces (UI) for Websites.png' },
+    { name: 'Design a User Experience for Social Good & Prepare for Jobs', issuer: 'Google', date: 'Apr 2025', category: 'Coursera', image: '/Certificates/Design a User Experience for Social Good.png' },
+    { name: 'Build Wireframes and Low-Fidelity Prototypes', issuer: 'Google', date: 'Mar 2025', category: 'Coursera', image: '/Certificates/Build Wireframes and Low Fidelity Prototypes.png' },
+    { name: 'Conduct UX Research and Test Early Concepts', issuer: 'Google', date: 'Mar 2025', category: 'Coursera', image: '/Certificates/Conduct UX Research .png' },
+    { name: 'Create High-Fidelity Designs and Prototypes in Figma', issuer: 'Google', date: 'Mar 2025', category: 'Coursera', image: '/Certificates/Create High Fidelity Designs and Prototypes.png' },
+    { name: 'Foundations of User Experience (UX) Design', issuer: 'Google', date: 'Feb 2025', category: 'Coursera', image: '/Certificates/Foundation of User Experience.png' },
+    { name: 'Start the UX Design Process: Empathize, Define, and Ideate', issuer: 'Google', date: 'Feb 2025', category: 'Coursera', image: '/Certificates/Start the UX design.png' },
+    { name: 'AI Fundamentals', issuer: 'Microsoft', date: '2025', category: 'Coursera', image: '/Certificates/AI Fundamentals.png' },
+    { name: 'AI for Writing and Communicating', issuer: 'Microsoft', date: '2025', category: 'Coursera', image: '/Certificates/AI for Writing and Communicating.png' },
+    { name: 'AI for Research and Insights', issuer: 'Microsoft', date: '2025', category: 'Coursera', image: '/Certificates/AI for Research and Insights.png' },
+    { name: 'AI For Data Analysis', issuer: 'Microsoft', date: '2025', category: 'Coursera', image: '/Certificates/AI For Data Analysis.jpg' },
+    { name: 'AI for Content Creation', issuer: 'Microsoft', date: '2025', category: 'Coursera', image: '/Certificates/AI for Content Creation.png' },
+    { name: 'AI For Brainstorming And Planning', issuer: 'Microsoft', date: '2025', category: 'Coursera', image: '/Certificates/AI For Brainstormiing And Planning.png' },
+    { name: 'AI For App Building', issuer: 'Microsoft', date: '2025', category: 'Coursera', image: '/Certificates/AI For App Building.png' },
+    { name: 'IGNITE Summit 2023 (Participation)', issuer: 'IGNITE', date: '2023', category: 'Participation', image: '/Certificates/IGNITE Summit 2023 (Participation).png' },
+    { name: 'Cybersecure U: Defending The Digital World (Participation)', issuer: 'Cybersecure U', date: '2024', category: 'Participation', image: '/Certificates/Cybersecure U Defending The Digital World (Participation).png' },
+    { name: 'Alumni Talks (Participation)', issuer: 'Alumni', date: '2024', category: 'Participation', image: '/Certificates/Alumni Talks (Participation).png' },
   ];
 
   const courses = [
@@ -80,25 +80,21 @@ const Education = () => {
   // Scroll reveal for header
   const { ref: headRef, visible: headVisible } = useScrollReveal(0.1);
 
-  // Filter tabs
-  const issuers = ['All', ...Array.from(new Set(certifications.map(c => c.issuer)))];
-  const filteredCerts = activeIssuer === 'All' ? certifications : certifications.filter(c => c.issuer === activeIssuer);
+  const filteredCerts = activeFilter === 'All' ? certifications : certifications.filter(c => c.category === activeFilter);
 
-  // Issuer accent colours
-  const issuerColor: Record<string, string> = {
-    Google: 'text-blue-500 bg-blue-500/10 border-blue-500/30',
-    Microsoft: 'text-emerald-500 bg-emerald-500/10 border-emerald-500/30',
-    IGNITE: 'text-purple-500 bg-purple-500/10 border-purple-500/30',
-    'Cybersecure U': 'text-rose-500 bg-rose-500/10 border-rose-500/30',
-    Alumni: 'text-amber-500 bg-amber-500/10 border-amber-500/30',
+  const categoryStyle: Record<string, { pill: string; badge: string; dot: string }> = {
+    Coursera: {
+      pill: 'bg-blue-500 text-white border-blue-500 shadow-sm shadow-blue-500/30',
+      badge: 'text-blue-500 bg-blue-500/10 border-blue-500/30',
+      dot: 'bg-blue-500',
+    },
+    Participation: {
+      pill: 'bg-amber-500 text-white border-amber-500 shadow-sm shadow-amber-500/30',
+      badge: 'text-amber-500 bg-amber-500/10 border-amber-500/30',
+      dot: 'bg-amber-500',
+    },
   };
-  const issuerDot: Record<string, string> = {
-    Google: 'bg-blue-500',
-    Microsoft: 'bg-emerald-500',
-    IGNITE: 'bg-purple-500',
-    'Cybersecure U': 'bg-rose-500',
-    Alumni: 'bg-amber-500',
-  };
+
 
   return (
     <section id="education" className="py-24 border-t border-neutral-200 dark:border-neutral-800 relative overflow-hidden">
@@ -182,21 +178,26 @@ const Education = () => {
             <span className="text-neutral-400 text-sm ml-1">({certifications.length})</span>
           </div>
 
-          {/* Issuer filter pills */}
+          {/* Filter tabs */}
           <div className="flex flex-wrap gap-2 mb-8">
-            {issuers.map(issuer => (
-              <button
-                key={issuer}
-                onClick={() => setActiveIssuer(issuer)}
-                className={`px-4 py-1.5 rounded-full text-sm font-medium border transition-all duration-200 ${
-                  activeIssuer === issuer
-                    ? 'bg-amber-500 text-white border-amber-500 shadow-sm shadow-amber-500/30'
-                    : 'border-neutral-200 dark:border-neutral-700 text-neutral-500 dark:text-neutral-400 hover:border-neutral-300 dark:hover:border-neutral-600'
-                }`}
-              >
-                {issuer === 'All' ? `All (${certifications.length})` : issuer}
-              </button>
-            ))}
+            {(['All', 'Coursera', 'Participation'] as const).map(tab => {
+              const count = tab === 'All' ? certifications.length : certifications.filter(c => c.category === tab).length;
+              const isActive = activeFilter === tab;
+              const activeStyle = tab !== 'All' ? categoryStyle[tab].pill : 'bg-amber-500 text-white border-amber-500 shadow-sm shadow-amber-500/30';
+              return (
+                <button
+                  key={tab}
+                  onClick={() => setActiveFilter(tab)}
+                  className={`px-4 py-1.5 rounded-full text-sm font-medium border transition-all duration-200 ${
+                    isActive
+                      ? activeStyle
+                      : 'border-neutral-200 dark:border-neutral-700 text-neutral-500 dark:text-neutral-400 hover:border-neutral-300 dark:hover:border-neutral-600'
+                  }`}
+                >
+                  {tab} <span className={`text-[11px] ml-0.5 ${isActive ? 'opacity-80' : 'opacity-60'}`}>({count})</span>
+                </button>
+              );
+            })}
           </div>
 
           {/* 4-column thumbnail grid */}
@@ -226,9 +227,9 @@ const Education = () => {
                       {cert.name}
                     </p>
                     <div className="flex items-center justify-between gap-1">
-                      <span className={`inline-flex items-center gap-1 text-[10px] font-medium px-2 py-0.5 rounded-full border ${issuerColor[cert.issuer] ?? 'text-neutral-500 bg-neutral-100 border-neutral-200'}`}>
-                        <span className={`w-1.5 h-1.5 rounded-full shrink-0 ${issuerDot[cert.issuer] ?? 'bg-neutral-400'}`} />
-                        {cert.issuer}
+                      <span className={`inline-flex items-center gap-1 text-[10px] font-medium px-2 py-0.5 rounded-full border ${categoryStyle[cert.category]?.badge ?? ''}`}>
+                        <span className={`w-1.5 h-1.5 rounded-full shrink-0 ${categoryStyle[cert.category]?.dot ?? ''}`} />
+                        {cert.category}
                       </span>
                       <span className="text-[10px] text-neutral-400 font-medium shrink-0">{cert.date}</span>
                     </div>
