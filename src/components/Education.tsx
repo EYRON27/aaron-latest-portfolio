@@ -1,11 +1,10 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect } from 'react';
 import { GraduationCap, Award, Calendar, ChevronLeft, ChevronRight, X } from 'lucide-react';
 import { useScrollReveal } from '../hooks/useScrollReveal';
 
 const Education = () => {
-  const [currentSlide, setCurrentSlide] = useState(0);
-  const [isAutoPlaying, setIsAutoPlaying] = useState(true);
   const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
+  const [activeIssuer, setActiveIssuer] = useState('All');
 
   const education = [
     {
@@ -62,20 +61,6 @@ const Education = () => {
     'Data Structures', 'Computer Networks',
   ];
 
-  const nextSlide = useCallback(() => {
-    setCurrentSlide((prev) => (prev + 1) % certifications.length);
-  }, [certifications.length]);
-
-  const prevSlide = useCallback(() => {
-    setCurrentSlide((prev) => (prev - 1 + certifications.length) % certifications.length);
-  }, [certifications.length]);
-
-  useEffect(() => {
-    if (!isAutoPlaying) return;
-    const interval = setInterval(nextSlide, 4000);
-    return () => clearInterval(interval);
-  }, [isAutoPlaying, nextSlide]);
-
   // Keyboard navigation for lightbox
   useEffect(() => {
     if (lightboxIndex === null) return;
@@ -94,6 +79,26 @@ const Education = () => {
 
   // Scroll reveal for header
   const { ref: headRef, visible: headVisible } = useScrollReveal(0.1);
+
+  // Filter tabs
+  const issuers = ['All', ...Array.from(new Set(certifications.map(c => c.issuer)))];
+  const filteredCerts = activeIssuer === 'All' ? certifications : certifications.filter(c => c.issuer === activeIssuer);
+
+  // Issuer accent colours
+  const issuerColor: Record<string, string> = {
+    Google: 'text-blue-500 bg-blue-500/10 border-blue-500/30',
+    Microsoft: 'text-emerald-500 bg-emerald-500/10 border-emerald-500/30',
+    IGNITE: 'text-purple-500 bg-purple-500/10 border-purple-500/30',
+    'Cybersecure U': 'text-rose-500 bg-rose-500/10 border-rose-500/30',
+    Alumni: 'text-amber-500 bg-amber-500/10 border-amber-500/30',
+  };
+  const issuerDot: Record<string, string> = {
+    Google: 'bg-blue-500',
+    Microsoft: 'bg-emerald-500',
+    IGNITE: 'bg-purple-500',
+    'Cybersecure U': 'bg-rose-500',
+    Alumni: 'bg-amber-500',
+  };
 
   return (
     <section id="education" className="py-24 border-t border-neutral-200 dark:border-neutral-800 relative overflow-hidden">
@@ -118,9 +123,8 @@ const Education = () => {
           Education &amp; certs<span className="text-amber-500">.</span>
         </h2>
 
-        {/* Timeline */}
+        {/* ── Education Timeline ── */}
         <div className="relative mb-20">
-          {/* Animated timeline line */}
           <div className="absolute left-[7px] top-2 bottom-2 w-px overflow-hidden">
             <div className="w-full bg-neutral-200 dark:bg-neutral-800 absolute inset-0" />
             <div
@@ -131,11 +135,7 @@ const Education = () => {
           <div className="space-y-12">
             {education.map((edu, index) => (
               <div key={index} className="relative pl-10 group">
-                {/* Glowing dot */}
-                <div
-                  className="absolute left-0 top-1.5 w-[15px] h-[15px] rounded-full border-2 border-amber-500 bg-stone-50 dark:bg-neutral-950 transition-all duration-300 group-hover:shadow-[0_0_12px_rgba(245,158,11,0.6)] group-hover:scale-125"
-                />
-                {/* Card */}
+                <div className="absolute left-0 top-1.5 w-[15px] h-[15px] rounded-full border-2 border-amber-500 bg-stone-50 dark:bg-neutral-950 transition-all duration-300 group-hover:shadow-[0_0_12px_rgba(245,158,11,0.6)] group-hover:scale-125" />
                 <div
                   className={`p-5 rounded-xl border transition-all duration-500 ${headVisible ? 'opacity-100 translate-x-0' : 'opacity-0 translate-x-8'}`}
                   style={{
@@ -173,112 +173,79 @@ const Education = () => {
           </div>
         </div>
 
-        {/* Certificate Carousel */}
+        {/* ── Certifications Grid ── */}
         <div className="mb-20">
-          <div className="flex items-center justify-between mb-8">
-            <div className="flex items-center gap-2">
-              <Award className="w-4 h-4 text-amber-500" />
-              <h3 className="font-bold text-lg">Certifications</h3>
-              <span className="text-neutral-400 text-sm ml-2">
-                {currentSlide + 1} / {certifications.length}
-              </span>
-            </div>
+          {/* Section header */}
+          <div className="flex items-center gap-2 mb-6">
+            <Award className="w-4 h-4 text-amber-500" />
+            <h3 className="font-bold text-lg">Certifications</h3>
+            <span className="text-neutral-400 text-sm ml-1">({certifications.length})</span>
           </div>
 
-          {/* Carousel viewport */}
-          <div
-            className="relative overflow-hidden rounded-xl group/carousel"
-            onMouseEnter={() => setIsAutoPlaying(false)}
-            onMouseLeave={() => setIsAutoPlaying(true)}
-          >
-            {/* Navigation buttons inside viewport */}
-            <button
-              onClick={(e) => { e.stopPropagation(); setIsAutoPlaying(false); prevSlide(); }}
-              className="absolute left-3 top-1/2 -translate-y-1/2 z-10 p-2 md:p-3 bg-black/40 hover:bg-black/60 rounded-full text-white backdrop-blur-md border border-white/10 transition-all opacity-0 group-hover/carousel:opacity-100 -translate-x-4 group-hover/carousel:translate-x-0"
-              aria-label="Previous certificate"
-            >
-              <ChevronLeft className="w-5 h-5 md:w-6 md:h-6" />
-            </button>
-            <button
-              onClick={(e) => { e.stopPropagation(); setIsAutoPlaying(false); nextSlide(); }}
-              className="absolute right-3 top-1/2 -translate-y-1/2 z-10 p-2 md:p-3 bg-black/40 hover:bg-black/60 rounded-full text-white backdrop-blur-md border border-white/10 transition-all opacity-0 group-hover/carousel:opacity-100 translate-x-4 group-hover/carousel:translate-x-0"
-              aria-label="Next certificate"
-            >
-              <ChevronRight className="w-5 h-5 md:w-6 md:h-6" />
-            </button>
-            <div
-              className="flex transition-transform duration-500 ease-out"
-              style={{ transform: `translateX(-${currentSlide * 100}%)` }}
-            >
-              {certifications.map((cert, index) => (
-                <div key={index} className="w-full flex-shrink-0 px-1">
-                  <div
-                    className="group relative cursor-pointer"
-                    onClick={() => setLightboxIndex(index)}
-                  >
-                    <div className="relative overflow-hidden rounded-xl border border-neutral-200 dark:border-neutral-800 bg-neutral-100 dark:bg-neutral-900">
-                      <img
-                        src={cert.image}
-                        alt={cert.name}
-                        className="w-full h-auto object-contain transition-transform duration-300 group-hover:scale-[1.02]"
-                        loading="lazy"
-                      />
-                      <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-                      <div className="absolute bottom-0 left-0 right-0 p-5 translate-y-4 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-300">
-                        <p className="text-white font-semibold text-sm">{cert.name}</p>
-                        <p className="text-white/70 text-xs mt-1">{cert.issuer} &middot; {cert.date}</p>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-
-          {/* Dot indicators */}
-          <div className="flex justify-center gap-1.5 mt-5">
-            {certifications.map((_, index) => (
+          {/* Issuer filter pills */}
+          <div className="flex flex-wrap gap-2 mb-8">
+            {issuers.map(issuer => (
               <button
-                key={index}
-                onClick={() => { setCurrentSlide(index); setIsAutoPlaying(false); }}
-                className={`h-1.5 rounded-full transition-all duration-300 ${index === currentSlide
-                    ? 'w-6 bg-amber-500'
-                    : 'w-1.5 bg-neutral-300 dark:bg-neutral-700 hover:bg-neutral-400 dark:hover:bg-neutral-600'
-                  }`}
-                aria-label={`Go to certificate ${index + 1}`}
-              />
-            ))}
-          </div>
-
-          {/* Cert name list below carousel */}
-          <div className="mt-8 space-y-2">
-            {certifications.map((cert, index) => (
-              <button
-                key={index}
-                onClick={() => { setCurrentSlide(index); setIsAutoPlaying(false); }}
-                className={`w-full flex items-start justify-between gap-4 py-2.5 px-3 rounded-lg text-left transition-all duration-200 ${index === currentSlide
-                    ? 'bg-amber-500/10 border border-amber-500/30'
-                    : 'border border-transparent hover:bg-neutral-100 dark:hover:bg-neutral-800/50'
-                  }`}
+                key={issuer}
+                onClick={() => setActiveIssuer(issuer)}
+                className={`px-4 py-1.5 rounded-full text-sm font-medium border transition-all duration-200 ${
+                  activeIssuer === issuer
+                    ? 'bg-amber-500 text-white border-amber-500 shadow-sm shadow-amber-500/30'
+                    : 'border-neutral-200 dark:border-neutral-700 text-neutral-500 dark:text-neutral-400 hover:border-neutral-300 dark:hover:border-neutral-600'
+                }`}
               >
-                <div className="flex items-start gap-3">
-                  <span className={`text-xs font-mono mt-0.5 ${index === currentSlide ? 'text-amber-500' : 'text-neutral-400'}`}>
-                    {String(index + 1).padStart(2, '0')}
-                  </span>
-                  <div>
-                    <p className={`font-medium text-sm ${index === currentSlide ? 'text-amber-500' : ''}`}>{cert.name}</p>
-                    <p className="text-neutral-400 text-xs mt-0.5">{cert.issuer}</p>
-                  </div>
-                </div>
-                <span className={`text-xs font-medium whitespace-nowrap mt-0.5 ${index === currentSlide ? 'text-amber-500' : 'text-neutral-400'}`}>
-                  {cert.date}
-                </span>
+                {issuer === 'All' ? `All (${certifications.length})` : issuer}
               </button>
             ))}
           </div>
+
+          {/* 4-column thumbnail grid */}
+          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
+            {filteredCerts.map((cert) => {
+              const globalIdx = certifications.indexOf(cert);
+              return (
+                <button
+                  key={globalIdx}
+                  onClick={() => setLightboxIndex(globalIdx)}
+                  className="group relative text-left rounded-xl overflow-hidden border border-neutral-200 dark:border-neutral-800 bg-neutral-50 dark:bg-neutral-900 hover:border-amber-500/40 hover:-translate-y-1 hover:shadow-lg transition-all duration-300 focus:outline-none focus-visible:ring-2 focus-visible:ring-amber-500"
+                >
+                  {/* Thumbnail */}
+                  <div className="aspect-[4/3] overflow-hidden bg-neutral-100 dark:bg-neutral-800">
+                    <img
+                      src={cert.image}
+                      alt={cert.name}
+                      className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-[1.06]"
+                      loading="lazy"
+                    />
+                  </div>
+                  {/* Gradient hover overlay */}
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none" />
+                  {/* Card info */}
+                  <div className="p-3">
+                    <p className="text-xs font-semibold leading-snug text-neutral-800 dark:text-neutral-100 line-clamp-2 mb-2">
+                      {cert.name}
+                    </p>
+                    <div className="flex items-center justify-between gap-1">
+                      <span className={`inline-flex items-center gap-1 text-[10px] font-medium px-2 py-0.5 rounded-full border ${issuerColor[cert.issuer] ?? 'text-neutral-500 bg-neutral-100 border-neutral-200'}`}>
+                        <span className={`w-1.5 h-1.5 rounded-full shrink-0 ${issuerDot[cert.issuer] ?? 'bg-neutral-400'}`} />
+                        {cert.issuer}
+                      </span>
+                      <span className="text-[10px] text-neutral-400 font-medium shrink-0">{cert.date}</span>
+                    </div>
+                  </div>
+                  {/* View hint badge */}
+                  <div className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none">
+                    <div className="bg-black/60 backdrop-blur-sm text-white text-[9px] font-bold px-2 py-1 rounded-full tracking-wide">
+                      View
+                    </div>
+                  </div>
+                </button>
+              );
+            })}
+          </div>
         </div>
 
-        {/* Coursework */}
+        {/* ── Coursework ── */}
         <div>
           <div className="flex items-center gap-2 mb-6">
             <GraduationCap className="w-4 h-4 text-amber-500" />
@@ -294,7 +261,7 @@ const Education = () => {
         </div>
       </div>
 
-      {/* Lightbox */}
+      {/* ── Lightbox ── */}
       {lightboxIndex !== null && (
         <div
           className="fixed inset-0 z-[100] bg-black/90 backdrop-blur-sm flex items-center justify-center p-4"
