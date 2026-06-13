@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 import { useScrollReveal } from '../hooks/useScrollReveal';
+import DraggableID from './DraggableID';
 
 // ── Count-up ──────────────────────────────────────────────────────────────────
 const CountUp = ({ target, suffix = '' }: { target: number; suffix?: string }) => {
@@ -162,7 +163,7 @@ const About = () => {
   const techs = ['React', 'TypeScript', 'Tailwind CSS', 'Flutter', 'Node.js', 'Figma', 'Firebase', 'Git'];
 
   return (
-    <section id="about" className="py-24 border-t border-neutral-200 dark:border-neutral-800 relative overflow-hidden">
+    <section id="about" className="py-24 border-t border-neutral-200 dark:border-neutral-800 relative">
       {/* Ambient orbs */}
       <div className="absolute top-0 right-0 w-[600px] h-[600px] rounded-full pointer-events-none"
         style={{ background: 'radial-gradient(circle, rgba(245,158,11,0.05) 0%, transparent 65%)', transform: 'translate(30%, -30%)' }} />
@@ -193,39 +194,12 @@ const About = () => {
 
         <div className="grid lg:grid-cols-[auto_1fr_1fr] gap-12 lg:gap-16 items-start">
 
-          {/* ── Photo Column ── */}
+          {/* ── Draggable ID Card Column ── */}
           <div
-            className={`transition-all duration-700 ${headVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}
+            className={`flex items-start justify-center lg:justify-start pb-10 transition-all duration-700 ${headVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}
             style={{ transitionDelay: '80ms' }}
           >
-            <div className="relative w-52 mx-auto lg:mx-0">
-              {/* Decorative corner accents */}
-              <div className="absolute -top-2 -left-2 w-6 h-6 border-t-2 border-l-2 border-amber-500 rounded-tl-md" />
-              <div className="absolute -bottom-2 -right-2 w-6 h-6 border-b-2 border-r-2 border-amber-500 rounded-br-md" />
-
-              {/* Photo frame */}
-              <div className="w-52 h-64 rounded-2xl overflow-hidden border-2 border-dashed border-amber-500/40 bg-neutral-100 dark:bg-neutral-800/60 flex flex-col items-center justify-center gap-3 relative">
-                <div className="flex flex-col items-center gap-2 text-center px-4 select-none pointer-events-none">
-                  <div className="w-14 h-14 rounded-full bg-amber-500/10 border border-amber-500/30 flex items-center justify-center">
-                    <svg className="w-7 h-7 text-amber-500/60" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
-                      <path strokeLinecap="round" strokeLinejoin="round" d="M6.827 6.175A2.31 2.31 0 0 1 5.186 7.23c-.38.054-.757.112-1.134.175C2.999 7.58 2.25 8.507 2.25 9.574V18a2.25 2.25 0 0 0 2.25 2.25h15A2.25 2.25 0 0 0 21.75 18V9.574c0-1.067-.75-1.994-1.802-2.169a47.865 47.865 0 0 0-1.134-.175 2.31 2.31 0 0 1-1.64-1.055l-.822-1.316a2.192 2.192 0 0 0-1.736-1.039 48.774 48.774 0 0 0-5.232 0 2.192 2.192 0 0 0-1.736 1.039l-.821 1.316Z" />
-                      <path strokeLinecap="round" strokeLinejoin="round" d="M16.5 12.75a4.5 4.5 0 1 1-9 0 4.5 4.5 0 0 1 9 0ZM18.75 10.5h.008v.008h-.008V10.5Z" />
-                    </svg>
-                  </div>
-                  <p className="text-xs text-neutral-400 dark:text-neutral-500 font-medium leading-snug">
-                    Photo coming<br />soon
-                  </p>
-                </div>
-
-                <div className="absolute inset-0 bg-gradient-to-br from-amber-500/5 via-transparent to-purple-500/5 rounded-2xl pointer-events-none" />
-              </div>
-
-              {/* Name tag */}
-              <div className="mt-4 text-center">
-                <p className="font-bold text-sm text-neutral-800 dark:text-neutral-100">Aaron</p>
-                <p className="text-xs text-amber-500 font-medium tracking-wide mt-0.5">IT Student · Dev</p>
-              </div>
-            </div>
+            <DraggableID />
           </div>
 
           {/* ── Bio Text Column ── */}
