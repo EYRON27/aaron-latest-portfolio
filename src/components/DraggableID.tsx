@@ -17,19 +17,15 @@ const DraggableID = ({
 }: DraggableIDProps) => {
   const wrapRef = useRef<HTMLDivElement>(null);
 
-  // Drag state
   const [pos, setPos] = useState({ x: 0, y: 0 });
   const [dragging, setDragging] = useState(false);
   const dragOffset = useRef({ x: 0, y: 0 });
+  const lastX = useRef(0);
 
-  // 3-D tilt
   const [tilt, setTilt] = useState({ rx: 0, ry: 0 });
   const [shine, setShine] = useState({ x: 50, y: 50 });
   const [lifted, setLifted] = useState(false);
-
-  // lanyard swing angle (follows drag direction)
   const [swing, setSwing] = useState(0);
-  const lastX = useRef(0);
 
   const onPointerDown = (e: React.PointerEvent) => {
     e.currentTarget.setPointerCapture(e.pointerId);
@@ -43,32 +39,30 @@ const DraggableID = ({
     if (dragging) {
       const dx = e.clientX - lastX.current;
       lastX.current = e.clientX;
-      // lanyard swings opposite to drag direction
-      setSwing(prev => Math.max(-22, Math.min(22, prev - dx * 0.4)));
+      setSwing(prev => Math.max(-18, Math.min(18, prev - dx * 0.35)));
       setPos({ x: e.clientX - dragOffset.current.x, y: e.clientY - dragOffset.current.y });
     }
-    // Tilt
     const el = wrapRef.current;
     if (!el) return;
     const rect = el.getBoundingClientRect();
     const cx = rect.left + rect.width / 2;
     const cy = rect.top + rect.height / 2;
-    setTilt({ rx: -((e.clientY - cy) / (rect.height / 2)) * 12, ry: ((e.clientX - cx) / (rect.width / 2)) * 12 });
+    setTilt({
+      rx: -((e.clientY - cy) / (rect.height / 2)) * 10,
+      ry: ((e.clientX - cx) / (rect.width / 2)) * 10,
+    });
     setShine({ x: ((e.clientX - rect.left) / rect.width) * 100, y: ((e.clientY - rect.top) / rect.height) * 100 });
   };
 
   const onPointerUp = () => {
-    setDragging(false);
-    setLifted(false);
-    setTilt({ rx: 0, ry: 0 });
-    setSwing(0);
+    setDragging(false); setLifted(false);
+    setTilt({ rx: 0, ry: 0 }); setSwing(0);
   };
 
   const onPointerLeave = () => {
     if (!dragging) { setTilt({ rx: 0, ry: 0 }); setLifted(false); setSwing(0); }
   };
 
-  // Hint
   const [hint, setHint] = useState(true);
   useEffect(() => { const t = setTimeout(() => setHint(false), 3500); return () => clearTimeout(t); }, []);
 
@@ -77,15 +71,19 @@ const DraggableID = ({
     perspective(800px)
     rotateX(${tilt.rx}deg)
     rotateY(${tilt.ry}deg)
-    scale(${lifted ? 1.06 : 1})
+    scale(${lifted ? 1.05 : 1})
   `;
 
-  // Lanyard bezier path — starts at clip (top-centre of lace) and curves down to the card
-  // The lace is 90px tall above the card. Clip at top, card hole at bottom.
-  const laceH = 88;
-  const laceW = 48;
-  // The two strands run side by side, swing with drag
-  const swingPx = swing * 0.6;
+  // Lanyard SVG dimensions
+  const W = 208; // same as card width (w-52 = 208px)
+  const H = 110; // height of lanyard above card
+  const strapW = 18; // wide strap width in px
+  const midX = W / 2;
+
+  // The two straps spread from centre-top and converge at bottom
+  // Left strap centre line, right strap centre line
+  const topSpread = 28; // half-spread at top (loop fold)
+  const botGap = 12;    // half-gap at bottom (where buckle clips attach)
 
   return (
     <div
@@ -101,87 +99,187 @@ const DraggableID = ({
         touchAction: 'none',
         userSelect: 'none',
         willChange: 'transform',
+        width: W,
       }}
-      className="relative w-52 select-none"
+      className="relative select-none"
     >
-      {/* ── Lanyard / Lace ── */}
+      {/* ── QCU Lanyard ── */}
       <div
-        className="flex justify-center mb-0 pointer-events-none"
+        className="pointer-events-none"
         style={{
-          height: laceH,
-          position: 'relative',
+          transform: `rotate(${swing}deg)`,
+          transformOrigin: `${midX}px 0px`,
+          transition: dragging ? 'none' : 'transform 0.55s cubic-bezier(0.34,1.56,0.64,1)',
         }}
       >
-        {/* SVG lanyard */}
         <svg
-          width={laceW + 16}
-          height={laceH}
-          viewBox={`0 0 ${laceW + 16} ${laceH}`}
-          style={{
-            overflow: 'visible',
-            transform: `translateX(${swingPx}px)`,
-            transition: dragging ? 'none' : 'transform 0.6s cubic-bezier(0.34,1.56,0.64,1)',
-          }}
+          width={W}
+          height={H}
+          viewBox={`0 0 ${W} ${H}`}
+          style={{ display: 'block', overflow: 'visible' }}
         >
-          {/* Clip / holder at the top */}
-          <rect x={(laceW + 16) / 2 - 6} y={0} width={12} height={6} rx={2} fill="#6b7280" />
-          <rect x={(laceW + 16) / 2 - 3} y={4} width={6} height={4} rx={1} fill="#9ca3af" />
-
-          {/* Left lanyard strand */}
-          <path
-            d={`M ${(laceW + 16) / 2 - 2} 8 Q ${(laceW + 16) / 2 - laceW / 2} ${laceH * 0.55} ${(laceW + 16) / 2 - 6} ${laceH}`}
-            fill="none"
-            stroke="url(#laceGrad)"
-            strokeWidth="3.5"
-            strokeLinecap="round"
-          />
-          {/* Right lanyard strand */}
-          <path
-            d={`M ${(laceW + 16) / 2 + 2} 8 Q ${(laceW + 16) / 2 + laceW / 2} ${laceH * 0.55} ${(laceW + 16) / 2 + 6} ${laceH}`}
-            fill="none"
-            stroke="url(#laceGrad)"
-            strokeWidth="3.5"
-            strokeLinecap="round"
-          />
-
-          {/* Diagonal weave lines on strands (decorative) */}
-          {[0.25, 0.45, 0.65].map((t, i) => {
-            const lx = (laceW + 16) / 2 - 2 + ((laceW + 16) / 2 - 6 - ((laceW + 16) / 2 - 2)) * t;
-            const ly = 8 + (laceH - 8) * t;
-            const rx2 = (laceW + 16) / 2 + 2 + ((laceW + 16) / 2 + 6 - ((laceW + 16) / 2 + 2)) * t;
-            return (
-              <line key={i} x1={lx} y1={ly} x2={rx2} y2={ly}
-                stroke="rgba(245,158,11,0.5)" strokeWidth="1.2" strokeLinecap="round" />
-            );
-          })}
-
-          {/* Badge hole circle at bottom of lace */}
-          <circle cx={(laceW + 16) / 2} cy={laceH} r={5} fill="#374151" stroke="#6b7280" strokeWidth="1.5" />
-          <circle cx={(laceW + 16) / 2} cy={laceH} r={2} fill="#111827" />
-
           <defs>
-            <linearGradient id="laceGrad" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="0%" stopColor="#f59e0b" />
-              <stop offset="50%" stopColor="#d97706" />
-              <stop offset="100%" stopColor="#92400e" />
+            {/* Dark strap fill with subtle texture */}
+            <linearGradient id="strapL" x1="0" y1="0" x2="1" y2="0">
+              <stop offset="0%" stopColor="#1a1a1a" />
+              <stop offset="40%" stopColor="#2d2d2d" />
+              <stop offset="100%" stopColor="#111" />
+            </linearGradient>
+            <linearGradient id="strapR" x1="0" y1="0" x2="1" y2="0">
+              <stop offset="0%" stopColor="#111" />
+              <stop offset="60%" stopColor="#2d2d2d" />
+              <stop offset="100%" stopColor="#1a1a1a" />
+            </linearGradient>
+            {/* Buckle metal */}
+            <linearGradient id="buckle" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stopColor="#6b7280" />
+              <stop offset="50%" stopColor="#374151" />
+              <stop offset="100%" stopColor="#1f2937" />
+            </linearGradient>
+            {/* Clip metal */}
+            <linearGradient id="clip" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stopColor="#9ca3af" />
+              <stop offset="100%" stopColor="#6b7280" />
             </linearGradient>
           </defs>
+
+          {/* ── Left Strap ── */}
+          {/* Left strap: starts at loop top (midX - topSpread), curves down to (midX - botGap - strapW/2) */}
+          <path
+            d={`
+              M ${midX - topSpread - strapW / 2} 4
+              C ${midX - topSpread - strapW / 2} ${H * 0.4}, ${midX - botGap - strapW} ${H * 0.55}, ${midX - botGap - strapW / 2} ${H - 22}
+              L ${midX - botGap + strapW / 2} ${H - 22}
+              C ${midX - botGap + strapW / 2} ${H * 0.55}, ${midX - topSpread + strapW / 2} ${H * 0.4}, ${midX - topSpread + strapW / 2} 4
+              Z
+            `}
+            fill="url(#strapL)"
+          />
+          {/* Left strap edge highlight */}
+          <path
+            d={`M ${midX - topSpread + strapW / 2} 4 C ${midX - topSpread + strapW / 2} ${H * 0.4}, ${midX - botGap + strapW / 2} ${H * 0.55}, ${midX - botGap + strapW / 2} ${H - 22}`}
+            fill="none" stroke="rgba(255,255,255,0.08)" strokeWidth="1"
+          />
+
+          {/* Left strap text: "QUEZON CITY UNIVERSITY" rotated */}
+          <text
+            transform={`translate(${midX - topSpread} 8) rotate(90)`}
+            fontSize="5.5"
+            fontFamily="Arial, sans-serif"
+            fontWeight="bold"
+            letterSpacing="1.2"
+            fill="rgba(255,255,255,0.55)"
+            textAnchor="start"
+          >
+            QUEZON CITY UNIVERSITY
+          </text>
+          {/* Left strap QCU large text */}
+          <text
+            transform={`translate(${midX - topSpread - 2} 28) rotate(90)`}
+            fontSize="14"
+            fontFamily="Georgia, serif"
+            fontWeight="bold"
+            letterSpacing="3"
+            fill="rgba(255,255,255,0.12)"
+            textAnchor="start"
+          >
+            QCU
+          </text>
+
+          {/* ── Right Strap ── */}
+          <path
+            d={`
+              M ${midX + topSpread - strapW / 2} 4
+              C ${midX + topSpread - strapW / 2} ${H * 0.4}, ${midX + botGap - strapW} ${H * 0.55}, ${midX + botGap - strapW / 2} ${H - 22}
+              L ${midX + botGap + strapW / 2} ${H - 22}
+              C ${midX + botGap + strapW / 2} ${H * 0.55}, ${midX + topSpread + strapW / 2} ${H * 0.4}, ${midX + topSpread + strapW / 2} 4
+              Z
+            `}
+            fill="url(#strapR)"
+          />
+          {/* Right strap edge highlight */}
+          <path
+            d={`M ${midX + topSpread - strapW / 2} 4 C ${midX + topSpread - strapW / 2} ${H * 0.4}, ${midX + botGap - strapW / 2} ${H * 0.55}, ${midX + botGap - strapW / 2} ${H - 22}`}
+            fill="none" stroke="rgba(255,255,255,0.08)" strokeWidth="1"
+          />
+
+          {/* Right strap text */}
+          <text
+            transform={`translate(${midX + topSpread + 2} 8) rotate(90)`}
+            fontSize="5.5"
+            fontFamily="Arial, sans-serif"
+            fontWeight="bold"
+            letterSpacing="1.2"
+            fill="rgba(255,255,255,0.55)"
+            textAnchor="start"
+          >
+            QUEZON CITY UNIVERSITY
+          </text>
+          <text
+            transform={`translate(${midX + topSpread + 5} 28) rotate(90)`}
+            fontSize="14"
+            fontFamily="Georgia, serif"
+            fontWeight="bold"
+            letterSpacing="3"
+            fill="rgba(255,255,255,0.12)"
+            textAnchor="start"
+          >
+            QCU
+          </text>
+
+          {/* ── Loop / fold at the top ── */}
+          <rect
+            x={midX - topSpread - strapW / 2}
+            y={0}
+            width={topSpread * 2 + strapW}
+            height={10}
+            rx={3}
+            fill="#111"
+            stroke="rgba(255,255,255,0.1)"
+            strokeWidth="0.8"
+          />
+          {/* Fold crease */}
+          <line x1={midX - topSpread} y1={0} x2={midX - topSpread} y2={10} stroke="rgba(255,255,255,0.06)" strokeWidth="1" />
+          <line x1={midX + topSpread} y1={0} x2={midX + topSpread} y2={10} stroke="rgba(255,255,255,0.06)" strokeWidth="1" />
+
+          {/* ── Left Buckle ── */}
+          {/* Buckle body */}
+          <rect x={midX - botGap - strapW / 2} y={H - 22} width={strapW} height={14} rx={2} fill="#1f2937" stroke="#374151" strokeWidth="0.8" />
+          {/* Buckle release button */}
+          <rect x={midX - botGap - strapW / 2 + 2} y={H - 20} width={strapW - 4} height={5} rx={1.5} fill="#374151" />
+          <rect x={midX - botGap - strapW / 2 + 2} y={H - 14} width={strapW - 4} height={5} rx={1.5} fill="#374151" />
+          {/* Buckle side rivets */}
+          <circle cx={midX - botGap - strapW / 2 + 2.5} cy={H - 15} r={1.5} fill="#6b7280" />
+          <circle cx={midX - botGap + strapW / 2 - 2.5} cy={H - 15} r={1.5} fill="#6b7280" />
+          {/* Metal swivel hook */}
+          <ellipse cx={midX - botGap} cy={H - 3} rx={4} ry={3} fill="none" stroke="url(#clip)" strokeWidth="2" />
+          <rect x={midX - botGap - 1.5} y={H - 6} width={3} height={4} rx={0.5} fill="#9ca3af" />
+
+          {/* ── Right Buckle ── */}
+          <rect x={midX + botGap - strapW / 2} y={H - 22} width={strapW} height={14} rx={2} fill="#1f2937" stroke="#374151" strokeWidth="0.8" />
+          <rect x={midX + botGap - strapW / 2 + 2} y={H - 20} width={strapW - 4} height={5} rx={1.5} fill="#374151" />
+          <rect x={midX + botGap - strapW / 2 + 2} y={H - 14} width={strapW - 4} height={5} rx={1.5} fill="#374151" />
+          <circle cx={midX + botGap - strapW / 2 + 2.5} cy={H - 15} r={1.5} fill="#6b7280" />
+          <circle cx={midX + botGap + strapW / 2 - 2.5} cy={H - 15} r={1.5} fill="#6b7280" />
+          <ellipse cx={midX + botGap} cy={H - 3} rx={4} ry={3} fill="none" stroke="url(#clip)" strokeWidth="2" />
+          <rect x={midX + botGap - 1.5} y={H - 6} width={3} height={4} rx={0.5} fill="#9ca3af" />
         </svg>
       </div>
 
-      {/* ── Card body ── */}
+      {/* ── ID Card ── */}
       <div
         style={{
           boxShadow: lifted
             ? '0 32px 64px rgba(0,0,0,0.5), 0 0 0 1px rgba(245,158,11,0.35)'
             : '0 8px 32px rgba(0,0,0,0.3), 0 0 0 1px rgba(245,158,11,0.15)',
           transition: 'box-shadow 0.3s',
+          width: W,
         }}
         className="relative bg-gradient-to-br from-neutral-900 via-neutral-800 to-neutral-900 border border-white/10 rounded-2xl overflow-hidden"
       >
         {/* Holographic shine */}
         <div
-          className="absolute inset-0 pointer-events-none z-10 rounded-2xl opacity-30"
+          className="absolute inset-0 pointer-events-none z-10 rounded-2xl opacity-25"
           style={{ background: `radial-gradient(circle at ${shine.x}% ${shine.y}%, rgba(245,158,11,0.4) 0%, rgba(139,92,246,0.2) 40%, transparent 70%)` }}
         />
 
@@ -213,7 +311,6 @@ const DraggableID = ({
                 <p className="text-[9px] text-neutral-500 font-medium leading-tight">Photo<br />coming soon</p>
               </div>
             )}
-            {/* Scanlines */}
             <div
               className="absolute inset-0 pointer-events-none opacity-[0.04]"
               style={{ backgroundImage: 'repeating-linear-gradient(0deg,#fff 0,#fff 1px,transparent 1px,transparent 4px)' }}
@@ -230,7 +327,6 @@ const DraggableID = ({
               <p className="text-[8px] text-neutral-500 uppercase tracking-wider">ID No.</p>
               <p className="text-neutral-300 text-[10px] font-mono font-bold">{idNumber}</p>
             </div>
-            {/* QR stub */}
             <div className="w-9 h-9 bg-white rounded-md p-1 grid grid-cols-3 gap-px">
               {[1,1,0,1,0,1,0,1,1].map((on, i) => (
                 <div key={i} className={`rounded-[1px] ${on ? 'bg-neutral-900' : 'bg-white'}`} />
@@ -239,11 +335,9 @@ const DraggableID = ({
           </div>
         </div>
 
-        {/* Bottom rainbow accent */}
         <div className="h-1 bg-gradient-to-r from-amber-500 via-purple-500 to-cyan-500" />
       </div>
 
-      {/* Hint */}
       {hint && (
         <div className="absolute -bottom-7 left-1/2 -translate-x-1/2 whitespace-nowrap text-[10px] text-neutral-500 font-medium flex items-center gap-1 pointer-events-none animate-pulse">
           <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
