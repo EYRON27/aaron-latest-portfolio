@@ -31,7 +31,7 @@ const CertificatesWindow = ({ isDark = false }: { isDark?: boolean }) => {
 
   return (
     <div className="flex flex-col h-[65vh] relative overflow-hidden">
-      
+
       {/* Scrollable Content Area */}
       <div className="p-8 overflow-y-auto custom-scrollbar flex-1 flex flex-col gap-10">
         <div>

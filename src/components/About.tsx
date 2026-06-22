@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 import { useScrollReveal } from '../hooks/useScrollReveal';
+import DraggableID from './DraggableID';
 
 // ── Count-up ──────────────────────────────────────────────────────────────────
 const CountUp = ({ target, suffix = '' }: { target: number; suffix?: string }) => {
@@ -162,7 +163,7 @@ const About = () => {
   const techs = ['React', 'TypeScript', 'Tailwind CSS', 'Flutter', 'Node.js', 'Figma', 'Firebase', 'Git'];
 
   return (
-    <section id="about" className="py-24 border-t border-neutral-200 dark:border-neutral-800 relative overflow-hidden">
+    <section id="about" className="py-24 border-t border-neutral-200 dark:border-neutral-800 relative">
       {/* Ambient orbs */}
       <div className="absolute top-0 right-0 w-[600px] h-[600px] rounded-full pointer-events-none"
         style={{ background: 'radial-gradient(circle, rgba(245,158,11,0.05) 0%, transparent 65%)', transform: 'translate(30%, -30%)' }} />
@@ -191,38 +192,29 @@ const About = () => {
           </span>
         </div>
 
-        <div className="grid lg:grid-cols-2 gap-16 lg:gap-24 items-start">
-          {/* Left */}
-          <div>
-            <h2
-              className={`text-3xl sm:text-4xl md:text-5xl font-black tracking-tight mb-10 leading-tight transition-all duration-800 ${headVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}
-              style={{ transitionDelay: '120ms', textShadow: '0 0 50px rgba(245,158,11,0.08)' }}
-            >
-              I build things<br />for the web<span className="text-amber-500">.</span>
-            </h2>
+        <div className="grid lg:grid-cols-[auto_1fr_1fr] gap-12 lg:gap-16 items-start">
 
-            <div className="grid grid-cols-3 gap-3">
-              {stats.map((s, i) => <StatCard key={i} {...s} />)}
-            </div>
-
-            <div
-              className="mt-10 h-px rounded-full"
-              style={{
-                background: 'linear-gradient(90deg, rgba(245,158,11,0.7), rgba(139,92,246,0.3), transparent)',
-                opacity: headVisible ? 1 : 0,
-                transform: headVisible ? 'scaleX(1)' : 'scaleX(0)',
-                transformOrigin: 'left',
-                transition: 'transform 1.2s 0.6s cubic-bezier(0.16,1,0.3,1), opacity 0.5s 0.6s',
-              }}
-            />
+          {/* ── Draggable ID Card Column ── */}
+          <div
+            className={`flex items-start justify-center lg:justify-start pb-10 transition-all duration-700 ${headVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}
+            style={{ transitionDelay: '80ms' }}
+          >
+            <DraggableID photoSrc="/ME YARN.jpg" />
           </div>
 
-          {/* Right */}
+          {/* ── Bio Text Column ── */}
           <div
             ref={textRef as React.RefObject<HTMLDivElement>}
             className={`space-y-5 text-neutral-600 dark:text-neutral-400 leading-relaxed transition-all duration-700 ${textVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}
             style={{ transitionDelay: '200ms' }}
           >
+            <h2
+              className={`text-3xl sm:text-4xl font-black tracking-tight mb-6 leading-tight text-neutral-900 dark:text-neutral-100 transition-all duration-800 ${headVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}
+              style={{ transitionDelay: '120ms', textShadow: '0 0 50px rgba(245,158,11,0.08)' }}
+            >
+              I build things<br />for the web<span className="text-amber-500">.</span>
+            </h2>
+
             {[
               "I'm a web development student who loves learning new technologies and building responsive, accessible, and efficient websites and applications. Currently pursuing a Bachelor of Science in Information Technology at Quezon City University.",
               "When I'm not coding or studying, I explore new tech, build side projects, and connect with other students who share the same passion for development. I believe in creating digital experiences that matter.",
@@ -247,6 +239,26 @@ const About = () => {
               ))}
             </div>
           </div>
+
+          {/* ── Stats Column ── */}
+          <div
+            className={`grid grid-cols-1 gap-3 transition-all duration-700 ${headVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}
+            style={{ transitionDelay: '300ms' }}
+          >
+            {stats.map((s, i) => <StatCard key={i} {...s} />)}
+
+            <div
+              className="mt-4 h-px rounded-full"
+              style={{
+                background: 'linear-gradient(90deg, rgba(245,158,11,0.7), rgba(139,92,246,0.3), transparent)',
+                opacity: headVisible ? 1 : 0,
+                transform: headVisible ? 'scaleX(1)' : 'scaleX(0)',
+                transformOrigin: 'left',
+                transition: 'transform 1.2s 0.6s cubic-bezier(0.16,1,0.3,1), opacity 0.5s 0.6s',
+              }}
+            />
+          </div>
+
         </div>
       </div>
     </section>
