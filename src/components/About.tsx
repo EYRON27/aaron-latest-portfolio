@@ -199,7 +199,7 @@ const About = () => {
             className={`flex items-start justify-center lg:justify-start pb-10 transition-all duration-700 ${headVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}
             style={{ transitionDelay: '80ms' }}
           >
-            <DraggableID />
+            <DraggableID photoSrc="/ME YARN.jpg" />
           </div>
 
           {/* ── Bio Text Column ── */}
