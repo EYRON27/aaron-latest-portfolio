@@ -20,6 +20,15 @@ const ProjectsWindow = ({ isDark = false }: { isDark?: boolean }) => {
       color: 'from-blue-500 to-indigo-600',
     },
     {
+      title: 'SyncStudy',
+      description: 'Full-stack collaborative workspace for students featuring a Kanban board, AI study assistant, budget tracker, and live study rooms with video/audio calling.',
+      technologies: ['React', 'Node.js', 'Socket.IO', 'Prisma'],
+      github: 'https://github.com/EYRON27/SyncStudy',
+      demo: 'https://sync-study-ten.vercel.app/',
+      role: 'Full Stack',
+      color: 'from-cyan-500 to-blue-600',
+    },
+    {
       title: 'Algorithm Portfolio',
       description: 'A comprehensive compilation portfolio showcasing algorithm implementations and problem-solving approaches for academic coursework. Features a beautiful macOS-inspired UI with interactive demonstrations, code examples, and a dynamic theme switcher.',
       technologies: ['React', 'TypeScript', 'Tailwind CSS', 'Vite'],

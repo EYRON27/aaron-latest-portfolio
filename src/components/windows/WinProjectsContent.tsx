@@ -11,6 +11,15 @@ const projects = [
     role: 'Front-End Developer',
   },
   {
+    title: 'SyncStudy',
+    desc: 'Full-stack collaborative workspace for students featuring a Kanban board, AI study assistant, budget tracker, and live study rooms with video/audio calling.',
+    tech: ['React', 'Node.js', 'Socket.IO', 'Prisma'],
+    github: 'https://github.com/EYRON27/SyncStudy',
+    demo: 'https://sync-study-ten.vercel.app/',
+    color: 'from-cyan-500 to-blue-600',
+    role: 'Full Stack',
+  },
+  {
     title: 'Algorithm Portfolio',
     desc: 'A comprehensive compilation portfolio showcasing algorithm implementations with a macOS-inspired UI, interactive demonstrations, code examples, and a dynamic theme switcher.',
     tech: ['React', 'TypeScript', 'Tailwind CSS', 'Vite'],
