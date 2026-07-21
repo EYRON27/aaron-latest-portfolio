@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { GraduationCap, Award, Calendar, ChevronLeft, ChevronRight, X } from 'lucide-react';
-import { useScrollReveal } from '../hooks/useScrollReveal';
-import { EDUCATION, CERTIFICATIONS } from '../data/portfolio';
+import { useScrollReveal } from '../../hooks/useScrollReveal';
+import { EDUCATION, CERTIFICATIONS } from '../../data/portfolio';
 
 const Education = () => {
   const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
@@ -13,10 +13,7 @@ const Education = () => {
   // ← Edit certifications in src/data/portfolio.ts → CERTIFICATIONS
   const certifications = CERTIFICATIONS;
 
-  const courses = [
-    'Web Development', 'Programming Fundamentals',
-    'Data Structures', 'Computer Networks',
-  ];
+
 
   // Keyboard navigation for lightbox
   useEffect(() => {
@@ -66,7 +63,7 @@ const Education = () => {
           className={`flex items-center gap-3 mb-12 transition-all duration-700 ${headVisible ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-6'}`}
         >
           <div className="h-px w-12 bg-amber-500"></div>
-          <span className="text-amber-500 text-sm font-medium tracking-wider uppercase">Experience</span>
+          <span className="text-amber-500 text-sm font-medium tracking-wider uppercase">Education & Certs</span>
         </div>
 
         <h2
@@ -203,16 +200,16 @@ const Education = () => {
           </div>
         </div>
 
-        {/* ── Coursework ── */}
+        {/* ── Coursework / Certificates ── */}
         <div>
           <div className="flex items-center gap-2 mb-6">
-            <GraduationCap className="w-4 h-4 text-amber-500" />
-            <h3 className="font-bold text-lg">Coursework</h3>
+            <Award className="w-4 h-4 text-amber-500" />
+            <h3 className="font-bold text-lg">Certifications & Courses</h3>
           </div>
           <div className="flex flex-wrap gap-2">
-            {courses.map((course, index) => (
+            {certifications.map((cert, index) => (
               <span key={index} className="px-4 py-2 bg-neutral-100 dark:bg-neutral-800/80 text-neutral-600 dark:text-neutral-400 text-sm rounded-full border border-neutral-200 dark:border-neutral-700/50">
-                {course}
+                {cert.name}
               </span>
             ))}
           </div>

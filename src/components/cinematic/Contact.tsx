@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Mail, Github, Linkedin, MapPin, ArrowUpRight, Send } from 'lucide-react';
-import { useScrollReveal } from '../hooks/useScrollReveal';
-import { CONTACT, PERSONAL } from '../data/portfolio';
+import { useScrollReveal } from '../../hooks/useScrollReveal';
+import { CONTACT, PERSONAL } from '../../data/portfolio';
 
 // ─── Magnetic link card ───────────────────────────────────────────────────────
 const SocialCard = ({ icon: Icon, label, value, href, color }: { icon: any; label: string; value: string; href: string; color: string }) => {
