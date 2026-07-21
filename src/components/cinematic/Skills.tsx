@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Code2, Server, Database, Wrench, Users } from 'lucide-react';
-import { useScrollReveal } from '../hooks/useScrollReveal';
-import { SKILL_CATEGORIES } from '../data/portfolio';
+import { useScrollReveal } from '../../hooks/useScrollReveal';
+import { SKILL_CATEGORIES } from '../../data/portfolio';
 
 // ← Edit skills in src/data/portfolio.ts → SKILL_CATEGORIES
 const skillCategories = SKILL_CATEGORIES.map((cat, i) => ({

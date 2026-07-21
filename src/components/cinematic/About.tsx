@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
-import { useScrollReveal } from '../hooks/useScrollReveal';
-import DraggableID from './DraggableID';
-import { STATS, TECH_PILLS, PERSONAL } from '../data/portfolio';
+import { useScrollReveal } from '../../hooks/useScrollReveal';
+import DraggableID from '../DraggableID';
+import { STATS, TECH_PILLS, PERSONAL } from '../../data/portfolio';
 
 // ── Count-up ──────────────────────────────────────────────────────────────────
 const CountUp = ({ target, suffix = '' }: { target: number; suffix?: string }) => {

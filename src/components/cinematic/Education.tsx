@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { GraduationCap, Award, Calendar, ChevronLeft, ChevronRight, X } from 'lucide-react';
-import { useScrollReveal } from '../hooks/useScrollReveal';
-import { EDUCATION, CERTIFICATIONS } from '../data/portfolio';
+import { useScrollReveal } from '../../hooks/useScrollReveal';
+import { EDUCATION, CERTIFICATIONS } from '../../data/portfolio';
 
 const Education = () => {
   const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);

@@ -1,7 +1,7 @@
 import { useRef, useState } from 'react';
 import { ExternalLink, Github, ArrowUpRight, Globe } from 'lucide-react';
-import { useScrollReveal } from '../hooks/useScrollReveal';
-import { PROJECTS } from '../data/portfolio';
+import { useScrollReveal } from '../../hooks/useScrollReveal';
+import { PROJECTS } from '../../data/portfolio';
 
 // ← Data is now in src/data/portfolio.ts — edit there to update projects
 const projects = PROJECTS;
