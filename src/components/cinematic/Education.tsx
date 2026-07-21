@@ -13,10 +13,7 @@ const Education = () => {
   // ← Edit certifications in src/data/portfolio.ts → CERTIFICATIONS
   const certifications = CERTIFICATIONS;
 
-  const courses = [
-    'Web Development', 'Programming Fundamentals',
-    'Data Structures', 'Computer Networks',
-  ];
+
 
   // Keyboard navigation for lightbox
   useEffect(() => {
@@ -203,16 +200,16 @@ const Education = () => {
           </div>
         </div>
 
-        {/* ── Coursework ── */}
+        {/* ── Coursework / Certificates ── */}
         <div>
           <div className="flex items-center gap-2 mb-6">
-            <GraduationCap className="w-4 h-4 text-amber-500" />
-            <h3 className="font-bold text-lg">Coursework</h3>
+            <Award className="w-4 h-4 text-amber-500" />
+            <h3 className="font-bold text-lg">Certifications & Courses</h3>
           </div>
           <div className="flex flex-wrap gap-2">
-            {courses.map((course, index) => (
+            {certifications.map((cert, index) => (
               <span key={index} className="px-4 py-2 bg-neutral-100 dark:bg-neutral-800/80 text-neutral-600 dark:text-neutral-400 text-sm rounded-full border border-neutral-200 dark:border-neutral-700/50">
-                {course}
+                {cert.name}
               </span>
             ))}
           </div>
