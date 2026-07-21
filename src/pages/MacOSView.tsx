@@ -7,6 +7,7 @@ import SkillsWindow from '../components/macos/SkillsWindow';
 import ProjectsWindow from '../components/macos/ProjectsWindow';
 import CertificatesWindow from '../components/macos/CertificatesWindow';
 import ContactWindow from '../components/macos/ContactWindow';
+import ExperienceWindow from '../components/macos/ExperienceWindow';
 import HomeDesktop from '../components/macos/HomeDesktop';
 
 const MacOSView = () => {
@@ -46,6 +47,13 @@ const MacOSView = () => {
       color: 'bg-purple-500',
       content: <SkillsWindow isDark={isDark} />
     },
+    experience: {
+      id: 'experience',
+      title: 'Experience',
+      dockIcon: <Briefcase className="w-6 h-6 text-white" />,
+      color: 'bg-green-500',
+      content: <ExperienceWindow isDark={isDark} />
+    },
     projects: {
       id: 'projects',
       title: 'Featured Projects',
@@ -64,7 +72,7 @@ const MacOSView = () => {
       id: 'contact',
       title: 'Get In Touch',
       dockIcon: <MessageSquare className="w-6 h-6 text-white" />,
-      color: 'bg-green-500',
+      color: 'bg-pink-500',
       content: <ContactWindow isDark={isDark} />
     },
   };

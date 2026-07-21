@@ -2,6 +2,7 @@ import Navigation from '../components/Navigation';
 import Hero from '../components/cinematic/Hero';
 import About from '../components/cinematic/About';
 import Skills from '../components/cinematic/Skills';
+import Experience from '../components/cinematic/Experience';
 import Projects from '../components/cinematic/Projects';
 import Education from '../components/cinematic/Education';
 import Contact from '../components/cinematic/Contact';
@@ -20,6 +21,7 @@ const CinematicView = () => (
     <About />
     <Education />
     <Skills />
+    <Experience />
     <Projects />
     <Contact />
     <Chatbot />
