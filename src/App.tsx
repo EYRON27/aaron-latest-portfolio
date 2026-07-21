@@ -5,7 +5,7 @@ import {
   Monitor, ChevronDown, Film, Moon, Sun, Send,
   Code2, Layers, Smartphone, Globe, Briefcase
 } from 'lucide-react';
-import { CONTACT, STATS, PROJECTS, EXPERIENCE } from './data/portfolio';
+import { CONTACT, STATS, PROJECTS, EXPERIENCE, PERSONAL } from './data/portfolio';
 
 // ── SVG logos ─────────────────────────────────────────────────────────────────
 const WindowsLogo = () => (
@@ -84,7 +84,7 @@ const TopNav = () => {
     return () => document.removeEventListener('mousedown', h);
   }, []);
 
-  const navLinks = ['Home', 'Works', 'Projects', 'Services'];
+  const navLinks = ['Home', 'About', 'Works', 'Projects', 'Services'];
 
   return (
     <nav style={{
@@ -394,6 +394,52 @@ export default function App() {
         </div>
       </section>
 
+      {/* ── ABOUT ───────────────────────────────────────────────────────────── */}
+      <section id="about" style={{ padding: '80px 48px', background: '#fafafa', borderTop: '1px solid #f0f0f0' }}>
+        <div style={{ maxWidth: 1120, margin: '0 auto', display: 'flex', flexDirection: 'column', gap: 40 }}>
+          <div>
+            <div style={{ fontSize: '0.7rem', fontWeight: 700, letterSpacing: '0.2em', textTransform: 'uppercase', color: '#f59e0b', marginBottom: 8 }}>About Me</div>
+            <h2 style={{ fontSize: 'clamp(1.8rem,3vw,2.6rem)', fontWeight: 900, letterSpacing: '-0.04em', margin: 0 }}>
+              Get to Know Me<span style={{ color: '#f59e0b' }}>.</span>
+            </h2>
+          </div>
+          
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: 40 }}>
+            {/* Bio text */}
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
+              {PERSONAL.bio.map((paragraph, i) => (
+                <p key={i} style={{ margin: 0, fontSize: '0.95rem', lineHeight: 1.8, color: '#555' }}>
+                  {paragraph}
+                </p>
+              ))}
+              <div style={{ marginTop: 12 }}>
+                <a href="#contact" style={{ display: 'inline-flex', alignItems: 'center', gap: 8, padding: '12px 24px', borderRadius: 8, fontWeight: 700, fontSize: '0.85rem', background: '#111', color: '#fff', textDecoration: 'none', transition: 'background 0.2s' }}
+                  onMouseEnter={e => (e.currentTarget.style.background = '#f59e0b')}
+                  onMouseLeave={e => (e.currentTarget.style.background = '#111')}
+                >
+                  Let's Talk
+                </a>
+              </div>
+            </div>
+            
+            {/* Details Grid */}
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 20, alignContent: 'start' }}>
+              <div style={{ background: '#fff', padding: 24, borderRadius: 16, border: '1px solid #eee' }}>
+                <div style={{ fontSize: '0.7rem', color: '#aaa', fontWeight: 700, textTransform: 'uppercase', marginBottom: 8 }}>Location</div>
+                <div style={{ fontSize: '0.9rem', fontWeight: 600, color: '#222' }}>{PERSONAL.location}</div>
+              </div>
+              <div style={{ background: '#fff', padding: 24, borderRadius: 16, border: '1px solid #eee' }}>
+                <div style={{ fontSize: '0.7rem', color: '#aaa', fontWeight: 700, textTransform: 'uppercase', marginBottom: 8 }}>Status</div>
+                <div style={{ fontSize: '0.9rem', fontWeight: 600, color: '#22c55e' }}>{PERSONAL.availability}</div>
+              </div>
+              <div style={{ background: '#fff', padding: 24, borderRadius: 16, border: '1px solid #eee', gridColumn: '1 / -1' }}>
+                <div style={{ fontSize: '0.7rem', color: '#aaa', fontWeight: 700, textTransform: 'uppercase', marginBottom: 8 }}>Email</div>
+                <a href={`mailto:${CONTACT.email}`} style={{ fontSize: '0.9rem', fontWeight: 600, color: '#222', textDecoration: 'none' }}>{CONTACT.email}</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
       {/* ── SERVICES ────────────────────────────────────────────────────────── */}
       <section id="services" style={{ padding: '80px 48px', borderTop: '1px solid #f0f0f0' }}>
         <div style={{ maxWidth: 1120, margin: '0 auto' }}>
