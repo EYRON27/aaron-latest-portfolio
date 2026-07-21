@@ -19,9 +19,9 @@ const CinematicView = () => (
     <Navigation />
     <Hero />
     <About />
+    <Experience />
     <Education />
     <Skills />
-    <Experience />
     <Projects />
     <Contact />
     <Chatbot />

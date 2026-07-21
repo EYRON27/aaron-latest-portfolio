@@ -66,7 +66,7 @@ const Education = () => {
           className={`flex items-center gap-3 mb-12 transition-all duration-700 ${headVisible ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-6'}`}
         >
           <div className="h-px w-12 bg-amber-500"></div>
-          <span className="text-amber-500 text-sm font-medium tracking-wider uppercase">Experience</span>
+          <span className="text-amber-500 text-sm font-medium tracking-wider uppercase">Education & Certs</span>
         </div>
 
         <h2
