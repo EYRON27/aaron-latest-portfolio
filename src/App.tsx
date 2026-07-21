@@ -3,9 +3,9 @@ import { useNavigate } from 'react-router-dom';
 import {
   Mail, Github, Linkedin, ArrowUpRight, ExternalLink,
   Monitor, ChevronDown, Film, Moon, Sun, Send,
-  Code2, Layers, Smartphone, Globe
+  Code2, Layers, Smartphone, Globe, Briefcase
 } from 'lucide-react';
-import { CONTACT, STATS, PROJECTS } from './data/portfolio';
+import { CONTACT, STATS, PROJECTS, EXPERIENCE } from './data/portfolio';
 
 // ── SVG logos ─────────────────────────────────────────────────────────────────
 const WindowsLogo = () => (
@@ -84,7 +84,7 @@ const TopNav = () => {
     return () => document.removeEventListener('mousedown', h);
   }, []);
 
-  const navLinks = ['Home', 'Works', 'About', 'Projects', 'Services'];
+  const navLinks = ['Home', 'Works', 'Projects', 'Services'];
 
   return (
     <nav style={{
@@ -426,8 +426,83 @@ export default function App() {
         </div>
       </section>
 
+      {/* ── EXPERIENCE (Works) ──────────────────────────────────────────────── */}
+      <section id="works" style={{ padding: '80px 48px', background: '#fff', borderTop: '1px solid #f0f0f0' }}>
+        <div style={{ maxWidth: 1120, margin: '0 auto' }}>
+          <div style={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'space-between', marginBottom: 48, flexWrap: 'wrap', gap: 16 }}>
+            <div>
+              <div style={{ fontSize: '0.7rem', fontWeight: 700, letterSpacing: '0.2em', textTransform: 'uppercase', color: '#f59e0b', marginBottom: 8 }}>Experience</div>
+              <h2 style={{ fontSize: 'clamp(1.8rem,3vw,2.6rem)', fontWeight: 900, letterSpacing: '-0.04em', margin: 0 }}>
+                Professional Experience<span style={{ color: '#f59e0b' }}>.</span>
+              </h2>
+            </div>
+          </div>
+
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 24 }}>
+            {EXPERIENCE.map((exp, i) => (
+              <div key={i} style={{ 
+                background: '#1a1a1a', 
+                borderRadius: 20, 
+                padding: '32px', 
+                color: '#fff',
+                display: 'flex',
+                gap: 24,
+                boxShadow: '0 20px 40px rgba(0,0,0,0.08)',
+                flexDirection: 'row'
+              }}>
+                {/* Logo Box */}
+                <div style={{ 
+                  width: 64, height: 64, borderRadius: 12, 
+                  background: '#0a0a0a', border: '1px solid #333',
+                  display: 'flex', alignItems: 'center', justifyContent: 'center',
+                  flexShrink: 0
+                }}>
+                  <span style={{ color: '#22c55e', fontSize: '2rem', fontWeight: 900, fontFamily: 'serif', fontStyle: 'italic' }}>y</span>
+                </div>
+                
+                {/* Content */}
+                <div style={{ flex: 1 }}>
+                  <h3 style={{ fontSize: '1.25rem', fontWeight: 700, margin: '0 0 4px', color: '#fff' }}>{exp.role}</h3>
+                  <div style={{ fontSize: '0.95rem', color: '#ccc', marginBottom: 6 }}>
+                    {exp.company} · {exp.type}
+                  </div>
+                  <div style={{ fontSize: '0.85rem', color: '#888', marginBottom: 2 }}>
+                    {exp.date} · {exp.duration}
+                  </div>
+                  <div style={{ fontSize: '0.85rem', color: '#888', marginBottom: 16 }}>
+                    {exp.location}
+                  </div>
+                  
+                  <p style={{ fontSize: '0.9rem', color: '#bbb', lineHeight: 1.6, margin: '0 0 20px' }}>
+                    {exp.description}
+                  </p>
+
+                  {/* Link Card */}
+                  {exp.link && (
+                    <a href={exp.link.url} target="_blank" rel="noopener noreferrer" style={{
+                      display: 'inline-flex', alignItems: 'center', gap: 12,
+                      background: '#2a2a2a', padding: '10px 16px', borderRadius: 10,
+                      textDecoration: 'none', color: '#fff', fontSize: '0.85rem', fontWeight: 600,
+                      transition: 'background 0.2s'
+                    }}
+                    onMouseEnter={e => (e.currentTarget.style.background = '#333')}
+                    onMouseLeave={e => (e.currentTarget.style.background = '#2a2a2a')}
+                    >
+                      <div style={{ width: 36, height: 36, background: '#111', borderRadius: 8, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                        <ExternalLink size={16} color="#fff" />
+                      </div>
+                      {exp.link.text}
+                    </a>
+                  )}
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
       {/* ── PROJECTS ─────────────────────────────────────────────────────────── */}
-      <section id="works" style={{ padding: '80px 48px', background: '#fafafa', borderTop: '1px solid #f0f0f0' }}>
+      <section id="projects" style={{ padding: '80px 48px', background: '#fafafa', borderTop: '1px solid #f0f0f0' }}>
         <div style={{ maxWidth: 1120, margin: '0 auto' }}>
           <div style={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'space-between', marginBottom: 48, flexWrap: 'wrap', gap: 16 }}>
             <div>
