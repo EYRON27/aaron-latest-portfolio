@@ -1,6 +1,13 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Home, User, Code, Briefcase, MessageSquare, Award, Sun, Moon } from 'lucide-react';
+import { Home, User, Code, Briefcase, MessageSquare, Award, Sun, Moon, Monitor, ChevronDown } from 'lucide-react';
+
+// Windows logo inline SVG
+const WindowsLogo = ({ size = 13 }: { size?: number }) => (
+  <svg width={size} height={size} viewBox="0 0 24 24" fill="currentColor">
+    <path d="M0 3.449L9.75 2.1v9.451H0m10.949-9.602L24 0v11.4H10.949M0 12.6h9.75v9.451L0 20.699M10.949 12.6H24V24l-13.051-1.8" />
+  </svg>
+);
 
 import AboutWindow from '../components/macos/AboutWindow';
 import SkillsWindow from '../components/macos/SkillsWindow';
@@ -17,6 +24,19 @@ const MacOSView = () => {
   const [hoveredDockItem, setHoveredDockItem] = useState<string | null>(null);
   const [isDark, setIsDark] = useState(false);
   const [windowKey, setWindowKey] = useState(0); // to re-trigger animation on page change
+  const [showUiDropdown, setShowUiDropdown] = useState(false);
+  const uiDropdownRef = useRef<HTMLDivElement>(null);
+
+  // Close dropdown on outside click
+  useEffect(() => {
+    const handler = (e: MouseEvent) => {
+      if (uiDropdownRef.current && !uiDropdownRef.current.contains(e.target as Node)) {
+        setShowUiDropdown(false);
+      }
+    };
+    document.addEventListener('mousedown', handler);
+    return () => document.removeEventListener('mousedown', handler);
+  }, []);
 
   useEffect(() => {
     const timer = setInterval(() => setCurrentTime(new Date()), 1000);
@@ -178,7 +198,6 @@ const MacOSView = () => {
 
           <div className={`w-px h-4 mx-0.5 ${isDark ? 'bg-white/10' : 'bg-slate-300/60'}`}/>
 
-          {/* Dark Mode Toggle */}
           <button
             onClick={() => setIsDark(d => !d)}
             className={`w-7 h-7 rounded-full flex items-center justify-center transition-all duration-300 ${isDark ? 'bg-white/10 hover:bg-white/20 text-yellow-400' : 'bg-slate-800/10 hover:bg-slate-800/20 text-slate-600'}`}
@@ -186,12 +205,55 @@ const MacOSView = () => {
           >
             {isDark ? <Sun className="w-3.5 h-3.5" /> : <Moon className="w-3.5 h-3.5" />}
           </button>
-          <button
-            onClick={() => navigate('/')}
-            className={`px-3 py-0.5 rounded-md transition-colors font-bold text-[12px] ${exitBtn}`}
-          >
-            Exit macOS Mode
-          </button>
+          
+          {/* UI Mode Dropdown */}
+          <div className="relative" ref={uiDropdownRef}>
+            <button
+              onClick={() => setShowUiDropdown(v => !v)}
+              className={`flex items-center gap-1.5 px-3 py-0.5 rounded-md transition-colors font-bold text-[12px] ${exitBtn}`}
+            >
+              <Monitor className="w-3 h-3" />
+              UI Mode
+              <ChevronDown className={`w-3 h-3 transition-transform duration-200 ${showUiDropdown ? 'rotate-180' : ''}`} />
+            </button>
+            
+            {showUiDropdown && (
+              <div className={`absolute top-full mt-2 right-0 w-44 rounded-xl overflow-hidden shadow-2xl border ${isDark ? 'border-white/10 bg-[#1c1c1e] text-white' : 'border-slate-200 bg-white text-slate-800'} backdrop-blur-xl z-[100]`}>
+                <div className={`px-3 py-2 border-b ${isDark ? 'border-white/10 text-white/50' : 'border-slate-100 text-slate-400'}`}>
+                  <p className="text-[10px] font-bold uppercase tracking-widest">Choose UI Mode</p>
+                </div>
+                <button
+                  onClick={() => { navigate('/cinematic'); setShowUiDropdown(false); }}
+                  className={`w-full flex items-center gap-3 px-4 py-3 text-[13px] font-medium transition-colors ${isDark ? 'hover:bg-white/10' : 'hover:bg-slate-50'}`}
+                >
+                  <div className="w-6 h-6 rounded-md bg-amber-500 text-white flex items-center justify-center font-bold text-[10px]">C</div>
+                  <div className="flex flex-col items-start text-left">
+                    <span>Cinematic</span>
+                    <span className="text-[9px] opacity-70">Creative UI</span>
+                  </div>
+                </button>
+                <button
+                  onClick={() => { navigate('/windows'); setShowUiDropdown(false); }}
+                  className={`w-full flex items-center gap-3 px-4 py-3 text-[13px] font-medium transition-colors border-b ${isDark ? 'hover:bg-white/10 border-white/10' : 'hover:bg-slate-50 border-slate-100'}`}
+                >
+                  <div className="w-6 h-6 rounded-md bg-[#0078d4] text-white flex items-center justify-center">
+                    <WindowsLogo size={12} />
+                  </div>
+                  <div className="flex flex-col items-start text-left">
+                    <span>Windows Mode</span>
+                    <span className="text-[9px] opacity-70">Win 11-style UI</span>
+                  </div>
+                </button>
+                <button
+                  onClick={() => { navigate('/'); setShowUiDropdown(false); }}
+                  className={`w-full flex items-center justify-center gap-2 px-4 py-3 text-[13px] font-bold text-red-500 transition-colors ${isDark ? 'hover:bg-red-500/10' : 'hover:bg-red-50'}`}
+                >
+                  Exit Mode
+                </button>
+              </div>
+            )}
+          </div>
+
           <span className={`hidden sm:inline-block transition-colors duration-500 ${isDark ? 'text-white/70' : ''}`}>
             {currentTime.toLocaleDateString([], { weekday: 'short', month: 'short', day: 'numeric' })}{' '}
             {currentTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
