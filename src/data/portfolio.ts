@@ -32,7 +32,7 @@ export const EXPERIENCE = [
     description: 'Currently driving frontend innovation at FlyRank AI as a Front-end AI Engineer. Spearheading the development of high-performance user interfaces and spearheading the seamless integration of AI-driven features.',
     link: {
       text: 'FlyRank - The Autopilot for Organic Growth',
-      url: '#' // Replace with actual URL if known
+      url: 'https://www.linkedin.com/posts/ca%C3%B1ada-aaron-m-352572352_flyrank-is-building-the-autopilot-for-organic-activity-7470102063142588416-0XyC?utm_source=share&utm_medium=member_desktop&rcm=ACoAAFgBIm4BPyX01L-_oI4_tYfk6jFxdrFd_Sc'
     }
   }
 ];
