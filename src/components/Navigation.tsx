@@ -222,15 +222,21 @@ const Navigation = () => {
                   </button>
                   <button
                     onClick={() => { navigate('/windows'); setShowUiDropdown(false); }}
-                    className="w-full flex items-center gap-3 px-4 py-3 text-[13px] font-medium text-neutral-700 dark:text-neutral-300 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors group"
+                    className="w-full flex items-center gap-3 px-4 py-3 text-[13px] font-medium text-neutral-700 dark:text-neutral-300 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors group border-b border-neutral-200 dark:border-neutral-800"
                   >
-                    <span className="w-7 h-7 rounded-lg bg-[#0078d4] flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform">
+                    <span className="w-7 h-7 rounded-lg bg-[#0078d4] flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform text-white">
                       <WindowsLogo size={14} />
                     </span>
                     <div className="flex flex-col items-start">
                       <span>Windows Mode</span>
                       <span className="text-[10px] text-neutral-400">Win 11-style UI</span>
                     </div>
+                  </button>
+                  <button
+                    onClick={() => { navigate('/'); setShowUiDropdown(false); }}
+                    className="w-full flex items-center justify-center gap-2 px-4 py-3 text-[13px] font-bold text-red-500 hover:bg-red-50 dark:hover:bg-red-950/30 transition-colors group"
+                  >
+                    Exit Mode
                   </button>
                 </div>
               )}

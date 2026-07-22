@@ -5,7 +5,7 @@ import {
   Monitor, ChevronDown, Film, Moon, Sun, Send,
   Code2, Layers, Smartphone, Globe, Briefcase
 } from 'lucide-react';
-import { CONTACT, STATS, PROJECTS, EXPERIENCE } from './data/portfolio';
+import { CONTACT, STATS, PROJECTS, EXPERIENCE, PERSONAL, EDUCATION, CERTIFICATIONS } from './data/portfolio';
 
 // ── SVG logos ─────────────────────────────────────────────────────────────────
 const WindowsLogo = () => (
@@ -60,6 +60,89 @@ const FloatingBadge = ({ icon, label, color, style }: { icon: React.ReactNode; l
   </div>
 );
 
+// ── Floating Preview ──────────────────────────────────────────────────────────
+interface FloatingPreviewProps {
+  url: string;
+  accent: string;
+  visible: boolean;
+  x: number;
+  y: number;
+}
+
+const FloatingPreview = ({ url, accent, visible, x, y }: FloatingPreviewProps) => (
+  <div
+    style={{
+      position: 'fixed',
+      left: x,
+      top: y,
+      width: 320,
+      pointerEvents: 'none',
+      zIndex: 9999,
+      borderRadius: 12,
+      overflow: 'hidden',
+      border: `1px solid ${accent}50`,
+      background: '#0d0d0d',
+      opacity: visible ? 1 : 0,
+      transform: visible
+        ? 'translate(-50%, calc(-100% - 18px)) scale(1) rotateX(0deg)'
+        : 'translate(-50%, calc(-100% - 18px)) scale(0.88) rotateX(10deg)',
+      boxShadow: visible
+        ? `0 28px 70px rgba(0,0,0,0.5), 0 0 0 1px ${accent}28, 0 0 50px ${accent}12`
+        : 'none',
+      transition: 'opacity 0.3s cubic-bezier(0.22,1,0.36,1), transform 0.3s cubic-bezier(0.22,1,0.36,1), box-shadow 0.3s ease',
+      transformOrigin: 'bottom center',
+    }}
+  >
+    <div style={{
+      display: 'flex', alignItems: 'center', gap: 6,
+      padding: '6px 10px',
+      background: accent + '15',
+      borderBottom: '1px solid rgba(255,255,255,0.06)',
+    }}>
+      <div style={{ display: 'flex', gap: 4, flexShrink: 0 }}>
+        {['#ff5f57','#febc2e','#28c840'].map(c => (
+          <span key={c} style={{ width: 8, height: 8, borderRadius: '50%', background: c, display: 'block' }} />
+        ))}
+      </div>
+      <div style={{
+        display: 'flex', alignItems: 'center', gap: 4,
+        background: 'rgba(255,255,255,0.06)', borderRadius: 4,
+        padding: '2px 8px', flex: 1, overflow: 'hidden',
+        fontSize: '0.6rem', color: 'rgba(200,200,200,0.5)', whiteSpace: 'nowrap',
+      }}>
+        <Globe size={9} style={{ color: accent, flexShrink: 0 }} />
+        <span style={{ overflow: 'hidden', textOverflow: 'ellipsis' }}>
+          {url.replace(/^https?:\/\//, '').replace(/\/$/, '')}
+        </span>
+      </div>
+    </div>
+    <div style={{ position: 'relative', width: '100%', height: 190, overflow: 'hidden', background: '#111' }}>
+      <iframe
+        src={url}
+        title="site preview"
+        scrolling="no"
+        style={{
+          width: '200%', height: '380px',
+          border: 'none',
+          transform: 'scale(0.5)',
+          transformOrigin: 'top left',
+          pointerEvents: 'none',
+          display: 'block',
+        }}
+        loading="lazy"
+      />
+      <div style={{
+        position: 'absolute', inset: 0, pointerEvents: 'none',
+        background: `linear-gradient(to top, ${accent}20 0%, transparent 60%)`,
+      }} />
+    </div>
+    <div style={{
+      height: 2,
+      background: `linear-gradient(90deg, transparent, ${accent}, transparent)`,
+    }} />
+  </div>
+);
+
 // ── Top Navigation ────────────────────────────────────────────────────────────
 const TopNav = () => {
   const navigate = useNavigate();
@@ -84,7 +167,7 @@ const TopNav = () => {
     return () => document.removeEventListener('mousedown', h);
   }, []);
 
-  const navLinks = ['Home', 'Works', 'Projects', 'Services'];
+  const navLinks = ['Home', 'About', 'Works', 'Education', 'Projects', 'Services'];
 
   return (
     <nav style={{
@@ -173,6 +256,10 @@ const TopNav = () => {
 export default function App() {
   const [email, setEmail] = useState('');
   const [subscribed, setSubscribed] = useState(false);
+  
+  // States for Project hover preview
+  const [hoveredProjectIdx, setHoveredProjectIdx] = useState<number | null>(null);
+  const [hoverPos, setHoverPos] = useState({ x: 0, y: 0 });
 
   const skills = [
     { icon: <Code2 size={20} />, label: 'Web Dev', count: 6, color: '#f59e0b' },
@@ -394,6 +481,52 @@ export default function App() {
         </div>
       </section>
 
+      {/* ── ABOUT ───────────────────────────────────────────────────────────── */}
+      <section id="about" style={{ padding: '80px 48px', background: '#fafafa', borderTop: '1px solid #f0f0f0' }}>
+        <div style={{ maxWidth: 1120, margin: '0 auto', display: 'flex', flexDirection: 'column', gap: 40 }}>
+          <div>
+            <div style={{ fontSize: '0.7rem', fontWeight: 700, letterSpacing: '0.2em', textTransform: 'uppercase', color: '#f59e0b', marginBottom: 8 }}>About Me</div>
+            <h2 style={{ fontSize: 'clamp(1.8rem,3vw,2.6rem)', fontWeight: 900, letterSpacing: '-0.04em', margin: 0 }}>
+              Get to Know Me<span style={{ color: '#f59e0b' }}>.</span>
+            </h2>
+          </div>
+          
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: 40 }}>
+            {/* Bio text */}
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
+              {PERSONAL.bio.map((paragraph, i) => (
+                <p key={i} style={{ margin: 0, fontSize: '0.95rem', lineHeight: 1.8, color: '#555' }}>
+                  {paragraph}
+                </p>
+              ))}
+              <div style={{ marginTop: 12 }}>
+                <a href="#contact" style={{ display: 'inline-flex', alignItems: 'center', gap: 8, padding: '12px 24px', borderRadius: 8, fontWeight: 700, fontSize: '0.85rem', background: '#111', color: '#fff', textDecoration: 'none', transition: 'background 0.2s' }}
+                  onMouseEnter={e => (e.currentTarget.style.background = '#f59e0b')}
+                  onMouseLeave={e => (e.currentTarget.style.background = '#111')}
+                >
+                  Let's Talk
+                </a>
+              </div>
+            </div>
+            
+            {/* Details Grid */}
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 20, alignContent: 'start' }}>
+              <div style={{ background: '#fff', padding: 24, borderRadius: 16, border: '1px solid #eee' }}>
+                <div style={{ fontSize: '0.7rem', color: '#aaa', fontWeight: 700, textTransform: 'uppercase', marginBottom: 8 }}>Location</div>
+                <div style={{ fontSize: '0.9rem', fontWeight: 600, color: '#222' }}>{PERSONAL.location}</div>
+              </div>
+              <div style={{ background: '#fff', padding: 24, borderRadius: 16, border: '1px solid #eee' }}>
+                <div style={{ fontSize: '0.7rem', color: '#aaa', fontWeight: 700, textTransform: 'uppercase', marginBottom: 8 }}>Status</div>
+                <div style={{ fontSize: '0.9rem', fontWeight: 600, color: '#22c55e' }}>{PERSONAL.availability}</div>
+              </div>
+              <div style={{ background: '#fff', padding: 24, borderRadius: 16, border: '1px solid #eee', gridColumn: '1 / -1' }}>
+                <div style={{ fontSize: '0.7rem', color: '#aaa', fontWeight: 700, textTransform: 'uppercase', marginBottom: 8 }}>Email</div>
+                <a href={`mailto:${CONTACT.email}`} style={{ fontSize: '0.9rem', fontWeight: 600, color: '#222', textDecoration: 'none' }}>{CONTACT.email}</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
       {/* ── SERVICES ────────────────────────────────────────────────────────── */}
       <section id="services" style={{ padding: '80px 48px', borderTop: '1px solid #f0f0f0' }}>
         <div style={{ maxWidth: 1120, margin: '0 auto' }}>
@@ -501,6 +634,64 @@ export default function App() {
         </div>
       </section>
 
+      {/* ── EDUCATION & CERTIFICATIONS ─────────────────────────────────────── */}
+      <section id="education" style={{ padding: '80px 48px', background: '#fff', borderTop: '1px solid #f0f0f0' }}>
+        <div style={{ maxWidth: 1120, margin: '0 auto' }}>
+          <div style={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'space-between', marginBottom: 48, flexWrap: 'wrap', gap: 16 }}>
+            <div>
+              <div style={{ fontSize: '0.7rem', fontWeight: 700, letterSpacing: '0.2em', textTransform: 'uppercase', color: '#f59e0b', marginBottom: 8 }}>Learning Journey</div>
+              <h2 style={{ fontSize: 'clamp(1.8rem,3vw,2.6rem)', fontWeight: 900, letterSpacing: '-0.04em', margin: 0 }}>
+                Education & Certs<span style={{ color: '#f59e0b' }}>.</span>
+              </h2>
+            </div>
+          </div>
+          
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 64 }}>
+            
+            {/* Education Section */}
+            <div>
+              <h3 style={{ fontSize: '1.2rem', fontWeight: 800, marginBottom: 24, color: '#111', display: 'flex', alignItems: 'center', gap: 8 }}>
+                <span style={{ width: 12, height: 12, borderRadius: '50%', background: '#f59e0b', display: 'inline-block' }} /> 
+                Academic Background
+              </h3>
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: 24 }}>
+                {EDUCATION.map((edu, i) => (
+                  <div key={i} style={{ padding: '24px', background: '#fafafa', borderRadius: 16, border: '1px solid #eee', position: 'relative' }}>
+                    <div style={{ position: 'absolute', left: 0, top: 24, bottom: 24, width: 3, background: '#f59e0b', borderRadius: '0 4px 4px 0' }} />
+                    <div style={{ fontSize: '0.75rem', fontWeight: 700, color: '#f59e0b', marginBottom: 4 }}>{edu.period}</div>
+                    <div style={{ fontSize: '1.1rem', fontWeight: 800, color: '#111', marginBottom: 4 }}>{edu.degree}</div>
+                    <div style={{ fontSize: '0.85rem', fontWeight: 600, color: '#666', marginBottom: 12 }}>{edu.institution}</div>
+                    <p style={{ fontSize: '0.85rem', color: '#777', lineHeight: 1.6, margin: 0 }}>{edu.description}</p>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Certifications Section */}
+            <div>
+              <h3 style={{ fontSize: '1.2rem', fontWeight: 800, marginBottom: 24, color: '#111', display: 'flex', alignItems: 'center', gap: 8 }}>
+                <span style={{ width: 12, height: 12, borderRadius: '50%', background: '#8b5cf6', display: 'inline-block' }} /> 
+                Certifications
+              </h3>
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(260px, 1fr))', gap: 16 }}>
+                {CERTIFICATIONS.map((cert, i) => (
+                  <div key={i} style={{ 
+                    padding: '20px', background: '#fff', borderRadius: 16, 
+                    border: '1px solid #eee', transition: 'all 0.25s', cursor: 'default'
+                  }}
+                  onMouseEnter={e => { const el = e.currentTarget as HTMLElement; el.style.borderColor = '#8b5cf6'; el.style.transform = 'translateY(-4px)'; el.style.boxShadow = '0 12px 32px rgba(139,92,246,0.12)'; }}
+                  onMouseLeave={e => { const el = e.currentTarget as HTMLElement; el.style.borderColor = '#eee'; el.style.transform = ''; el.style.boxShadow = ''; }}
+                  >
+                    <div style={{ fontSize: '0.65rem', fontWeight: 700, color: '#8b5cf6', marginBottom: 6, textTransform: 'uppercase', letterSpacing: '0.08em' }}>{cert.issuer}</div>
+                    <div style={{ fontSize: '0.9rem', fontWeight: 800, color: '#111', marginBottom: 10, lineHeight: 1.3 }}>{cert.name}</div>
+                    <div style={{ fontSize: '0.75rem', color: '#888', fontWeight: 500 }}>{cert.date}</div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
       {/* ── PROJECTS ─────────────────────────────────────────────────────────── */}
       <section id="projects" style={{ padding: '80px 48px', background: '#fafafa', borderTop: '1px solid #f0f0f0' }}>
         <div style={{ maxWidth: 1120, margin: '0 auto' }}>
@@ -522,8 +713,21 @@ export default function App() {
             {PROJECTS.map((p, i) => (
               <div key={i}
                 style={{ background: '#fff', border: '2px solid #f0f0f0', borderRadius: 20, overflow: 'hidden', transition: 'all 0.25s', cursor: 'default' }}
-                onMouseEnter={e => { const el = e.currentTarget as HTMLElement; el.style.borderColor = p.accent; el.style.transform = 'translateY(-4px)'; el.style.boxShadow = `0 20px 48px ${p.accent}18`; }}
-                onMouseLeave={e => { const el = e.currentTarget as HTMLElement; el.style.borderColor = '#f0f0f0'; el.style.transform = ''; el.style.boxShadow = ''; }}
+                onMouseEnter={e => { 
+                  const el = e.currentTarget as HTMLElement; 
+                  el.style.borderColor = p.accent; 
+                  el.style.transform = 'translateY(-4px)'; 
+                  el.style.boxShadow = `0 20px 48px ${p.accent}18`; 
+                  setHoveredProjectIdx(i);
+                }}
+                onMouseLeave={e => { 
+                  const el = e.currentTarget as HTMLElement; 
+                  el.style.borderColor = '#f0f0f0'; 
+                  el.style.transform = ''; 
+                  el.style.boxShadow = ''; 
+                  setHoveredProjectIdx(null);
+                }}
+                onMouseMove={e => setHoverPos({ x: e.clientX, y: e.clientY })}
               >
                 {/* Thumbnail */}
                 <div style={{ height: 110, background: `linear-gradient(135deg,${p.accent}18,${p.accent}08)`, display: 'flex', alignItems: 'center', justifyContent: 'center', position: 'relative' }}>
@@ -537,7 +741,7 @@ export default function App() {
                     {p.role && <span style={{ fontSize: '0.6rem', fontWeight: 700, background: p.accent + '15', color: p.accent, padding: '3px 8px', borderRadius: 999, textTransform: 'uppercase', letterSpacing: '0.07em', whiteSpace: 'nowrap', marginLeft: 8 }}>{p.role}</span>}
                   </div>
                   {/* Description — from portfolio.ts */}
-                  <p style={{ fontSize: '0.78rem', color: '#777', lineHeight: 1.6, margin: '0 0 12px', display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>
+                  <p style={{ fontSize: '0.78rem', color: '#777', lineHeight: 1.6, margin: '0 0 12px' }}>
                     {p.description}
                   </p>
                   {/* Tech pills */}
@@ -616,6 +820,16 @@ export default function App() {
         <span style={{ fontSize: '0.75rem', color: '#888' }}>© 2025 Aaron M. Cañada · All Rights Reserved</span>
         <span style={{ fontSize: '0.7rem', color: '#555' }}>Design by Aarvieve</span>
       </footer>
+
+      {hoveredProjectIdx !== null && PROJECTS[hoveredProjectIdx].demo && (
+        <FloatingPreview
+          url={PROJECTS[hoveredProjectIdx].demo}
+          accent={PROJECTS[hoveredProjectIdx].accent}
+          visible={true}
+          x={hoverPos.x}
+          y={hoverPos.y}
+        />
+      )}
 
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');

@@ -39,7 +39,7 @@ export const EXPERIENCE = [
 
 // ── Contact ───────────────────────────────────────────────────
 export const CONTACT = {
-  email: 'canadaaaronm@gmail.com',
+  email: 'canada.aaron.mulat@gmail.com',
   github: {
     label: 'GitHub',
     handle: '@EYRON27',
