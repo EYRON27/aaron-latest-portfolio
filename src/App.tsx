@@ -143,6 +143,49 @@ const FloatingPreview = ({ url, accent, visible, x, y }: FloatingPreviewProps) =
   </div>
 );
 
+// ── Typewriter component ──────────────────────────────────────────────────────
+const Typewriter = ({ words, typingSpeed = 80, deletingSpeed = 40, delay = 2000 }: { words: string[]; typingSpeed?: number; deletingSpeed?: number; delay?: number }) => {
+  const [currentWordIdx, setCurrentWordIdx] = useState(0);
+  const [currentText, setCurrentText] = useState('');
+  const [isDeleting, setIsDeleting] = useState(false);
+
+  useEffect(() => {
+    let timer: NodeJS.Timeout;
+    const currentWord = words[currentWordIdx];
+
+    if (isDeleting) {
+      timer = setTimeout(() => {
+        setCurrentText(prev => prev.slice(0, -1));
+      }, deletingSpeed);
+    } else {
+      timer = setTimeout(() => {
+        setCurrentText(currentWord.slice(0, currentText.length + 1));
+      }, typingSpeed);
+    }
+
+    if (!isDeleting && currentText === currentWord) {
+      timer = setTimeout(() => setIsDeleting(true), delay);
+    } else if (isDeleting && currentText === '') {
+      setIsDeleting(false);
+      setCurrentWordIdx(prev => (prev + 1) % words.length);
+    }
+
+    return () => clearTimeout(timer);
+  }, [currentText, isDeleting, currentWordIdx, words, typingSpeed, deletingSpeed, delay]);
+
+  return (
+    <span style={{ display: 'inline-flex', alignItems: 'center', minWidth: '290px' }}>
+      {currentText}
+      <span style={{
+        marginLeft: 4,
+        fontWeight: 400,
+        color: '#f59e0b',
+        animation: 'blink 0.8s step-end infinite'
+      }}>|</span>
+    </span>
+  );
+};
+
 // ── Top Navigation ────────────────────────────────────────────────────────────
 const TopNav = () => {
   const navigate = useNavigate();
@@ -280,106 +323,94 @@ export default function App() {
 
           {/* Top: headline */}
           <div>
-            <div style={{ display: 'flex', alignItems: 'center', gap: 14, marginBottom: 28, flexWrap: 'wrap' }}>
-              <h1 style={{ fontSize: 'clamp(2.4rem, 4.5vw, 3.8rem)', fontWeight: 900, lineHeight: 1.05, letterSpacing: '-0.04em', color: '#111', margin: 0 }}>
-                Hi! I Am
-              </h1>
-              <span style={{
-                fontSize: '1rem', fontWeight: 800, background: '#f59e0b',
-                color: '#fff', padding: '6px 18px', borderRadius: 999,
-                letterSpacing: '0.02em', whiteSpace: 'nowrap',
-              }}>
-                Front-End
-              </span>
+            {/* Status Chip */}
+            <div style={{ display: 'inline-flex', alignItems: 'center', gap: 8, background: 'rgba(245, 158, 11, 0.08)', border: '1px solid rgba(245, 158, 11, 0.2)', padding: '6px 14px', borderRadius: 99, marginBottom: 24 }}>
+              <span style={{ width: 6, height: 6, borderRadius: '50%', background: '#f59e0b', display: 'inline-block' }} />
+              <span style={{ fontSize: '0.72rem', fontWeight: 700, color: '#b45309', letterSpacing: '0.05em', textTransform: 'uppercase' }}>Available for projects</span>
             </div>
 
-            <h1 style={{ fontSize: 'clamp(2.4rem, 4.5vw, 3.8rem)', fontWeight: 900, lineHeight: 1.05, letterSpacing: '-0.04em', color: '#111', margin: '0 0 24px' }}>
-              Aaron M. Cañada<span style={{ color: '#f59e0b' }}>.</span>
+            <h1 style={{ fontSize: 'clamp(2.5rem, 5vw, 4rem)', fontWeight: 900, lineHeight: 1.1, letterSpacing: '-0.04em', color: '#111', margin: '0 0 16px' }}>
+              Hi! I Am <span style={{ background: 'linear-gradient(to right, #f97316, #f59e0b)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>Aaron Cañada</span>
             </h1>
 
-            <p style={{ fontSize: '1rem', lineHeight: 1.7, color: '#666', maxWidth: 400, marginBottom: 36 }}>
-              Crafting fast, modern web experiences for over <strong style={{ color: '#111' }}>2 years</strong><br />
-              as a full-stack developer & UI/UX designer.
+            <h2 style={{ fontSize: 'clamp(1.3rem, 2.5vw, 1.8rem)', fontWeight: 800, color: '#333', letterSpacing: '-0.02em', margin: '0 0 24px', display: 'flex', alignItems: 'center', gap: 12, flexWrap: 'wrap' }}>
+              <Typewriter words={['Front-End AI Engineer', 'Full-Stack Developer', 'UI/UX Designer']} />
+              <span style={{ fontSize: '0.72rem', fontWeight: 700, background: '#111', color: '#f59e0b', padding: '4px 12px', borderRadius: 6, textTransform: 'uppercase', letterSpacing: '0.05em' }}>QCU BSIT STUDENT</span>
+            </h2>
+
+            <p style={{ fontSize: '1.05rem', lineHeight: 1.7, color: '#555', maxWidth: 500, marginBottom: 36 }}>
+              Crafting fast, modern, and intelligent web experiences. Specialize in building user-focused applications with React, TypeScript, and interactive UI/UX designs.
             </p>
 
             {/* CTAs */}
             <div style={{ display: 'flex', alignItems: 'center', gap: 20, marginBottom: 40, flexWrap: 'wrap' }}>
               <a href="#contact"
-                style={{ display: 'inline-flex', alignItems: 'center', gap: 8, padding: '14px 32px', borderRadius: 8, fontWeight: 800, fontSize: '0.92rem', background: '#f97316', color: '#fff', textDecoration: 'none', boxShadow: '0 8px 24px rgba(249,115,22,0.35)', transition: 'transform 0.2s, box-shadow 0.2s' }}
-                onMouseEnter={e => { const el = e.currentTarget as HTMLElement; el.style.transform = 'translateY(-2px)'; el.style.boxShadow = '0 14px 32px rgba(249,115,22,0.45)'; }}
-                onMouseLeave={e => { const el = e.currentTarget as HTMLElement; el.style.transform = ''; el.style.boxShadow = '0 8px 24px rgba(249,115,22,0.35)'; }}
+                style={{ display: 'inline-flex', alignItems: 'center', gap: 8, padding: '14px 32px', borderRadius: 10, fontWeight: 800, fontSize: '0.92rem', background: '#f97316', color: '#fff', textDecoration: 'none', boxShadow: '0 8px 24px rgba(249,115,22,0.25)', transition: 'all 0.2s' }}
+                onMouseEnter={e => { const el = e.currentTarget as HTMLElement; el.style.transform = 'translateY(-2px)'; el.style.boxShadow = '0 12px 28px rgba(249,115,22,0.35)'; }}
+                onMouseLeave={e => { const el = e.currentTarget as HTMLElement; el.style.transform = ''; el.style.boxShadow = '0 8px 24px rgba(249,115,22,0.25)'; }}
               >
                 Hire Me
               </a>
               <a href="#works"
-                style={{ display: 'inline-flex', alignItems: 'center', gap: 6, fontWeight: 700, fontSize: '0.92rem', color: '#111', textDecoration: 'none', transition: 'gap 0.2s' }}
-                onMouseEnter={e => (e.currentTarget as HTMLElement).style.gap = '12px'}
-                onMouseLeave={e => (e.currentTarget as HTMLElement).style.gap = '6px'}
+                style={{ display: 'inline-flex', alignItems: 'center', gap: 8, padding: '14px 24px', borderRadius: 10, fontWeight: 700, fontSize: '0.92rem', border: '1.5px solid #ddd', color: '#333', textDecoration: 'none', transition: 'all 0.2s' }}
+                onMouseEnter={e => { const el = e.currentTarget as HTMLElement; el.style.borderColor = '#f59e0b'; el.style.color = '#f59e0b'; }}
+                onMouseLeave={e => { const el = e.currentTarget as HTMLElement; el.style.borderColor = '#ddd'; el.style.color = '#333'; }}
               >
                 Projects <ArrowUpRight size={16} />
               </a>
-
-              {/* Certification badge */}
-              <div style={{
-                marginLeft: 'auto', width: 80, height: 80,
-                borderRadius: '50%', background: '#111', color: '#f59e0b',
-                display: 'flex', alignItems: 'center', justifyContent: 'center',
-                fontSize: '0.52rem', fontWeight: 800, textAlign: 'center',
-                letterSpacing: '0.06em', textTransform: 'uppercase', lineHeight: 1.4,
-                boxShadow: '0 8px 24px rgba(0,0,0,0.18)',
-                flexShrink: 0,
-              }}>
-                QCU<br />BSIT<br />STUDENT
-              </div>
             </div>
 
-            {/* Stats — from src/data/portfolio.ts → STATS */}
-            <div style={{ display: 'flex', gap: 40, marginBottom: 28 }}>
+            {/* Stats — Grid layout with top/bottom border */}
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 24, borderTop: '1px solid #eee', borderBottom: '1px solid #eee', padding: '24px 0', marginBottom: 36 }}>
               {STATS.map(s => (
                 <div key={s.label}>
-                  <div style={{ fontSize: '2.4rem', fontWeight: 900, color: '#111', lineHeight: 1 }}>
+                  <div style={{ fontSize: '2.2rem', fontWeight: 900, color: '#111', lineHeight: 1, letterSpacing: '-0.02em' }}>
                     <CountUp to={s.number} suffix={s.suffix} />
                   </div>
-                  <div style={{ fontSize: '0.78rem', color: '#888', marginTop: 4, lineHeight: 1.4 }}>{s.label}</div>
+                  <div style={{ fontSize: '0.78rem', color: '#666', marginTop: 6, fontWeight: 500 }}>{s.label}</div>
                 </div>
               ))}
             </div>
 
-            {/* Contact inline — from src/data/portfolio.ts → CONTACT */}
-            <div style={{ display: 'flex', alignItems: 'center', gap: 28, flexWrap: 'wrap' }}>
+            {/* Contact inline */}
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: 16 }}>
               <div>
-                <div style={{ fontSize: '0.72rem', fontWeight: 700, color: '#111', textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: 2 }}>Contact</div>
-                <a href={`mailto:${CONTACT.email}`} style={{ fontSize: '0.88rem', color: '#f59e0b', fontWeight: 600, textDecoration: 'none' }}>
+                <div style={{ fontSize: '0.68rem', fontWeight: 700, color: '#888', textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: 4 }}>Contact Email</div>
+                <a href={`mailto:${CONTACT.email}`} style={{ fontSize: '0.92rem', color: '#111', fontWeight: 700, textDecoration: 'none', transition: 'color 0.2s' }}
+                  onMouseEnter={e => (e.currentTarget.style.color = '#f59e0b')}
+                  onMouseLeave={e => (e.currentTarget.style.color = '#111')}
+                >
                   {CONTACT.email}
                 </a>
               </div>
               <div style={{ display: 'flex', gap: 10 }}>
                 {[
-                  { href: CONTACT.github.url,   icon: <Github size={16} /> },
-                  { href: CONTACT.linkedin.url,  icon: <Linkedin size={16} /> },
-                ].map(({ href, icon }) => (
-                  <a key={href} href={href} target="_blank" rel="noopener noreferrer"
-                    style={{ width: 36, height: 36, borderRadius: '50%', border: '1.5px solid #ddd', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#555', textDecoration: 'none', transition: 'all 0.2s' }}
-                    onMouseEnter={e => { const el = e.currentTarget as HTMLElement; el.style.borderColor = '#f59e0b'; el.style.color = '#f59e0b'; }}
-                    onMouseLeave={e => { const el = e.currentTarget as HTMLElement; el.style.borderColor = '#ddd'; el.style.color = '#555'; }}
+                  { href: CONTACT.github.url,   icon: <Github size={16} />, label: 'GitHub' },
+                  { href: CONTACT.linkedin.url,  icon: <Linkedin size={16} />, label: 'LinkedIn' },
+                ].map(({ href, icon, label }) => (
+                  <a key={href} href={href} target="_blank" rel="noopener noreferrer" title={label}
+                    style={{ width: 38, height: 38, borderRadius: 8, border: '1px solid #eee', background: '#fafafa', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#555', textDecoration: 'none', transition: 'all 0.2s' }}
+                    onMouseEnter={e => { const el = e.currentTarget as HTMLElement; el.style.borderColor = '#f59e0b'; el.style.color = '#f59e0b'; el.style.background = 'rgba(245,158,11,0.04)'; }}
+                    onMouseLeave={e => { const el = e.currentTarget as HTMLElement; el.style.borderColor = '#eee'; el.style.color = '#555'; el.style.background = '#fafafa'; }}
                   >{icon}</a>
                 ))}
               </div>
             </div>
           </div>
 
-          {/* Bottom dark bar: Project Statistics */}
-          <div style={{ marginTop: 48, background: '#111', borderRadius: 20, padding: '28px 32px', color: '#fff' }}>
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 24, alignItems: 'start' }}>
+          {/* Bottom styled gradient card: Project Statistics */}
+          <div style={{ marginTop: 40, background: 'linear-gradient(135deg, #1e1b4b 0%, #0f172a 100%)', borderRadius: 20, padding: '24px 28px', color: '#fff', border: '1px solid rgba(255,255,255,0.05)', boxShadow: '0 20px 40px rgba(15,23,42,0.15)' }}>
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1.2fr', gap: 32, alignItems: 'center', flexWrap: 'wrap' }}>
               <div>
-                <div style={{ fontSize: '0.78rem', color: '#888', textTransform: 'uppercase', letterSpacing: '0.12em', marginBottom: 8 }}>Project Statistics 2025</div>
+                <div style={{ fontSize: '0.65rem', color: '#94a3b8', textTransform: 'uppercase', letterSpacing: '0.12em', fontWeight: 700, marginBottom: 6 }}>Overview</div>
+                <div style={{ fontSize: '1.25rem', fontWeight: 800, color: '#f8fafc', lineHeight: 1.2, marginBottom: 12 }}>Project Stats 2025</div>
                 <a href="#works"
-                  style={{ display: 'inline-flex', alignItems: 'center', gap: 6, background: '#f59e0b', color: '#111', fontWeight: 800, fontSize: '0.78rem', padding: '8px 18px', borderRadius: 6, textDecoration: 'none', marginTop: 4, transition: 'transform 0.2s' }}
-                  onMouseEnter={e => (e.currentTarget as HTMLElement).style.transform = 'translateY(-1px)'}
-                  onMouseLeave={e => (e.currentTarget as HTMLElement).style.transform = ''}
+                  style={{ display: 'inline-flex', alignItems: 'center', gap: 6, background: '#f59e0b', color: '#111', fontWeight: 800, fontSize: '0.78rem', padding: '8px 16px', borderRadius: 8, textDecoration: 'none', transition: 'all 0.2s' }}
+                  onMouseEnter={e => { const el = e.currentTarget as HTMLElement; el.style.background = '#fbbf24'; el.style.transform = 'translateY(-1px)'; }}
+                  onMouseLeave={e => { const el = e.currentTarget as HTMLElement; el.style.background = '#f59e0b'; el.style.transform = ''; }}
                 >Know More</a>
               </div>
-              <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
                 {[
                   { label: 'Website Design', count: 6 },
                   { label: 'Mobile App', count: 1 },
@@ -838,6 +869,9 @@ export default function App() {
           0%,100% { transform: translateY(0px) rotate(0deg); }
           33%      { transform: translateY(-10px) rotate(2deg); }
           66%      { transform: translateY(-5px) rotate(-2deg); }
+        }
+        @keyframes blink {
+          50% { opacity: 0; }
         }
         @media (max-width: 768px) {
           section > div, section { grid-template-columns: 1fr !important; }
