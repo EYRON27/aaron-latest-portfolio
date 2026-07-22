@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import {
   Mail, Github, Linkedin, ArrowUpRight, ExternalLink,
   Monitor, ChevronDown, Film, Moon, Sun, Send,
-  Code2, Layers, Smartphone, Globe, Briefcase
+  Code2, Layers, Smartphone, Globe, Briefcase, X
 } from 'lucide-react';
 import { CONTACT, STATS, PROJECTS, EXPERIENCE, PERSONAL, EDUCATION, CERTIFICATIONS } from './data/portfolio';
 
@@ -304,6 +304,9 @@ export default function App() {
   const [hoveredProjectIdx, setHoveredProjectIdx] = useState<number | null>(null);
   const [hoverPos, setHoverPos] = useState({ x: 0, y: 0 });
 
+  // State for active certification image modal
+  const [activeCert, setActiveCert] = useState<{ name: string; image: string } | null>(null);
+
   const skills = [
     { icon: <Code2 size={20} />, label: 'Web Dev', count: 6, color: '#f59e0b' },
     { icon: <Layers size={20} />, label: 'UI/UX', count: 3, color: '#8b5cf6' },
@@ -319,40 +322,41 @@ export default function App() {
       <section id="home" style={{ paddingTop: 64, minHeight: '100vh', display: 'grid', gridTemplateColumns: '1fr 1fr' }}>
 
         {/* Left panel — white */}
-        <div style={{ padding: '64px 48px 48px', display: 'flex', flexDirection: 'column', justifyContent: 'space-between', minHeight: 'calc(100vh - 64px)' }}>
+        <div style={{ padding: '24px 48px', display: 'flex', flexDirection: 'column', justifyContent: 'space-between', minHeight: 'calc(100vh - 64px)' }}>
 
           {/* Top: headline */}
           <div>
             {/* Status Chip */}
-            <div style={{ display: 'inline-flex', alignItems: 'center', gap: 8, background: 'rgba(245, 158, 11, 0.08)', border: '1px solid rgba(245, 158, 11, 0.2)', padding: '6px 14px', borderRadius: 99, marginBottom: 24 }}>
+            <div style={{ display: 'inline-flex', alignItems: 'center', gap: 8, background: 'rgba(245, 158, 11, 0.08)', border: '1px solid rgba(245, 158, 11, 0.2)', padding: '6px 14px', borderRadius: 99, marginBottom: 12 }}>
               <span style={{ width: 6, height: 6, borderRadius: '50%', background: '#f59e0b', display: 'inline-block' }} />
               <span style={{ fontSize: '0.72rem', fontWeight: 700, color: '#b45309', letterSpacing: '0.05em', textTransform: 'uppercase' }}>Available for projects</span>
             </div>
 
-            <h1 style={{ fontSize: 'clamp(2.5rem, 5vw, 4rem)', fontWeight: 900, lineHeight: 1.1, letterSpacing: '-0.04em', color: '#111', margin: '0 0 16px' }}>
-              Hi! I Am <span style={{ background: 'linear-gradient(to right, #f97316, #f59e0b)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>Aaron Cañada</span>
+            <h1 style={{ fontSize: 'clamp(2.5rem, 4.5vw, 3.8rem)', fontWeight: 900, lineHeight: 1.1, letterSpacing: '-0.04em', color: '#111', margin: '0 0 8px' }}>
+              <span style={{ fontSize: '1.2rem', fontWeight: 800, color: '#666', display: 'block', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: 4 }}>Hi! I Am</span>
+              <span style={{ display: 'inline-block', background: 'linear-gradient(to right, #f97316, #f59e0b)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>Aaron M. Cañada</span>
             </h1>
 
-            <h2 style={{ fontSize: 'clamp(1.3rem, 2.5vw, 1.8rem)', fontWeight: 800, color: '#333', letterSpacing: '-0.02em', margin: '0 0 24px', display: 'flex', alignItems: 'center', gap: 12, flexWrap: 'wrap' }}>
+            <h2 style={{ fontSize: 'clamp(1.2rem, 2.2vw, 1.6rem)', fontWeight: 800, color: '#333', letterSpacing: '-0.02em', margin: '0 0 16px', display: 'flex', alignItems: 'center', gap: 12, flexWrap: 'wrap' }}>
               <Typewriter words={['Front-End AI Engineer', 'Full-Stack Developer', 'UI/UX Designer']} />
               <span style={{ fontSize: '0.72rem', fontWeight: 700, background: '#111', color: '#f59e0b', padding: '4px 12px', borderRadius: 6, textTransform: 'uppercase', letterSpacing: '0.05em' }}>QCU BSIT STUDENT</span>
             </h2>
 
-            <p style={{ fontSize: '1.05rem', lineHeight: 1.7, color: '#555', maxWidth: 500, marginBottom: 36 }}>
+            <p style={{ fontSize: '1rem', lineHeight: 1.6, color: '#555', maxWidth: 500, marginBottom: 24 }}>
               Crafting fast, modern, and intelligent web experiences. Specialize in building user-focused applications with React, TypeScript, and interactive UI/UX designs.
             </p>
 
             {/* CTAs */}
-            <div style={{ display: 'flex', alignItems: 'center', gap: 20, marginBottom: 40, flexWrap: 'wrap' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 20, marginBottom: 24, flexWrap: 'wrap' }}>
               <a href="#contact"
-                style={{ display: 'inline-flex', alignItems: 'center', gap: 8, padding: '14px 32px', borderRadius: 10, fontWeight: 800, fontSize: '0.92rem', background: '#f97316', color: '#fff', textDecoration: 'none', boxShadow: '0 8px 24px rgba(249,115,22,0.25)', transition: 'all 0.2s' }}
+                style={{ display: 'inline-flex', alignItems: 'center', gap: 8, padding: '12px 28px', borderRadius: 10, fontWeight: 800, fontSize: '0.92rem', background: '#f97316', color: '#fff', textDecoration: 'none', boxShadow: '0 8px 24px rgba(249,115,22,0.25)', transition: 'all 0.2s' }}
                 onMouseEnter={e => { const el = e.currentTarget as HTMLElement; el.style.transform = 'translateY(-2px)'; el.style.boxShadow = '0 12px 28px rgba(249,115,22,0.35)'; }}
                 onMouseLeave={e => { const el = e.currentTarget as HTMLElement; el.style.transform = ''; el.style.boxShadow = '0 8px 24px rgba(249,115,22,0.25)'; }}
               >
                 Hire Me
               </a>
               <a href="#works"
-                style={{ display: 'inline-flex', alignItems: 'center', gap: 8, padding: '14px 24px', borderRadius: 10, fontWeight: 700, fontSize: '0.92rem', border: '1.5px solid #ddd', color: '#333', textDecoration: 'none', transition: 'all 0.2s' }}
+                style={{ display: 'inline-flex', alignItems: 'center', gap: 8, padding: '12px 24px', borderRadius: 10, fontWeight: 700, fontSize: '0.92rem', border: '1.5px solid #ddd', color: '#333', textDecoration: 'none', transition: 'all 0.2s' }}
                 onMouseEnter={e => { const el = e.currentTarget as HTMLElement; el.style.borderColor = '#f59e0b'; el.style.color = '#f59e0b'; }}
                 onMouseLeave={e => { const el = e.currentTarget as HTMLElement; el.style.borderColor = '#ddd'; el.style.color = '#333'; }}
               >
@@ -361,7 +365,7 @@ export default function App() {
             </div>
 
             {/* Stats — Grid layout with top/bottom border */}
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 24, borderTop: '1px solid #eee', borderBottom: '1px solid #eee', padding: '24px 0', marginBottom: 36 }}>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 24, borderTop: '1px solid #eee', borderBottom: '1px solid #eee', padding: '16px 0', marginBottom: 24 }}>
               {STATS.map(s => (
                 <div key={s.label}>
                   <div style={{ fontSize: '2.2rem', fontWeight: 900, color: '#111', lineHeight: 1, letterSpacing: '-0.02em' }}>
@@ -399,8 +403,8 @@ export default function App() {
           </div>
 
           {/* Bottom styled gradient card: Project Statistics */}
-          <div style={{ marginTop: 40, background: 'linear-gradient(135deg, #1e1b4b 0%, #0f172a 100%)', borderRadius: 20, padding: '24px 28px', color: '#fff', border: '1px solid rgba(255,255,255,0.05)', boxShadow: '0 20px 40px rgba(15,23,42,0.15)' }}>
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1.2fr', gap: 32, alignItems: 'center', flexWrap: 'wrap' }}>
+          <div style={{ marginTop: 20, background: 'linear-gradient(135deg, #1e1b4b 0%, #0f172a 100%)', borderRadius: 20, padding: '20px 24px', color: '#fff', border: '1px solid rgba(255,255,255,0.05)', boxShadow: '0 20px 40px rgba(15,23,42,0.15)' }}>
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1.2fr', gap: 24, alignItems: 'center', flexWrap: 'wrap' }}>
               <div>
                 <div style={{ fontSize: '0.65rem', color: '#94a3b8', textTransform: 'uppercase', letterSpacing: '0.12em', fontWeight: 700, marginBottom: 6 }}>Overview</div>
                 <div style={{ fontSize: '1.25rem', fontWeight: 800, color: '#f8fafc', lineHeight: 1.2, marginBottom: 12 }}>Project Stats 2025</div>
@@ -706,9 +710,11 @@ export default function App() {
               </h3>
               <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(260px, 1fr))', gap: 16 }}>
                 {CERTIFICATIONS.map((cert, i) => (
-                  <div key={i} style={{ 
+                  <div key={i} 
+                  onClick={() => setActiveCert(cert)}
+                  style={{ 
                     padding: '20px', background: '#fff', borderRadius: 16, 
-                    border: '1px solid #eee', transition: 'all 0.25s', cursor: 'default'
+                    border: '1px solid #eee', transition: 'all 0.25s', cursor: 'pointer'
                   }}
                   onMouseEnter={e => { const el = e.currentTarget as HTMLElement; el.style.borderColor = '#8b5cf6'; el.style.transform = 'translateY(-4px)'; el.style.boxShadow = '0 12px 32px rgba(139,92,246,0.12)'; }}
                   onMouseLeave={e => { const el = e.currentTarget as HTMLElement; el.style.borderColor = '#eee'; el.style.transform = ''; el.style.boxShadow = ''; }}
@@ -862,6 +868,77 @@ export default function App() {
         />
       )}
 
+      {activeCert && (
+        <div 
+          onClick={() => setActiveCert(null)}
+          style={{
+            position: 'fixed',
+            inset: 0,
+            background: 'rgba(0,0,0,0.85)',
+            backdropFilter: 'blur(8px)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            zIndex: 100000,
+            cursor: 'zoom-out',
+            animation: 'fadeIn 0.2s ease-out'
+          }}
+        >
+          <div 
+            onClick={e => e.stopPropagation()}
+            style={{
+              position: 'relative',
+              maxWidth: '90%',
+              maxHeight: '90%',
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+              gap: 16,
+              animation: 'scaleUp 0.25s cubic-bezier(0.34, 1.3, 0.64, 1)'
+            }}
+          >
+            <button 
+              onClick={() => setActiveCert(null)}
+              style={{
+                position: 'absolute',
+                top: -48,
+                right: 0,
+                background: 'rgba(255, 255, 255, 0.1)',
+                border: 'none',
+                borderRadius: '50%',
+                width: 36,
+                height: 36,
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                color: '#fff',
+                cursor: 'pointer',
+                transition: 'background 0.2s'
+              }}
+              onMouseEnter={e => (e.currentTarget.style.background = 'rgba(255, 255, 255, 0.2)')}
+              onMouseLeave={e => (e.currentTarget.style.background = 'rgba(255, 255, 255, 0.1)')}
+            >
+              <X size={20} />
+            </button>
+            <img 
+              src={activeCert.image} 
+              alt={activeCert.name}
+              style={{
+                maxWidth: '100%',
+                maxHeight: '80vh',
+                borderRadius: 12,
+                boxShadow: '0 25px 50px -12px rgba(0,0,0,0.5)',
+                border: '1px solid rgba(255, 255, 255, 0.1)',
+                objectFit: 'contain'
+              }}
+            />
+            <div style={{ color: '#fff', fontSize: '1rem', fontWeight: 700, textAlign: 'center', maxWidth: 600 }}>
+              {activeCert.name}
+            </div>
+          </div>
+        </div>
+      )}
+
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
         * { box-sizing: border-box; }
@@ -872,6 +949,14 @@ export default function App() {
         }
         @keyframes blink {
           50% { opacity: 0; }
+        }
+        @keyframes fadeIn {
+          from { opacity: 0; }
+          to { opacity: 1; }
+        }
+        @keyframes scaleUp {
+          from { transform: scale(0.95); opacity: 0; }
+          to { transform: scale(1); opacity: 1; }
         }
         @media (max-width: 768px) {
           section > div, section { grid-template-columns: 1fr !important; }
