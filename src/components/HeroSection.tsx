@@ -1,9 +1,11 @@
 import React, { useState, useEffect, useRef } from 'react';
 import {
   Mail, Github, Linkedin, ArrowUpRight,
-  Code2, Layers, Globe, Briefcase,
-  FileText, Send, ChevronLeft, ChevronRight, Sparkles
+  Globe, Briefcase,
+  FileText, Send, ChevronLeft, ChevronRight
 } from 'lucide-react';
+
+
 import { PERSONAL, CONTACT, STATS, REPO_STATEMENTS } from '../data/portfolio';
 
 // ── Typewriter ────────────────────────────────────────────────────────────────
@@ -176,7 +178,7 @@ export const AnimatedHeroStatement = () => {
           fontSize: 'clamp(1.15rem, 2vw, 1.35rem)',
           lineHeight: 1.8,
           color: '#334155',
-          margin: '0 0 16px',
+          margin: '0 0 20px',
           fontWeight: 450,
           minHeight: '4.8rem',
         }}
@@ -191,7 +193,7 @@ export const AnimatedHeroStatement = () => {
             fontWeight: 800,
             background: current.bgLight,
             border: `1.5px solid ${current.borderColor}`,
-            padding: '3px 12px 3px 10px',
+            padding: '3px 12px',
             borderRadius: '8px',
             whiteSpace: 'nowrap',
             verticalAlign: 'middle',
@@ -199,7 +201,6 @@ export const AnimatedHeroStatement = () => {
             transition: 'all 0.3s ease',
           }}
         >
-          <span>{current.emoji}</span>
           <span>
             {displayedFrom}
             <span
@@ -221,92 +222,74 @@ export const AnimatedHeroStatement = () => {
         </strong>
       </p>
 
-      {/* ── Clean 1-Line Project Indicator (Uncluttered & Spacious) ── */}
-      <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+      {/* ── Minimal Project Indicator Row ── */}
+      <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
+        {/* Project name tag with colored left-border accent */}
         <div
           style={{
             display: 'inline-flex',
             alignItems: 'center',
-            gap: 8,
-            padding: '5px 12px',
-            borderRadius: 99,
+            gap: 10,
+            padding: '6px 14px',
+            borderRadius: 8,
             background: '#f8fafc',
             border: '1px solid #e2e8f0',
-            fontSize: '0.74rem',
-            color: '#475569',
+            borderLeft: `3px solid ${current.color}`,
           }}
         >
-          <Sparkles size={12} style={{ color: current.color }} />
-          <span style={{ fontWeight: 600 }}>Project Proof:</span>
-          <span style={{ fontWeight: 800, color: '#0f172a' }}>
-            {current.emoji} {current.project}
+          <span style={{ fontSize: '0.7rem', color: '#94a3b8', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.08em' }}>
+            {current.tag}
+          </span>
+          <span style={{ width: 1, height: 12, background: '#e2e8f0', display: 'inline-block' }} />
+          <span style={{ fontSize: '0.82rem', fontWeight: 700, color: '#0f172a' }}>
+            {current.project}
           </span>
         </div>
 
-        {/* Minimalist Dot Stepper */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: 5 }}>
-          {REPO_STATEMENTS.map((s, i) => (
-            <button
-              key={s.id}
-              onClick={() => {
-                setActiveIdx(i);
-                setDisplayedFrom(s.from);
-                setIsDeleting(false);
-              }}
-              title={s.project}
-              style={{
-                width: i === activeIdx ? 18 : 6,
-                height: 6,
-                borderRadius: 99,
-                background: i === activeIdx ? current.color : '#cbd5e1',
-                border: 'none',
-                padding: 0,
-                cursor: 'pointer',
-                transition: 'all 0.25s cubic-bezier(0.4, 0, 0.2, 1)',
-              }}
-            />
-          ))}
-        </div>
-
-        {/* Compact Navigation Arrows */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
+        {/* Dot stepper + arrows grouped together cleanly */}
+        <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
           <button
             onClick={handlePrev}
             style={{
-              width: 22,
-              height: 22,
-              borderRadius: '50%',
-              border: '1px solid #e2e8f0',
-              background: '#fff',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              cursor: 'pointer',
-              color: '#64748b',
-              padding: 0,
+              width: 24, height: 24, borderRadius: '50%',
+              border: '1px solid #e2e8f0', background: '#fff',
+              display: 'flex', alignItems: 'center', justifyContent: 'center',
+              cursor: 'pointer', color: '#94a3b8', padding: 0,
               transition: 'all 0.2s',
             }}
-            title="Previous project statement"
+            title="Previous"
           >
             <ChevronLeft size={13} />
           </button>
+
+          <div style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
+            {REPO_STATEMENTS.map((s, i) => (
+              <button
+                key={s.id}
+                onClick={() => { setActiveIdx(i); setDisplayedFrom(s.from); setIsDeleting(false); }}
+                title={s.project}
+                style={{
+                  width: i === activeIdx ? 20 : 6,
+                  height: 6,
+                  borderRadius: 99,
+                  background: i === activeIdx ? current.color : '#e2e8f0',
+                  border: 'none', padding: 0, cursor: 'pointer',
+                  transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+                }}
+              />
+            ))}
+          </div>
+
           <button
             onClick={handleNext}
             style={{
-              width: 22,
-              height: 22,
-              borderRadius: '50%',
-              border: '1px solid #e2e8f0',
-              background: '#fff',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              cursor: 'pointer',
-              color: '#64748b',
-              padding: 0,
+              width: 24, height: 24, borderRadius: '50%',
+              border: '1px solid #e2e8f0', background: '#fff',
+              display: 'flex', alignItems: 'center', justifyContent: 'center',
+              cursor: 'pointer', color: '#94a3b8', padding: 0,
               transition: 'all 0.2s',
             }}
-            title="Next project statement"
+            title="Next"
           >
             <ChevronRight size={13} />
           </button>
@@ -766,207 +749,241 @@ export function HeroSection() {
       {/* ── RIGHT PANEL ── */}
       <div
         style={{
-          background: 'linear-gradient(160deg, #f8f6f0 0%, #ede7dc 100%)',
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center',
-          justifyContent: 'space-between',
-          padding: '48px 40px 36px',
           position: 'relative',
           minHeight: 'calc(100vh - 64px)',
           overflow: 'hidden',
+          display: 'flex',
+          flexDirection: 'column',
         }}
       >
-        <div style={{ textAlign: 'center', fontSize: '1.05rem', fontWeight: 500, color: '#334155', lineHeight: 1.6 }}>
-          Build your site in <strong style={{ color: '#0f172a' }}>React</strong>,{' '}
-          <strong style={{ color: '#0f172a' }}>TypeScript</strong> or <strong style={{ color: '#0f172a' }}>Next.js</strong>
+        {/* Full-bleed photo background */}
+        <div style={{ position: 'absolute', inset: 0, zIndex: 0 }}>
+          <img
+            src={encodeURI(PERSONAL.photo)}
+            alt={PERSONAL.name}
+            style={{
+              width: '100%',
+              height: '100%',
+              objectFit: 'cover',
+              objectPosition: 'center 15%',
+              display: 'block',
+            }}
+            onError={(e) => {
+              const el = e.currentTarget as HTMLElement;
+              el.style.display = 'none';
+              (el.parentElement as HTMLElement).style.background =
+                'linear-gradient(160deg, #0f172a 0%, #1e293b 60%, #f59e0b 100%)';
+            }}
+          />
+          {/* Dark gradient overlay — stronger at top and bottom */}
+          <div
+            style={{
+              position: 'absolute',
+              inset: 0,
+              background:
+                'linear-gradient(to bottom, rgba(15,23,42,0.55) 0%, rgba(15,23,42,0.05) 40%, rgba(15,23,42,0.10) 65%, rgba(15,23,42,0.82) 100%)',
+            }}
+          />
+          {/* Subtle orange accent stripe at the left edge */}
+          <div
+            style={{
+              position: 'absolute',
+              left: 0,
+              top: 0,
+              bottom: 0,
+              width: 4,
+              background: 'linear-gradient(to bottom, #f59e0b, #ea580c)',
+            }}
+          />
         </div>
 
-        {/* Profile Card & Tech Badges */}
+        {/* ── TOP STRIP: availability badge ── */}
         <div
           style={{
             position: 'relative',
-            flex: 1,
+            zIndex: 2,
+            padding: '28px 32px 0',
             display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            width: '100%',
+            justifyContent: 'flex-end',
           }}
         >
-          <FloatingBadge
-            icon={<Code2 size={20} />}
-            label="React"
-            color="#61dafb"
-            style={{ top: '10%', left: '8%', animationDelay: '0s' }}
-          />
-          <FloatingBadge
-            icon={<span style={{ fontWeight: 900, fontSize: '0.85rem', color: '#3178c6' }}>TS</span>}
-            label="TypeScript"
-            color="#3178c6"
-            style={{ top: '18%', right: '6%', animationDelay: '0.8s' }}
-          />
-          <FloatingBadge
-            icon={<Layers size={20} />}
-            label="Figma"
-            color="#f24e1e"
-            style={{ bottom: '26%', left: '6%', animationDelay: '1.6s' }}
-          />
-          <FloatingBadge
-            icon={<Globe size={20} />}
-            label="Node.js"
-            color="#339933"
-            style={{ bottom: '18%', right: '8%', animationDelay: '2.4s' }}
-          />
-
           <div
             style={{
-              width: 290,
-              height: 390,
-              borderRadius: 24,
-              background: '#fff',
-              display: 'flex',
-              flexDirection: 'column',
+              display: 'inline-flex',
               alignItems: 'center',
-              boxShadow: '0 28px 70px rgba(0,0,0,0.12), 0 0 0 1px rgba(255,255,255,0.8)',
-              position: 'relative',
-              overflow: 'hidden',
-              border: '4px solid #fff',
+              gap: 7,
+              background: 'rgba(255,255,255,0.12)',
+              backdropFilter: 'blur(12px)',
+              WebkitBackdropFilter: 'blur(12px)',
+              border: '1px solid rgba(255,255,255,0.22)',
+              padding: '6px 14px',
+              borderRadius: 99,
             }}
           >
-            <div
+            <span
               style={{
-                width: '100%',
-                height: '78%',
-                position: 'relative',
-                overflow: 'hidden',
-                background: '#f1f5f9',
+                width: 7,
+                height: 7,
+                borderRadius: '50%',
+                background: '#22c55e',
+                display: 'inline-block',
+                boxShadow: '0 0 0 3px rgba(34,197,94,0.3)',
               }}
-            >
-              <img
-                src={encodeURI(PERSONAL.photo)}
-                alt={PERSONAL.name}
-                style={{
-                  width: '100%',
-                  height: '100%',
-                  objectFit: 'cover',
-                  objectPosition: 'center 20%',
-                  display: 'block',
-                  position: 'relative',
-                  zIndex: 1,
-                }}
-                onError={(e) => {
-                  (e.target as HTMLElement).style.display = 'none';
-                }}
-              />
-              <div
-                style={{
-                  position: 'absolute',
-                  inset: 0,
-                  background: 'linear-gradient(135deg, #f59e0b 0%, #ea580c 100%)',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  fontSize: '4rem',
-                  fontWeight: 900,
-                  color: '#fff',
-                }}
-              >
-                A
-              </div>
-              <div
-                style={{
-                  position: 'absolute',
-                  top: 14,
-                  right: 14,
-                  background: '#22c55e',
-                  borderRadius: 999,
-                  padding: '4px 12px',
-                  fontSize: '0.62rem',
-                  fontWeight: 800,
-                  color: '#fff',
-                  letterSpacing: '0.06em',
-                  textTransform: 'uppercase',
-                  boxShadow: '0 4px 12px rgba(34,197,94,0.45)',
-                  zIndex: 2,
-                }}
-              >
-                ● Available
-              </div>
-            </div>
-
-            <div
-              style={{
-                width: '100%',
-                flex: 1,
-                padding: '12px 16px',
-                background: '#fff',
-                display: 'flex',
-                flexDirection: 'column',
-                justifyContent: 'center',
-                alignItems: 'center',
-                textAlign: 'center',
-              }}
-            >
-              <div style={{ fontWeight: 850, fontSize: '1.05rem', color: '#0f172a', letterSpacing: '-0.02em' }}>
-                Aaron M. Cañada
-              </div>
-              <div style={{ fontSize: '0.72rem', color: '#f59e0b', fontWeight: 700, marginTop: 2 }}>
-                Front-End AI Engineer · Full-Stack
-              </div>
-            </div>
+            />
+            <span style={{ fontSize: '0.7rem', fontWeight: 700, color: '#fff', letterSpacing: '0.06em', textTransform: 'uppercase' }}>
+              Open to Work
+            </span>
           </div>
         </div>
 
-        {/* Subscribe box */}
-        <div style={{ width: '100%', maxWidth: 340, position: 'relative' }}>
-          <input
-            type="email"
-            placeholder="Subscribe my Newsletter"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
+        {/* ── CENTER: name / role glass card ── */}
+        <div
+          style={{
+            flex: 1,
+            position: 'relative',
+            zIndex: 2,
+            display: 'flex',
+            alignItems: 'flex-end',
+            padding: '0 32px 32px',
+          }}
+        >
+          <div
             style={{
               width: '100%',
-              padding: '13px 50px 13px 18px',
-              borderRadius: 12,
-              border: '1.5px solid rgba(0,0,0,0.12)',
-              fontSize: '0.82rem',
-              background: '#fff',
-              outline: 'none',
-              boxSizing: 'border-box',
-              boxShadow: '0 4px 16px rgba(0,0,0,0.06)',
+              background: 'rgba(15,23,42,0.55)',
+              backdropFilter: 'blur(18px)',
+              WebkitBackdropFilter: 'blur(18px)',
+              border: '1px solid rgba(255,255,255,0.12)',
+              borderRadius: 20,
+              padding: '24px 28px',
             }}
-          />
-          <button
-            onClick={() => {
-              if (email) setSubscribed(true);
-            }}
-            style={{
-              position: 'absolute',
-              right: 6,
-              top: '50%',
-              transform: 'translateY(-50%)',
-              width: 36,
-              height: 36,
-              borderRadius: 9,
-              background: '#0f172a',
-              border: 'none',
-              cursor: 'pointer',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              color: '#fff',
-              transition: 'background 0.2s',
-            }}
-            onMouseEnter={(e) => (e.currentTarget.style.background = '#f59e0b')}
-            onMouseLeave={(e) => (e.currentTarget.style.background = '#0f172a')}
           >
-            {subscribed ? '✓' : <Send size={14} />}
-          </button>
-          {subscribed && (
-            <div style={{ textAlign: 'center', marginTop: 8, fontSize: '0.72rem', color: '#22c55e', fontWeight: 600 }}>
-              Thanks for subscribing! 🎉
+            {/* Name */}
+            <div
+              style={{
+                fontSize: 'clamp(1.3rem, 2.5vw, 1.65rem)',
+                fontWeight: 900,
+                color: '#fff',
+                letterSpacing: '-0.03em',
+                lineHeight: 1.15,
+                marginBottom: 6,
+              }}
+            >
+              Aaron M.{' '}
+              <span
+                style={{
+                  background: 'linear-gradient(90deg, #f97316, #f59e0b)',
+                  WebkitBackgroundClip: 'text',
+                  WebkitTextFillColor: 'transparent',
+                }}
+              >
+                Cañada
+              </span>
             </div>
-          )}
+
+            {/* Role */}
+            <div
+              style={{
+                fontSize: '0.8rem',
+                fontWeight: 600,
+                color: 'rgba(255,255,255,0.65)',
+                letterSpacing: '0.02em',
+                marginBottom: 20,
+              }}
+            >
+              Front-End AI Engineer · Full-Stack Developer · UI/UX Designer
+            </div>
+
+            {/* Divider */}
+            <div style={{ height: 1, background: 'rgba(255,255,255,0.1)', marginBottom: 18 }} />
+
+            {/* Tech stack inline chips */}
+            <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8 }}>
+              {[
+                { label: 'React',       color: '#61dafb' },
+                { label: 'TypeScript',  color: '#3178c6' },
+                { label: 'Node.js',     color: '#68a063' },
+                { label: 'Figma',       color: '#f24e1e' },
+                { label: 'Flutter',     color: '#54c5f8' },
+                { label: 'Firebase',    color: '#ffcb2b' },
+              ].map(({ label, color }) => (
+                <span
+                  key={label}
+                  style={{
+                    display: 'inline-flex',
+                    alignItems: 'center',
+                    gap: 5,
+                    fontSize: '0.7rem',
+                    fontWeight: 700,
+                    color: '#fff',
+                    background: 'rgba(255,255,255,0.08)',
+                    border: '1px solid rgba(255,255,255,0.14)',
+                    padding: '4px 10px',
+                    borderRadius: 6,
+                    letterSpacing: '0.02em',
+                  }}
+                >
+                  <span style={{ width: 6, height: 6, borderRadius: '50%', background: color, display: 'inline-block', flexShrink: 0 }} />
+                  {label}
+                </span>
+              ))}
+            </div>
+
+            {/* Bottom row: location + newsletter */}
+            <div style={{ marginTop: 20, display: 'flex', alignItems: 'center', gap: 12 }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 6, flex: 1 }}>
+                <Globe size={13} style={{ color: 'rgba(255,255,255,0.45)', flexShrink: 0 }} />
+                <span style={{ fontSize: '0.73rem', color: 'rgba(255,255,255,0.55)', fontWeight: 500 }}>
+                  Quezon City, PH
+                </span>
+              </div>
+
+              {/* Compact newsletter */}
+              <div style={{ position: 'relative' }}>
+                <input
+                  type="email"
+                  placeholder="Subscribe newsletter"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  style={{
+                    padding: '8px 40px 8px 14px',
+                    borderRadius: 8,
+                    border: '1px solid rgba(255,255,255,0.2)',
+                    fontSize: '0.72rem',
+                    background: 'rgba(255,255,255,0.1)',
+                    color: '#fff',
+                    outline: 'none',
+                    width: 188,
+                    boxSizing: 'border-box',
+                  }}
+                />
+                <button
+                  onClick={() => { if (email) setSubscribed(true); }}
+                  style={{
+                    position: 'absolute',
+                    right: 5,
+                    top: '50%',
+                    transform: 'translateY(-50%)',
+                    width: 28,
+                    height: 28,
+                    borderRadius: 6,
+                    background: subscribed ? '#22c55e' : 'linear-gradient(135deg, #f59e0b, #f97316)',
+                    border: 'none',
+                    cursor: 'pointer',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    color: '#fff',
+                    fontSize: '0.75rem',
+                    fontWeight: 800,
+                    transition: 'all 0.2s',
+                  }}
+                >
+                  {subscribed ? '✓' : <Send size={12} />}
+                </button>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </section>
