@@ -336,6 +336,245 @@ const TopNav = () => {
   );
 };
 
+// ── Animated Hero Statement (Moving Letters & Repo Projects) ─────────────────
+interface StatementItem {
+  id: string;
+  from: string;
+  to: string;
+  benefit: string;
+  project: string;
+  tag: string;
+  color: string;
+  bgLight: string;
+  borderColor: string;
+  emoji: string;
+}
+
+const REPO_STATEMENTS: StatementItem[] = [
+  {
+    id: 'facebook',
+    from: "'just a Facebook page'",
+    to: 'a high-converting website',
+    benefit: 'real customers.',
+    project: 'Schatzies Events',
+    tag: 'Web Conversion',
+    color: '#f59e0b',
+    bgLight: 'rgba(245, 158, 11, 0.12)',
+    borderColor: 'rgba(245, 158, 11, 0.35)',
+    emoji: '📘',
+  },
+  {
+    id: 'syncstudy',
+    from: "'scattered notes & study tabs'",
+    to: 'a real-time AI study workspace',
+    benefit: 'productive collaborative teams.',
+    project: 'SyncStudy',
+    tag: 'AI & WebSockets',
+    color: '#3b82f6',
+    bgLight: 'rgba(59, 130, 246, 0.12)',
+    borderColor: 'rgba(59, 130, 246, 0.35)',
+    emoji: '⚡',
+  },
+  {
+    id: 'algo',
+    from: "'complex computer science code'",
+    to: 'an interactive macOS-inspired playground',
+    benefit: 'live visual algorithm demos.',
+    project: 'Algorithm Portfolio',
+    tag: 'macOS UI & Algorithmic Demos',
+    color: '#8b5cf6',
+    bgLight: 'rgba(139, 92, 246, 0.12)',
+    borderColor: 'rgba(139, 92, 246, 0.35)',
+    emoji: '💻',
+  },
+  {
+    id: 'lingualink',
+    from: "'real-world language barriers'",
+    to: 'a smart Flutter + Firebase mobile app',
+    benefit: 'instant AI OCR translation.',
+    project: 'LinguaLink',
+    tag: 'Flutter Mobile & AI OCR',
+    color: '#06b6d4',
+    bgLight: 'rgba(6, 182, 212, 0.12)',
+    borderColor: 'rgba(6, 182, 212, 0.35)',
+    emoji: '🌍',
+  },
+  {
+    id: 'lifesync',
+    from: "'chaotic tasks & expense tracking'",
+    to: 'a secure all-in-one productivity suite',
+    benefit: 'frictionless daily clarity.',
+    project: 'AarvieveLifeSync',
+    tag: 'Full-Stack Management',
+    color: '#10b981',
+    bgLight: 'rgba(16, 185, 129, 0.12)',
+    borderColor: 'rgba(16, 185, 129, 0.35)',
+    emoji: '🚀',
+  },
+  {
+    id: 'rlphil',
+    from: "'offline construction workflows'",
+    to: 'a fast, modern digital brand platform',
+    benefit: 'high-value client contracts.',
+    project: 'RL Phil Construction',
+    tag: 'Enterprise Web Presence',
+    color: '#ea580c',
+    bgLight: 'rgba(234, 88, 12, 0.12)',
+    borderColor: 'rgba(234, 88, 12, 0.35)',
+    emoji: '🏗️',
+  },
+];
+
+const AnimatedHeroStatement = () => {
+  const [activeIdx, setActiveIdx] = useState(0);
+  const [displayedFrom, setDisplayedFrom] = useState('');
+  const [isDeleting, setIsDeleting] = useState(false);
+  const [isPaused, setIsPaused] = useState(false);
+
+  const currentStatement = REPO_STATEMENTS[activeIdx];
+
+  // Moving letters typewriter effect for the "from" phrase
+  useEffect(() => {
+    if (isPaused) return;
+
+    const targetText = currentStatement.from;
+    let timer: NodeJS.Timeout;
+
+    if (!isDeleting) {
+      if (displayedFrom.length < targetText.length) {
+        timer = setTimeout(() => {
+          setDisplayedFrom(targetText.slice(0, displayedFrom.length + 1));
+        }, 55);
+      } else {
+        // Pause to let user read the complete statement
+        timer = setTimeout(() => {
+          setIsDeleting(true);
+        }, 3200);
+      }
+    } else {
+      if (displayedFrom.length > 0) {
+        timer = setTimeout(() => {
+          setDisplayedFrom(prev => prev.slice(0, -1));
+        }, 28);
+      } else {
+        setIsDeleting(false);
+        setActiveIdx(prev => (prev + 1) % REPO_STATEMENTS.length);
+      }
+    }
+
+    return () => clearTimeout(timer);
+  }, [displayedFrom, isDeleting, activeIdx, isPaused, currentStatement.from]);
+
+  const selectStatement = (index: number) => {
+    setActiveIdx(index);
+    setDisplayedFrom(REPO_STATEMENTS[index].from);
+    setIsDeleting(false);
+  };
+
+  return (
+    <div
+      style={{ marginBottom: 28, maxWidth: 580 }}
+      onMouseEnter={() => setIsPaused(true)}
+      onMouseLeave={() => setIsPaused(false)}
+    >
+      {/* ── Main Dynamic Statement Paragraph ── */}
+      <p style={{
+        fontSize: 'clamp(1.05rem, 1.8vw, 1.25rem)',
+        lineHeight: 1.75,
+        color: '#334155',
+        margin: '0 0 16px',
+        fontWeight: 450,
+        minHeight: '4.2rem',
+      }}>
+        I turn{' '}
+        <span
+          style={{
+            display: 'inline-flex',
+            alignItems: 'center',
+            gap: 6,
+            color: '#0f172a',
+            fontWeight: 800,
+            background: currentStatement.bgLight,
+            border: `1.5px solid ${currentStatement.borderColor}`,
+            padding: '2px 10px 2px 8px',
+            borderRadius: '6px',
+            boxShadow: `0 2px 10px ${currentStatement.color}15`,
+            transition: 'background 0.3s, border-color 0.3s',
+            whiteSpace: 'nowrap',
+            verticalAlign: 'middle',
+          }}
+        >
+          <span style={{ fontSize: '0.95em' }}>{currentStatement.emoji}</span>
+          <span style={{ position: 'relative' }}>
+            {displayedFrom}
+            <span style={{
+              display: 'inline-block',
+              width: '2px',
+              height: '1.05em',
+              background: currentStatement.color,
+              marginLeft: '2px',
+              verticalAlign: 'text-bottom',
+              animation: 'blink 0.8s step-end infinite',
+            }} />
+          </span>
+        </span>
+        {' '}into {currentStatement.to} that brings in{' '}
+        <strong style={{
+          color: currentStatement.color,
+          fontWeight: 850,
+          transition: 'color 0.3s',
+          letterSpacing: '-0.01em',
+        }}>
+          {currentStatement.benefit}
+        </strong>
+      </p>
+
+      {/* ── Project Source Indicator / Statement Switcher ── */}
+      <div style={{ display: 'flex', alignItems: 'center', gap: 6, flexWrap: 'wrap' }}>
+        <span style={{
+          fontSize: '0.66rem',
+          fontWeight: 700,
+          color: '#94a3b8',
+          textTransform: 'uppercase',
+          letterSpacing: '0.08em',
+          marginRight: 4,
+        }}>
+          Based on projects:
+        </span>
+        {REPO_STATEMENTS.map((item, idx) => {
+          const isActive = idx === activeIdx;
+          return (
+            <button
+              key={item.id}
+              onClick={() => selectStatement(idx)}
+              style={{
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: 5,
+                padding: '3px 10px',
+                borderRadius: 99,
+                fontSize: '0.68rem',
+                fontWeight: isActive ? 800 : 600,
+                border: isActive ? `1.5px solid ${item.color}` : '1px solid #e2e8f0',
+                background: isActive ? item.bgLight : '#fff',
+                color: isActive ? '#0f172a' : '#64748b',
+                cursor: 'pointer',
+                transition: 'all 0.2s',
+                boxShadow: isActive ? `0 2px 8px ${item.color}25` : 'none',
+                transform: isActive ? 'scale(1.04)' : 'scale(1)',
+              }}
+              title={`${item.project} (${item.tag})`}
+            >
+              <span>{item.emoji}</span>
+              <span>{item.project}</span>
+            </button>
+          );
+        })}
+      </div>
+    </div>
+  );
+};
+
 // ── Main App ──────────────────────────────────────────────────────────────────
 export default function App() {
   const [email, setEmail] = useState('');
@@ -387,9 +626,8 @@ export default function App() {
               <span style={{ fontSize: '0.72rem', fontWeight: 700, background: '#111', color: '#f59e0b', padding: '4px 12px', borderRadius: 6, textTransform: 'uppercase', letterSpacing: '0.05em' }}>QCU BSIT STUDENT</span>
             </h2>
 
-            <p style={{ fontSize: '1.2rem', lineHeight: 1.7, color: '#444', maxWidth: 550, marginBottom: 32, fontWeight: 500 }}>
-              I turn <span style={{ color: '#111', fontWeight: 800, background: 'rgba(245, 158, 11, 0.1)', padding: '2px 6px', borderRadius: '4px' }}>'just a Facebook page'</span> into a high-converting website that brings in <strong style={{ color: '#f59e0b', fontWeight: 800 }}>real customers</strong>.
-            </p>
+            {/* ── Dynamic Moving Statement based on projects ── */}
+            <AnimatedHeroStatement />
 
             {/* CTAs */}
             <div style={{ display: 'flex', alignItems: 'center', gap: 20, marginBottom: 24, flexWrap: 'wrap' }}>
