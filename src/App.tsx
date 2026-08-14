@@ -143,6 +143,47 @@ const FloatingPreview = ({ url, accent, visible, x, y }: FloatingPreviewProps) =
   </div>
 );
 
+// ── Floating Cert Preview ─────────────────────────────────────────────────────
+interface FloatingCertPreviewProps {
+  image: string;
+  name: string;
+  visible: boolean;
+  x: number;
+  y: number;
+}
+
+const FloatingCertPreview = ({ image, name, visible, x, y }: FloatingCertPreviewProps) => (
+  <div
+    style={{
+      position: 'fixed',
+      left: x,
+      top: y,
+      width: 280,
+      pointerEvents: 'none',
+      zIndex: 99999,
+      borderRadius: 12,
+      overflow: 'hidden',
+      border: '1px solid rgba(139, 92, 246, 0.3)',
+      background: '#0d0d0d',
+      opacity: visible ? 1 : 0,
+      transform: visible
+        ? 'translate(-50%, calc(-100% - 18px)) scale(1) rotateX(0deg)'
+        : 'translate(-50%, calc(-100% - 18px)) scale(0.88) rotateX(10deg)',
+      boxShadow: visible
+        ? '0 28px 70px rgba(0,0,0,0.5), 0 0 50px rgba(139,92,246,0.12)'
+        : 'none',
+      transition: 'opacity 0.25s cubic-bezier(0.22,1,0.36,1), transform 0.25s cubic-bezier(0.22,1,0.36,1)',
+      transformOrigin: 'bottom center',
+    }}
+  >
+    <img 
+      src={image} 
+      alt={name} 
+      style={{ width: '100%', height: 'auto', display: 'block', objectFit: 'contain' }} 
+    />
+  </div>
+);
+
 // ── Typewriter component ──────────────────────────────────────────────────────
 const Typewriter = ({ words, typingSpeed = 80, deletingSpeed = 40, delay = 2000 }: { words: string[]; typingSpeed?: number; deletingSpeed?: number; delay?: number }) => {
   const [currentWordIdx, setCurrentWordIdx] = useState(0);
@@ -306,6 +347,10 @@ export default function App() {
 
   // State for active certification image modal
   const [activeCert, setActiveCert] = useState<{ name: string; image: string } | null>(null);
+
+  // States for Certification hover preview
+  const [hoveredCertIdx, setHoveredCertIdx] = useState<number | null>(null);
+  const [certHoverPos, setCertHoverPos] = useState({ x: 0, y: 0 });
 
   const skills = [
     { icon: <Code2 size={20} />, label: 'Web Dev', count: 6, color: '#f59e0b' },
@@ -716,8 +761,21 @@ export default function App() {
                     padding: '20px', background: '#fff', borderRadius: 16, 
                     border: '1px solid #eee', transition: 'all 0.25s', cursor: 'pointer'
                   }}
-                  onMouseEnter={e => { const el = e.currentTarget as HTMLElement; el.style.borderColor = '#8b5cf6'; el.style.transform = 'translateY(-4px)'; el.style.boxShadow = '0 12px 32px rgba(139,92,246,0.12)'; }}
-                  onMouseLeave={e => { const el = e.currentTarget as HTMLElement; el.style.borderColor = '#eee'; el.style.transform = ''; el.style.boxShadow = ''; }}
+                  onMouseEnter={e => { 
+                    const el = e.currentTarget as HTMLElement; 
+                    el.style.borderColor = '#8b5cf6'; 
+                    el.style.transform = 'translateY(-4px)'; 
+                    el.style.boxShadow = '0 12px 32px rgba(139,92,246,0.12)'; 
+                    setHoveredCertIdx(i);
+                  }}
+                  onMouseLeave={e => { 
+                    const el = e.currentTarget as HTMLElement; 
+                    el.style.borderColor = '#eee'; 
+                    el.style.transform = ''; 
+                    el.style.boxShadow = ''; 
+                    setHoveredCertIdx(null);
+                  }}
+                  onMouseMove={e => setCertHoverPos({ x: e.clientX, y: e.clientY })}
                   >
                     <div style={{ fontSize: '0.65rem', fontWeight: 700, color: '#8b5cf6', marginBottom: 6, textTransform: 'uppercase', letterSpacing: '0.08em' }}>{cert.issuer}</div>
                     <div style={{ fontSize: '0.9rem', fontWeight: 800, color: '#111', marginBottom: 10, lineHeight: 1.3 }}>{cert.name}</div>
@@ -937,6 +995,16 @@ export default function App() {
             </div>
           </div>
         </div>
+      )}
+
+      {hoveredCertIdx !== null && (
+        <FloatingCertPreview
+          image={CERTIFICATIONS[hoveredCertIdx].image}
+          name={CERTIFICATIONS[hoveredCertIdx].name}
+          visible={true}
+          x={certHoverPos.x}
+          y={certHoverPos.y}
+        />
       )}
 
       <style>{`
