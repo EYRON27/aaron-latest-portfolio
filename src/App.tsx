@@ -387,8 +387,8 @@ export default function App() {
               <span style={{ fontSize: '0.72rem', fontWeight: 700, background: '#111', color: '#f59e0b', padding: '4px 12px', borderRadius: 6, textTransform: 'uppercase', letterSpacing: '0.05em' }}>QCU BSIT STUDENT</span>
             </h2>
 
-            <p style={{ fontSize: '1rem', lineHeight: 1.6, color: '#555', maxWidth: 500, marginBottom: 24 }}>
-              Crafting fast, modern, and intelligent web experiences. Specialize in building user-focused applications with React, TypeScript, and interactive UI/UX designs.
+            <p style={{ fontSize: '1.2rem', lineHeight: 1.7, color: '#444', maxWidth: 550, marginBottom: 32, fontWeight: 500 }}>
+              I turn <span style={{ color: '#111', fontWeight: 800, background: 'rgba(245, 158, 11, 0.1)', padding: '2px 6px', borderRadius: '4px' }}>'just a Facebook page'</span> into a high-converting website that brings in <strong style={{ color: '#f59e0b', fontWeight: 800 }}>real customers</strong>.
             </p>
 
             {/* CTAs */}
