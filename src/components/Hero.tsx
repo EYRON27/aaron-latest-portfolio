@@ -867,10 +867,10 @@ const Hero = () => {
 
             {/* Description */}
             <p
-              className={`text-neutral-500 dark:text-neutral-400 text-lg leading-relaxed max-w-lg transition-all duration-700 ${mounted ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'}`}
+              className={`text-neutral-600 dark:text-neutral-300 text-xl leading-relaxed max-w-lg transition-all duration-700 font-medium ${mounted ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'}`}
               style={{ transitionDelay: '560ms' }}
             >
-              Crafting fast, accessible, and visually compelling web experiences — where every pixel tells a story.
+              I turn <span className="text-neutral-900 dark:text-white font-black bg-amber-500/10 px-1.5 py-0.5 rounded">'just a Facebook page'</span> into a high-converting website that brings in <strong className="text-amber-500 font-black">real customers</strong>.
             </p>
 
             {/* CTAs — Magnetic */}
