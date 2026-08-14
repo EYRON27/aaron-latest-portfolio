@@ -364,109 +364,166 @@ export default function App() {
       <TopNav />
 
       {/* ── HERO — Split Layout ─────────────────────────────────────────────── */}
-      <section id="home" style={{ paddingTop: 64, minHeight: '100vh', display: 'grid', gridTemplateColumns: '1fr 1fr' }}>
+      <section id="home" style={{ paddingTop: 64, minHeight: '100vh', display: 'grid', gridTemplateColumns: '55fr 45fr' }}>
 
-        {/* Left panel — white */}
-        <div style={{ padding: '24px 48px', display: 'flex', flexDirection: 'column', justifyContent: 'space-between', minHeight: 'calc(100vh - 64px)' }}>
+        {/* ── LEFT PANEL ── */}
+        <div style={{
+          padding: 'clamp(32px,5vh,64px) clamp(28px,4vw,56px)',
+          display: 'flex', flexDirection: 'column', justifyContent: 'center',
+          minHeight: 'calc(100vh - 64px)', gap: 0,
+          background: '#fff',
+        }}>
 
-          {/* Top: headline */}
-          <div>
-            {/* Status Chip */}
-            <div style={{ display: 'inline-flex', alignItems: 'center', gap: 8, background: 'rgba(245, 158, 11, 0.08)', border: '1px solid rgba(245, 158, 11, 0.2)', padding: '6px 14px', borderRadius: 99, marginBottom: 12 }}>
-              <span style={{ width: 6, height: 6, borderRadius: '50%', background: '#f59e0b', display: 'inline-block' }} />
-              <span style={{ fontSize: '0.72rem', fontWeight: 700, color: '#b45309', letterSpacing: '0.05em', textTransform: 'uppercase' }}>Available for projects</span>
-            </div>
+          {/* Available chip */}
+          <div style={{ display: 'inline-flex', alignItems: 'center', gap: 8, background: 'rgba(34,197,94,0.08)', border: '1px solid rgba(34,197,94,0.25)', padding: '5px 14px', borderRadius: 99, width: 'fit-content', marginBottom: 20 }}>
+            <span style={{ position: 'relative', display: 'inline-flex' }}>
+              <span style={{ width: 7, height: 7, borderRadius: '50%', background: '#22c55e', display: 'block', boxShadow: '0 0 0 0 rgba(34,197,94,0.4)', animation: 'ping 1.5s ease-out infinite' }} />
+              <span style={{ width: 7, height: 7, borderRadius: '50%', background: '#22c55e', display: 'block', position: 'absolute', inset: 0 }} />
+            </span>
+            <span style={{ fontSize: '0.7rem', fontWeight: 700, color: '#15803d', letterSpacing: '0.06em', textTransform: 'uppercase' }}>Available for new projects</span>
+          </div>
 
-            <h1 style={{ fontSize: 'clamp(2.5rem, 4.5vw, 3.8rem)', fontWeight: 900, lineHeight: 1.1, letterSpacing: '-0.04em', color: '#111', margin: '0 0 8px' }}>
-              <span style={{ fontSize: '1.2rem', fontWeight: 800, color: '#666', display: 'block', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: 4 }}>Hi! I Am</span>
-              <span style={{ display: 'inline-block', background: 'linear-gradient(to right, #f97316, #f59e0b)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>Aaron M. Cañada</span>
+          {/* Name block */}
+          <div style={{ marginBottom: 20 }}>
+            <p style={{ fontSize: '0.85rem', fontWeight: 600, color: '#9ca3af', textTransform: 'uppercase', letterSpacing: '0.12em', marginBottom: 4 }}>Hi, I'm</p>
+            <h1 style={{ fontSize: 'clamp(2.8rem, 5vw, 4.2rem)', fontWeight: 900, lineHeight: 1.0, letterSpacing: '-0.04em', color: '#0f172a', margin: 0, marginBottom: 10 }}>
+              Aaron M.{' '}
+              <span style={{ display: 'block', background: 'linear-gradient(135deg, #f97316 0%, #f59e0b 60%, #eab308 100%)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>
+                Cañada<span style={{ WebkitTextFillColor: '#f59e0b' }}>.</span>
+              </span>
             </h1>
-
-            <h2 style={{ fontSize: 'clamp(1.2rem, 2.2vw, 1.6rem)', fontWeight: 800, color: '#333', letterSpacing: '-0.02em', margin: '0 0 16px', display: 'flex', alignItems: 'center', gap: 12, flexWrap: 'wrap' }}>
-              <Typewriter words={['Front-End AI Engineer', 'Full-Stack Developer', 'UI/UX Designer']} />
-              <span style={{ fontSize: '0.72rem', fontWeight: 700, background: '#111', color: '#f59e0b', padding: '4px 12px', borderRadius: 6, textTransform: 'uppercase', letterSpacing: '0.05em' }}>QCU BSIT STUDENT</span>
-            </h2>
-
-            <p style={{ fontSize: '1.2rem', lineHeight: 1.7, color: '#444', maxWidth: 550, marginBottom: 32, fontWeight: 500 }}>
-              I turn <span style={{ color: '#111', fontWeight: 800, background: 'rgba(245, 158, 11, 0.1)', padding: '2px 6px', borderRadius: '4px' }}>'just a Facebook page'</span> into a high-converting website that brings in <strong style={{ color: '#f59e0b', fontWeight: 800 }}>real customers</strong>.
-            </p>
-
-            {/* CTAs */}
-            <div style={{ display: 'flex', alignItems: 'center', gap: 20, marginBottom: 24, flexWrap: 'wrap' }}>
-              <a href="#contact"
-                style={{ display: 'inline-flex', alignItems: 'center', gap: 8, padding: '12px 28px', borderRadius: 10, fontWeight: 800, fontSize: '0.92rem', background: '#f97316', color: '#fff', textDecoration: 'none', boxShadow: '0 8px 24px rgba(249,115,22,0.25)', transition: 'all 0.2s' }}
-                onMouseEnter={e => { const el = e.currentTarget as HTMLElement; el.style.transform = 'translateY(-2px)'; el.style.boxShadow = '0 12px 28px rgba(249,115,22,0.35)'; }}
-                onMouseLeave={e => { const el = e.currentTarget as HTMLElement; el.style.transform = ''; el.style.boxShadow = '0 8px 24px rgba(249,115,22,0.25)'; }}
-              >
-                Hire Me
-              </a>
-              <a href="#works"
-                style={{ display: 'inline-flex', alignItems: 'center', gap: 8, padding: '12px 24px', borderRadius: 10, fontWeight: 700, fontSize: '0.92rem', border: '1.5px solid #ddd', color: '#333', textDecoration: 'none', transition: 'all 0.2s' }}
-                onMouseEnter={e => { const el = e.currentTarget as HTMLElement; el.style.borderColor = '#f59e0b'; el.style.color = '#f59e0b'; }}
-                onMouseLeave={e => { const el = e.currentTarget as HTMLElement; el.style.borderColor = '#ddd'; el.style.color = '#333'; }}
-              >
-                Projects <ArrowUpRight size={16} />
-              </a>
-            </div>
-
-            {/* Stats — Grid layout with top/bottom border */}
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 24, borderTop: '1px solid #eee', borderBottom: '1px solid #eee', padding: '16px 0', marginBottom: 24 }}>
-              {STATS.map(s => (
-                <div key={s.label}>
-                  <div style={{ fontSize: '2.2rem', fontWeight: 900, color: '#111', lineHeight: 1, letterSpacing: '-0.02em' }}>
-                    <CountUp to={s.number} suffix={s.suffix} />
-                  </div>
-                  <div style={{ fontSize: '0.78rem', color: '#666', marginTop: 6, fontWeight: 500 }}>{s.label}</div>
-                </div>
-              ))}
-            </div>
-
-            {/* Contact inline */}
-            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: 16 }}>
-              <div>
-                <div style={{ fontSize: '0.68rem', fontWeight: 700, color: '#888', textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: 4 }}>Contact Email</div>
-                <a href={`mailto:${CONTACT.email}`} style={{ fontSize: '0.92rem', color: '#111', fontWeight: 700, textDecoration: 'none', transition: 'color 0.2s' }}
-                  onMouseEnter={e => (e.currentTarget.style.color = '#f59e0b')}
-                  onMouseLeave={e => (e.currentTarget.style.color = '#111')}
-                >
-                  {CONTACT.email}
-                </a>
-              </div>
-              <div style={{ display: 'flex', gap: 10 }}>
-                {[
-                  { href: CONTACT.github.url,   icon: <Github size={16} />, label: 'GitHub' },
-                  { href: CONTACT.linkedin.url,  icon: <Linkedin size={16} />, label: 'LinkedIn' },
-                ].map(({ href, icon, label }) => (
-                  <a key={href} href={href} target="_blank" rel="noopener noreferrer" title={label}
-                    style={{ width: 38, height: 38, borderRadius: 8, border: '1px solid #eee', background: '#fafafa', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#555', textDecoration: 'none', transition: 'all 0.2s' }}
-                    onMouseEnter={e => { const el = e.currentTarget as HTMLElement; el.style.borderColor = '#f59e0b'; el.style.color = '#f59e0b'; el.style.background = 'rgba(245,158,11,0.04)'; }}
-                    onMouseLeave={e => { const el = e.currentTarget as HTMLElement; el.style.borderColor = '#eee'; el.style.color = '#555'; el.style.background = '#fafafa'; }}
-                  >{icon}</a>
-                ))}
-              </div>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 12, flexWrap: 'wrap' }}>
+              <span style={{ fontSize: 'clamp(1rem, 1.8vw, 1.35rem)', fontWeight: 700, color: '#374151', letterSpacing: '-0.01em' }}>
+                <Typewriter words={['Front-End AI Engineer', 'Full-Stack Developer', 'UI/UX Designer']} />
+              </span>
+              <span style={{ fontSize: '0.65rem', fontWeight: 800, background: '#0f172a', color: '#f59e0b', padding: '4px 10px', borderRadius: 6, textTransform: 'uppercase', letterSpacing: '0.08em', whiteSpace: 'nowrap' }}>QCU BSIT</span>
             </div>
           </div>
 
-          {/* Bottom styled gradient card: Project Statistics */}
-          <div style={{ marginTop: 20, background: 'linear-gradient(135deg, #1e1b4b 0%, #0f172a 100%)', borderRadius: 20, padding: '20px 24px', color: '#fff', border: '1px solid rgba(255,255,255,0.05)', boxShadow: '0 20px 40px rgba(15,23,42,0.15)' }}>
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1.2fr', gap: 24, alignItems: 'center', flexWrap: 'wrap' }}>
-              <div>
-                <div style={{ fontSize: '0.65rem', color: '#94a3b8', textTransform: 'uppercase', letterSpacing: '0.12em', fontWeight: 700, marginBottom: 6 }}>Overview</div>
-                <div style={{ fontSize: '1.25rem', fontWeight: 800, color: '#f8fafc', lineHeight: 1.2, marginBottom: 12 }}>Project Stats 2025</div>
-                <a href="#works"
-                  style={{ display: 'inline-flex', alignItems: 'center', gap: 6, background: '#f59e0b', color: '#111', fontWeight: 800, fontSize: '0.78rem', padding: '8px 16px', borderRadius: 8, textDecoration: 'none', transition: 'all 0.2s' }}
-                  onMouseEnter={e => { const el = e.currentTarget as HTMLElement; el.style.background = '#fbbf24'; el.style.transform = 'translateY(-1px)'; }}
-                  onMouseLeave={e => { const el = e.currentTarget as HTMLElement; el.style.background = '#f59e0b'; el.style.transform = ''; }}
-                >Know More</a>
+          {/* ── Hero Claim — PREMIUM REDESIGN ── */}
+          <div style={{
+            position: 'relative',
+            marginBottom: 28,
+            padding: '20px 22px',
+            borderRadius: 16,
+            background: 'linear-gradient(135deg, #fffbeb 0%, #fff7ed 100%)',
+            border: '1.5px solid rgba(245,158,11,0.2)',
+            boxShadow: '0 4px 24px rgba(245,158,11,0.08)',
+            overflow: 'hidden',
+          }}>
+            {/* accent glow */}
+            <div style={{ position: 'absolute', top: -20, right: -20, width: 120, height: 120, borderRadius: '50%', background: 'radial-gradient(circle, rgba(249,115,22,0.12) 0%, transparent 70%)', pointerEvents: 'none' }} />
+            <p style={{ fontSize: 'clamp(1rem, 1.5vw, 1.18rem)', lineHeight: 1.75, color: '#1f2937', margin: 0, fontWeight: 400, position: 'relative', zIndex: 1 }}>
+              I turn{' '}
+              <span style={{
+                display: 'inline-flex', alignItems: 'center', gap: 6,
+                fontWeight: 800, color: '#1e3a5f',
+                background: 'rgba(30,58,95,0.07)',
+                border: '1.5px solid rgba(30,58,95,0.15)',
+                padding: '1px 10px 1px 8px', borderRadius: 8,
+                fontSize: '0.95em',
+                whiteSpace: 'nowrap',
+                letterSpacing: '-0.01em',
+              }}>
+                <span style={{ fontSize: '1em' }}>📘</span> 'just a Facebook page'
+              </span>
+              {' '}into a{' '}
+              <strong style={{ fontWeight: 900, color: '#111', letterSpacing: '-0.02em' }}>high-converting website</strong>
+              {' '}that brings in{' '}
+              <span style={{
+                fontWeight: 900,
+                letterSpacing: '-0.02em',
+                background: 'linear-gradient(135deg, #ea580c, #f59e0b)',
+                WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent',
+              }}>real customers.</span>
+            </p>
+          </div>
+
+          {/* CTAs */}
+          <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 28, flexWrap: 'wrap' }}>
+            <a href="#contact"
+              style={{ display: 'inline-flex', alignItems: 'center', gap: 8, padding: '14px 32px', borderRadius: 12, fontWeight: 800, fontSize: '0.9rem', background: 'linear-gradient(135deg,#f97316,#f59e0b)', color: '#fff', textDecoration: 'none', boxShadow: '0 6px 22px rgba(249,115,22,0.4), 0 1px 0 rgba(255,255,255,0.3) inset', transition: 'all 0.25s', letterSpacing: '-0.01em' }}
+              onMouseEnter={e => { const el = e.currentTarget as HTMLElement; el.style.transform = 'translateY(-2px)'; el.style.boxShadow = '0 12px 32px rgba(249,115,22,0.5), 0 1px 0 rgba(255,255,255,0.3) inset'; }}
+              onMouseLeave={e => { const el = e.currentTarget as HTMLElement; el.style.transform = ''; el.style.boxShadow = '0 6px 22px rgba(249,115,22,0.4), 0 1px 0 rgba(255,255,255,0.3) inset'; }}
+            >
+              <Mail size={15} style={{ flexShrink: 0 }} /> Hire Me
+            </a>
+            <a href="#works"
+              style={{ display: 'inline-flex', alignItems: 'center', gap: 8, padding: '14px 28px', borderRadius: 12, fontWeight: 700, fontSize: '0.9rem', border: '1.5px solid #e2e8f0', color: '#374151', textDecoration: 'none', transition: 'all 0.25s', background: '#fff', boxShadow: '0 2px 8px rgba(0,0,0,0.06)' }}
+              onMouseEnter={e => { const el = e.currentTarget as HTMLElement; el.style.borderColor = '#f59e0b'; el.style.color = '#c2410c'; el.style.transform = 'translateY(-2px)'; el.style.boxShadow = '0 8px 20px rgba(0,0,0,0.08)'; }}
+              onMouseLeave={e => { const el = e.currentTarget as HTMLElement; el.style.borderColor = '#e2e8f0'; el.style.color = '#374151'; el.style.transform = ''; el.style.boxShadow = '0 2px 8px rgba(0,0,0,0.06)'; }}
+            >
+              View Projects <ArrowUpRight size={15} />
+            </a>
+            <div style={{ display: 'flex', gap: 8, marginLeft: 2 }}>
+              {[
+                { href: CONTACT.github.url, icon: <Github size={15} />, label: 'GitHub' },
+                { href: CONTACT.linkedin.url, icon: <Linkedin size={15} />, label: 'LinkedIn' },
+              ].map(({ href, icon, label }) => (
+                <a key={href} href={href} target="_blank" rel="noopener noreferrer" title={label}
+                  style={{ width: 42, height: 42, borderRadius: 10, border: '1.5px solid #e2e8f0', background: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#6b7280', textDecoration: 'none', transition: 'all 0.2s', boxShadow: '0 2px 8px rgba(0,0,0,0.05)' }}
+                  onMouseEnter={e => { const el = e.currentTarget as HTMLElement; el.style.borderColor = '#f59e0b'; el.style.color = '#f59e0b'; el.style.transform = 'translateY(-2px)'; }}
+                  onMouseLeave={e => { const el = e.currentTarget as HTMLElement; el.style.borderColor = '#e2e8f0'; el.style.color = '#6b7280'; el.style.transform = ''; }}
+                >{icon}</a>
+              ))}
+            </div>
+          </div>
+
+          {/* Stats row — premium cards */}
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 10, marginBottom: 20 }}>
+            {STATS.map((s, i) => (
+              <div key={s.label} style={{
+                borderRadius: 14,
+                padding: '16px 14px',
+                background: i === 0
+                  ? 'linear-gradient(135deg, #0f172a 0%, #1e293b 100%)'
+                  : '#f8fafc',
+                border: i === 0 ? '1px solid rgba(245,158,11,0.2)' : '1.5px solid #f1f5f9',
+                transition: 'all 0.2s',
+                cursor: 'default',
+              }}
+                onMouseEnter={e => { const el = e.currentTarget as HTMLElement; el.style.transform = 'translateY(-3px)'; el.style.boxShadow = i === 0 ? '0 12px 28px rgba(15,23,42,0.25)' : '0 8px 20px rgba(0,0,0,0.08)'; }}
+                onMouseLeave={e => { const el = e.currentTarget as HTMLElement; el.style.transform = ''; el.style.boxShadow = ''; }}
+              >
+                <div style={{ fontSize: '2rem', fontWeight: 900, color: i === 0 ? '#f59e0b' : '#0f172a', lineHeight: 1, letterSpacing: '-0.04em' }}>
+                  <CountUp to={s.number} suffix={s.suffix} />
+                </div>
+                <div style={{ fontSize: '0.68rem', color: i === 0 ? 'rgba(148,163,184,0.85)' : '#94a3b8', marginTop: 5, fontWeight: 600, letterSpacing: '0.04em', textTransform: 'uppercase' }}>{s.label}</div>
               </div>
-              <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+            ))}
+          </div>
+
+          {/* Contact email pill */}
+          <div style={{ display: 'inline-flex', alignItems: 'center', gap: 10, padding: '10px 16px', borderRadius: 10, background: '#f8fafc', border: '1.5px solid #f1f5f9' }}>
+            <Mail size={14} style={{ color: '#f59e0b', flexShrink: 0 }} />
+            <a href={`mailto:${CONTACT.email}`} style={{ fontSize: '0.82rem', color: '#374151', fontWeight: 700, textDecoration: 'none', transition: 'color 0.2s' }}
+              onMouseEnter={e => (e.currentTarget.style.color = '#f59e0b')}
+              onMouseLeave={e => (e.currentTarget.style.color = '#374151')}
+            >
+              {CONTACT.email}
+            </a>
+          </div>
+
+          {/* Bottom Project Stats card */}
+          <div style={{ marginTop: 24, background: 'linear-gradient(135deg, #1e1b4b 0%, #0f172a 100%)', borderRadius: 18, padding: '18px 22px', color: '#fff', border: '1px solid rgba(255,255,255,0.05)', boxShadow: '0 16px 40px rgba(15,23,42,0.2)' }}>
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1.3fr', gap: 20, alignItems: 'center' }}>
+              <div>
+                <div style={{ fontSize: '0.6rem', color: '#94a3b8', textTransform: 'uppercase', letterSpacing: '0.15em', fontWeight: 700, marginBottom: 6 }}>Overview</div>
+                <div style={{ fontSize: '1.15rem', fontWeight: 800, color: '#f8fafc', lineHeight: 1.3, marginBottom: 12 }}>Project Stats 2025</div>
+                <a href="#works"
+                  style={{ display: 'inline-flex', alignItems: 'center', gap: 6, background: 'linear-gradient(135deg,#f59e0b,#f97316)', color: '#111', fontWeight: 800, fontSize: '0.75rem', padding: '8px 16px', borderRadius: 8, textDecoration: 'none', transition: 'all 0.2s' }}
+                  onMouseEnter={e => { const el = e.currentTarget as HTMLElement; el.style.transform = 'translateY(-1px)'; el.style.boxShadow = '0 6px 16px rgba(245,158,11,0.4)'; }}
+                  onMouseLeave={e => { const el = e.currentTarget as HTMLElement; el.style.transform = ''; el.style.boxShadow = ''; }}
+                >Know More <ArrowUpRight size={12} /></a>
+              </div>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
                 {[
                   { label: 'Website Design', count: 6 },
                   { label: 'Mobile App', count: 1 },
                   { label: 'Full-Stack Apps', count: 2 },
                 ].map(s => (
-                  <div key={s.label} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderBottom: '1px solid rgba(255,255,255,0.07)', paddingBottom: 8 }}>
-                    <span style={{ fontSize: '0.8rem', color: '#bbb' }}>{s.label}</span>
+                  <div key={s.label} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderBottom: '1px solid rgba(255,255,255,0.06)', paddingBottom: 7 }}>
+                    <span style={{ fontSize: '0.78rem', color: '#94a3b8' }}>{s.label}</span>
                     <span style={{ fontSize: '0.88rem', fontWeight: 800, color: '#f59e0b' }}>{s.count}</span>
                   </div>
                 ))}
@@ -475,7 +532,7 @@ export default function App() {
           </div>
         </div>
 
-        {/* Right panel — beige/cream */}
+        {/* ── RIGHT PANEL ── */}
         <div style={{ background: '#f5f0e8', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'space-between', padding: '56px 40px 40px', position: 'relative', minHeight: 'calc(100vh - 64px)', overflow: 'hidden' }}>
 
           {/* Top caption */}
@@ -484,46 +541,19 @@ export default function App() {
             <strong>TypeScript</strong> or <strong>Next.js</strong>
           </div>
 
-          {/* Profile photo placeholder */}
+          {/* Profile photo */}
           <div style={{ position: 'relative', flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', width: '100%' }}>
-            {/* Floating tech badges */}
             <FloatingBadge icon={<Code2 size={22} />} label="React" color="#61dafb" style={{ top: '12%', left: '8%', animationDelay: '0s' }} />
             <FloatingBadge icon={<span style={{ fontWeight: 900, fontSize: '0.9rem', color: '#3178c6' }}>TS</span>} label="TypeScript" color="#3178c6" style={{ top: '22%', right: '6%', animationDelay: '0.8s' }} />
             <FloatingBadge icon={<Layers size={22} />} label="Figma" color="#f24e1e" style={{ bottom: '30%', left: '5%', animationDelay: '1.6s' }} />
             <FloatingBadge icon={<Globe size={22} />} label="Node.js" color="#339933" style={{ bottom: '22%', right: '8%', animationDelay: '2.4s' }} />
 
-            {/* Photo card */}
-            <div style={{
-              width: 280, height: 380,
-              borderRadius: 24,
-              background: 'linear-gradient(160deg, #e8dcc8 0%, #d4c5a9 100%)',
-              display: 'flex', flexDirection: 'column',
-              alignItems: 'center', justifyContent: 'center',
-              boxShadow: '0 32px 80px rgba(0,0,0,0.14)',
-              position: 'relative', overflow: 'hidden',
-              border: '3px solid rgba(255,255,255,0.6)',
-            }}>
-              {/* Avatar initial */}
-              <div style={{
-                width: 110, height: 110, borderRadius: '50%',
-                background: 'linear-gradient(135deg, #f59e0b, #f97316)',
-                display: 'flex', alignItems: 'center', justifyContent: 'center',
-                fontSize: '3rem', fontWeight: 900, color: '#fff',
-                boxShadow: '0 12px 40px rgba(249,115,22,0.4)',
-                marginBottom: 20,
-              }}>A</div>
+            <div style={{ width: 280, height: 380, borderRadius: 24, background: 'linear-gradient(160deg, #e8dcc8 0%, #d4c5a9 100%)', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', boxShadow: '0 32px 80px rgba(0,0,0,0.14)', position: 'relative', overflow: 'hidden', border: '3px solid rgba(255,255,255,0.6)' }}>
+              <div style={{ width: 110, height: 110, borderRadius: '50%', background: 'linear-gradient(135deg, #f59e0b, #f97316)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '3rem', fontWeight: 900, color: '#fff', boxShadow: '0 12px 40px rgba(249,115,22,0.4)', marginBottom: 20 }}>A</div>
               <div style={{ fontWeight: 800, fontSize: '1.1rem', color: '#333' }}>Aaron M. Cañada</div>
               <div style={{ fontSize: '0.75rem', color: '#f59e0b', fontWeight: 700, marginTop: 4 }}>Developer · Designer</div>
               <div style={{ marginTop: 16, fontSize: '0.65rem', color: '#aaa', fontStyle: 'italic' }}>📸 Photo coming soon</div>
-
-              {/* Open to work badge */}
-              <div style={{
-                position: 'absolute', top: 16, right: 16,
-                background: '#22c55e', borderRadius: 999,
-                padding: '4px 12px', fontSize: '0.6rem', fontWeight: 800,
-                color: '#fff', letterSpacing: '0.08em', textTransform: 'uppercase',
-                boxShadow: '0 4px 12px rgba(34,197,94,0.4)',
-              }}>● Available</div>
+              <div style={{ position: 'absolute', top: 16, right: 16, background: '#22c55e', borderRadius: 999, padding: '4px 12px', fontSize: '0.6rem', fontWeight: 800, color: '#fff', letterSpacing: '0.08em', textTransform: 'uppercase', boxShadow: '0 4px 12px rgba(34,197,94,0.4)' }}>● Available</div>
             </div>
           </div>
 
@@ -534,13 +564,7 @@ export default function App() {
               placeholder="Subscribe my Newsletter"
               value={email}
               onChange={e => setEmail(e.target.value)}
-              style={{
-                width: '100%', padding: '14px 52px 14px 20px',
-                borderRadius: 10, border: '1.5px solid rgba(0,0,0,0.1)',
-                fontSize: '0.82rem', background: '#fff',
-                outline: 'none', boxSizing: 'border-box',
-                boxShadow: '0 4px 16px rgba(0,0,0,0.08)',
-              }}
+              style={{ width: '100%', padding: '14px 52px 14px 20px', borderRadius: 10, border: '1.5px solid rgba(0,0,0,0.1)', fontSize: '0.82rem', background: '#fff', outline: 'none', boxSizing: 'border-box', boxShadow: '0 4px 16px rgba(0,0,0,0.08)' }}
             />
             <button
               onClick={() => { if (email) setSubscribed(true); }}
@@ -1014,6 +1038,9 @@ export default function App() {
           0%,100% { transform: translateY(0px) rotate(0deg); }
           33%      { transform: translateY(-10px) rotate(2deg); }
           66%      { transform: translateY(-5px) rotate(-2deg); }
+        }
+        @keyframes ping {
+          75%, 100% { transform: scale(2.2); opacity: 0; }
         }
         @keyframes blink {
           50% { opacity: 0; }
