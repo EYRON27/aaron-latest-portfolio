@@ -749,15 +749,282 @@ export function HeroSection() {
       {/* ── RIGHT PANEL ── */}
       <div
         style={{
+          background: 'linear-gradient(150deg, #faf9f6 0%, #f0ebe1 100%)',
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+          justifyContent: 'center',
           position: 'relative',
           minHeight: 'calc(100vh - 64px)',
           overflow: 'hidden',
-          display: 'flex',
-          flexDirection: 'column',
+          padding: '48px 40px',
         }}
       >
-        {/* Full-bleed photo background */}
-        <div style={{ position: 'absolute', inset: 0, zIndex: 0 }}>
+        {/* ── Decorative geometric blob behind card ── */}
+        <div
+          style={{
+            position: 'absolute',
+            top: '50%',
+            left: '50%',
+            transform: 'translate(-58%, -52%)',
+            width: 420,
+            height: 420,
+            borderRadius: '60% 40% 55% 45% / 45% 55% 45% 55%',
+            background: 'linear-gradient(135deg, #f97316 0%, #f59e0b 55%, #fbbf24 100%)',
+            opacity: 0.18,
+            filter: 'blur(2px)',
+            zIndex: 0,
+          }}
+        />
+        {/* Second smaller shape for depth */}
+        <div
+          style={{
+            position: 'absolute',
+            top: '30%',
+            right: '12%',
+            width: 180,
+            height: 180,
+            borderRadius: '50%',
+            background: 'linear-gradient(135deg, #0f172a 0%, #1e293b 100%)',
+            opacity: 0.06,
+            zIndex: 0,
+          }}
+        />
+        {/* Subtle dot grid pattern */}
+        <div
+          style={{
+            position: 'absolute',
+            inset: 0,
+            backgroundImage: 'radial-gradient(circle, rgba(15,23,42,0.08) 1px, transparent 1px)',
+            backgroundSize: '28px 28px',
+            zIndex: 0,
+          }}
+        />
+
+        {/* ── Floating mini-stat: Experience ── */}
+        <div
+          style={{
+            position: 'absolute',
+            top: '18%',
+            left: '10%',
+            background: '#0f172a',
+            borderRadius: 14,
+            padding: '12px 18px',
+            zIndex: 4,
+            boxShadow: '0 12px 32px rgba(15,23,42,0.2)',
+            animation: 'float-badge 5s ease-in-out infinite',
+          }}
+        >
+          <div style={{ fontSize: '1.5rem', fontWeight: 900, color: '#f59e0b', lineHeight: 1 }}>2+</div>
+          <div style={{ fontSize: '0.65rem', fontWeight: 700, color: '#94a3b8', textTransform: 'uppercase', letterSpacing: '0.08em', marginTop: 3 }}>
+            Yrs Experience
+          </div>
+        </div>
+
+        {/* ── Floating mini-stat: Projects ── */}
+        <div
+          style={{
+            position: 'absolute',
+            top: '22%',
+            right: '8%',
+            background: '#fff',
+            borderRadius: 14,
+            padding: '12px 18px',
+            zIndex: 4,
+            boxShadow: '0 12px 32px rgba(0,0,0,0.1)',
+            border: '1px solid #f1f5f9',
+            animation: 'float-badge 5s ease-in-out infinite',
+            animationDelay: '1.2s',
+          }}
+        >
+          <div style={{ fontSize: '1.5rem', fontWeight: 900, color: '#0f172a', lineHeight: 1 }}>9+</div>
+          <div style={{ fontSize: '0.65rem', fontWeight: 700, color: '#64748b', textTransform: 'uppercase', letterSpacing: '0.08em', marginTop: 3 }}>
+            Projects Built
+          </div>
+        </div>
+
+        {/* ── Floating mini-stat: Available badge ── */}
+        <div
+          style={{
+            position: 'absolute',
+            bottom: '24%',
+            left: '8%',
+            background: '#fff',
+            borderRadius: 99,
+            padding: '8px 14px',
+            zIndex: 4,
+            boxShadow: '0 8px 24px rgba(0,0,0,0.08)',
+            display: 'flex',
+            alignItems: 'center',
+            gap: 7,
+            animation: 'float-badge 5s ease-in-out infinite',
+            animationDelay: '2.4s',
+          }}
+        >
+          <span
+            style={{
+              width: 8,
+              height: 8,
+              borderRadius: '50%',
+              background: '#22c55e',
+              display: 'inline-block',
+              boxShadow: '0 0 0 3px rgba(34,197,94,0.25)',
+            }}
+          />
+          <span style={{ fontSize: '0.72rem', fontWeight: 700, color: '#15803d' }}>Open to Work</span>
+        </div>
+
+        {/* ── Floating mini-stat: Certs ── */}
+        <div
+          style={{
+            position: 'absolute',
+            bottom: '22%',
+            right: '6%',
+            background: 'linear-gradient(135deg, #f59e0b, #ea580c)',
+            borderRadius: 14,
+            padding: '12px 18px',
+            zIndex: 4,
+            boxShadow: '0 12px 28px rgba(249,115,22,0.35)',
+            animation: 'float-badge 5s ease-in-out infinite',
+            animationDelay: '3.6s',
+          }}
+        >
+          <div style={{ fontSize: '1.5rem', fontWeight: 900, color: '#fff', lineHeight: 1 }}>9+</div>
+          <div style={{ fontSize: '0.65rem', fontWeight: 700, color: 'rgba(255,255,255,0.8)', textTransform: 'uppercase', letterSpacing: '0.08em', marginTop: 3 }}>
+            Certs
+          </div>
+        </div>
+
+        {/* ── Main Portrait Card ── */}
+        <div
+          style={{
+            position: 'relative',
+            zIndex: 3,
+            width: 270,
+            borderRadius: 28,
+            overflow: 'hidden',
+            boxShadow: '0 32px 80px rgba(15,23,42,0.22), 0 0 0 1px rgba(255,255,255,0.9)',
+            border: '5px solid #fff',
+            background: '#f1f5f9',
+          }}
+        >
+          {/* Photo */}
+          <img
+            src={encodeURI(PERSONAL.photo)}
+            alt={PERSONAL.name}
+            style={{
+              width: '100%',
+              aspectRatio: '3 / 4',
+              objectFit: 'cover',
+              objectPosition: 'center 15%',
+              display: 'block',
+            }}
+            onError={(e) => {
+              const el = e.currentTarget as HTMLElement;
+              el.style.display = 'none';
+            }}
+          />
+          {/* Bottom name strip */}
+          <div
+            style={{
+              padding: '16px 20px',
+              background: '#0f172a',
+            }}
+          >
+            <div style={{ fontWeight: 900, fontSize: '1rem', color: '#fff', letterSpacing: '-0.02em' }}>
+              Aaron M.{' '}
+              <span
+                style={{
+                  background: 'linear-gradient(90deg, #f97316, #f59e0b)',
+                  WebkitBackgroundClip: 'text',
+                  WebkitTextFillColor: 'transparent',
+                }}
+              >
+                Cañada
+              </span>
+            </div>
+            <div style={{ fontSize: '0.72rem', color: '#64748b', fontWeight: 600, marginTop: 3 }}>
+              Front-End AI Engineer · Full-Stack
+            </div>
+            {/* Tech row */}
+            <div style={{ display: 'flex', gap: 6, marginTop: 12, flexWrap: 'wrap' }}>
+              {['React', 'TypeScript', 'Figma', 'Flutter'].map((t) => (
+                <span
+                  key={t}
+                  style={{
+                    fontSize: '0.62rem',
+                    fontWeight: 700,
+                    color: '#94a3b8',
+                    background: 'rgba(255,255,255,0.06)',
+                    border: '1px solid rgba(255,255,255,0.1)',
+                    padding: '3px 8px',
+                    borderRadius: 5,
+                  }}
+                >
+                  {t}
+                </span>
+              ))}
+            </div>
+          </div>
+        </div>
+
+        {/* ── Newsletter subscribe at bottom ── */}
+        <div style={{ position: 'relative', marginTop: 32, width: '100%', maxWidth: 300, zIndex: 3 }}>
+          <input
+            type="email"
+            placeholder="Subscribe to newsletter"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            style={{
+              width: '100%',
+              padding: '11px 46px 11px 16px',
+              borderRadius: 10,
+              border: '1.5px solid rgba(15,23,42,0.12)',
+              fontSize: '0.78rem',
+              background: '#fff',
+              outline: 'none',
+              boxSizing: 'border-box',
+              boxShadow: '0 4px 16px rgba(0,0,0,0.06)',
+              color: '#334155',
+            }}
+          />
+          <button
+            onClick={() => { if (email) setSubscribed(true); }}
+            style={{
+              position: 'absolute',
+              right: 5,
+              top: '50%',
+              transform: 'translateY(-50%)',
+              width: 34,
+              height: 34,
+              borderRadius: 8,
+              background: subscribed ? '#22c55e' : 'linear-gradient(135deg, #f59e0b, #f97316)',
+              border: 'none',
+              cursor: 'pointer',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              color: '#fff',
+              fontWeight: 800,
+              fontSize: '0.8rem',
+              transition: 'all 0.2s',
+              boxShadow: '0 4px 12px rgba(249,115,22,0.35)',
+            }}
+          >
+            {subscribed ? '✓' : <Send size={13} />}
+          </button>
+          {subscribed && (
+            <div style={{ textAlign: 'center', marginTop: 8, fontSize: '0.72rem', color: '#22c55e', fontWeight: 600 }}>
+              Thanks for subscribing!
+            </div>
+          )}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+
           <img
             src={encodeURI(PERSONAL.photo)}
             alt={PERSONAL.name}
