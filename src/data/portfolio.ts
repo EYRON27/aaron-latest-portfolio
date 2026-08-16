@@ -63,7 +63,7 @@ export const STATS = [
 // ── Tech pills shown in About ─────────────────────────────────
 export const TECH_PILLS = [
   'React', 'TypeScript', 'Tailwind CSS', 'Flutter',
-  'Node.js', 'Figma', 'Firebase', 'Git',
+  'Node.js', 'Figma', 'Firebase', 'Supabase', 'Git',
 ];
 
 // ── Skills ────────────────────────────────────────────────────
@@ -81,7 +81,7 @@ export const SKILL_CATEGORIES = [
   {
     title: 'Databases',
     color: '#06b6d4',
-    skills: ['MySQL', 'MSSQL', 'Firebase'],
+    skills: ['MySQL', 'MSSQL', 'Firebase', 'Supabase'],
   },
   {
     title: 'Tools',

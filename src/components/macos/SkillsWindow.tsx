@@ -21,7 +21,7 @@ const SkillsWindow = ({ isDark = false }: { isDark?: boolean }) => {
           <div className="w-4 h-4 rounded bg-green-500 flex items-center justify-center text-white text-[10px] font-bold">B</div> Backend
         </h3>
         <div className="flex flex-wrap gap-2.5">
-          {['Node.js', 'PHP', 'C#', 'ASP.NET Core', 'MySQL', 'SQL Server', 'React Native', 'Firebase'].map((skill) => (
+          {['Node.js', 'PHP', 'C#', 'ASP.NET Core', 'MySQL', 'SQL Server', 'Firebase', 'Supabase', 'React Native'].map((skill) => (
             <span key={skill} className="px-4 py-2 bg-white text-green-700 rounded-xl text-sm font-medium border border-green-100 hover:scale-105 hover:shadow-md transition-all cursor-default shadow-sm">
               {skill}
             </span>

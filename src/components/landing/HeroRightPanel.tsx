@@ -244,6 +244,7 @@ export const HeroRightPanel = () => {
                 { name: 'TypeScript', color: '#3178c6' },
                 { name: 'Next.js', color: '#ffffff' },
                 { name: 'Tailwind CSS', color: '#38bdf8' },
+                { name: 'Supabase', color: '#3ecf8e' },
                 { name: 'AI/LLM UI', color: '#f59e0b' },
                 { name: 'Figma', color: '#f24e1e' },
                 { name: 'Node.js', color: '#22c55e' },
