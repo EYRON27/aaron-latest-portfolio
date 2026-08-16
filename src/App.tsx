@@ -7,7 +7,7 @@ import {
   FileText, Download, Sparkles
 } from 'lucide-react';
 import { CONTACT, STATS, PROJECTS, EXPERIENCE, PERSONAL, EDUCATION, CERTIFICATIONS } from './data/portfolio';
-import { HeroSection } from './components/HeroSection';
+import { HeroSection } from './components/landing';
 
 // ── SVG logos ─────────────────────────────────────────────────────────────────
 const WindowsLogo = () => (
