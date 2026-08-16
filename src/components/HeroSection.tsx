@@ -386,7 +386,7 @@ export function HeroSection() {
                   textTransform: 'uppercase',
                 }}
               >
-                FlyRank AI Intern
+                Front-End AI Engineer @ FlyRank
               </span>
             </div>
           </div>
