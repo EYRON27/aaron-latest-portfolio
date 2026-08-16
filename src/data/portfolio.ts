@@ -23,9 +23,9 @@ export const PERSONAL = {
 // ── Experience ────────────────────────────────────────────────
 export const EXPERIENCE = [
   {
-    role: 'Front-end AI Engineering Intern',
+    role: 'Front-End AI Engineer',
     company: 'FlyRank AI',
-    type: 'Internship',
+    type: 'Apprenticeship / Engineer',
     date: 'Jun 2026 - Present',
     duration: '2 mos',
     location: 'Quezon City, National Capital Region, Philippines · Remote',
