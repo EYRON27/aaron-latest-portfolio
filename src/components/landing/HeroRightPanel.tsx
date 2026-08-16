@@ -3,12 +3,17 @@ import {
   Briefcase, MapPin, Code2, Terminal
 } from 'lucide-react';
 import { PERSONAL, CONTACT } from '../../data/portfolio';
+import { useTheme } from '../../context/ThemeContext';
 
 export const HeroRightPanel = () => {
+  const { isDark } = useTheme();
+
   return (
     <div
       style={{
-        background: 'linear-gradient(150deg, #faf8f5 0%, #f1ece1 50%, #e8e0d0 100%)',
+        background: isDark
+          ? 'linear-gradient(150deg, #090d16 0%, #0d131f 50%, #111827 100%)'
+          : 'linear-gradient(150deg, #faf8f5 0%, #f1ece1 50%, #e8e0d0 100%)',
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'center',
@@ -17,6 +22,7 @@ export const HeroRightPanel = () => {
         minHeight: 'calc(100vh - 64px)',
         overflow: 'hidden',
         padding: '40px 32px',
+        transition: 'background 0.3s ease',
       }}
     >
       {/* ── Ambient Glow & Grid ── */}
@@ -29,7 +35,9 @@ export const HeroRightPanel = () => {
           width: 520,
           height: 520,
           borderRadius: '50%',
-          background: 'radial-gradient(circle, rgba(245,158,11,0.18) 0%, rgba(249,115,22,0.08) 45%, transparent 70%)',
+          background: isDark
+            ? 'radial-gradient(circle, rgba(245,158,11,0.22) 0%, rgba(249,115,22,0.1) 45%, transparent 70%)'
+            : 'radial-gradient(circle, rgba(245,158,11,0.18) 0%, rgba(249,115,22,0.08) 45%, transparent 70%)',
           filter: 'blur(30px)',
           pointerEvents: 'none',
           zIndex: 0,
@@ -39,7 +47,9 @@ export const HeroRightPanel = () => {
         style={{
           position: 'absolute',
           inset: 0,
-          backgroundImage: 'radial-gradient(circle, rgba(15,23,42,0.07) 1px, transparent 1px)',
+          backgroundImage: isDark
+            ? 'radial-gradient(circle, rgba(255,255,255,0.06) 1px, transparent 1px)'
+            : 'radial-gradient(circle, rgba(15,23,42,0.07) 1px, transparent 1px)',
           backgroundSize: '24px 24px',
           zIndex: 0,
           pointerEvents: 'none',

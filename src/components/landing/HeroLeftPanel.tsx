@@ -6,8 +6,11 @@ import { PERSONAL, CONTACT, STATS } from '../../data/portfolio';
 import { Typewriter } from './Typewriter';
 import { CountUp } from './CountUp';
 import { AnimatedStatement } from './AnimatedStatement';
+import { useTheme } from '../../context/ThemeContext';
 
 export const HeroLeftPanel = () => {
+  const { isDark } = useTheme();
+
   return (
     <div
       style={{
@@ -16,7 +19,8 @@ export const HeroLeftPanel = () => {
         flexDirection: 'column',
         justifyContent: 'space-between',
         minHeight: 'calc(100vh - 64px)',
-        background: '#fff',
+        background: isDark ? '#090d16' : '#fff',
+        transition: 'background 0.3s ease',
       }}
     >
       <div>
@@ -91,7 +95,7 @@ export const HeroLeftPanel = () => {
             style={{
               fontSize: '0.85rem',
               fontWeight: 700,
-              color: '#64748b',
+              color: isDark ? '#94a3b8' : '#64748b',
               display: 'block',
               textTransform: 'uppercase',
               letterSpacing: '0.14em',
@@ -106,7 +110,7 @@ export const HeroLeftPanel = () => {
               fontWeight: 900,
               lineHeight: 1.05,
               letterSpacing: '-0.04em',
-              color: '#0f172a',
+              color: isDark ? '#f8fafc' : '#0f172a',
               margin: '0 0 14px',
             }}
           >
@@ -124,7 +128,7 @@ export const HeroLeftPanel = () => {
           </h1>
 
           <div style={{ display: 'flex', alignItems: 'center', gap: 12, flexWrap: 'wrap' }}>
-            <span style={{ fontSize: 'clamp(1.1rem, 1.8vw, 1.35rem)', fontWeight: 700, color: '#334155' }}>
+            <span style={{ fontSize: 'clamp(1.1rem, 1.8vw, 1.35rem)', fontWeight: 700, color: isDark ? '#e2e8f0' : '#334155' }}>
               <Typewriter
                 words={['Front-End AI Engineer', 'Full-Stack Developer', 'UI/UX Designer', 'Web Craftsman']}
               />
@@ -133,12 +137,13 @@ export const HeroLeftPanel = () => {
               style={{
                 fontSize: '0.66rem',
                 fontWeight: 800,
-                background: '#0f172a',
+                background: isDark ? '#1e293b' : '#0f172a',
                 color: '#f59e0b',
                 padding: '4px 10px',
                 borderRadius: 6,
                 textTransform: 'uppercase',
                 letterSpacing: '0.08em',
+                border: isDark ? '1px solid rgba(245,158,11,0.3)' : 'none',
               }}
             >
               QCU BSIT
@@ -196,24 +201,24 @@ export const HeroLeftPanel = () => {
               borderRadius: 12,
               fontWeight: 700,
               fontSize: '0.92rem',
-              background: 'rgba(245, 158, 11, 0.08)',
-              border: '1.5px solid rgba(245, 158, 11, 0.35)',
-              color: '#b45309',
+              background: isDark ? 'rgba(245, 158, 11, 0.12)' : 'rgba(245, 158, 11, 0.08)',
+              border: `1.5px solid ${isDark ? 'rgba(245, 158, 11, 0.45)' : 'rgba(245, 158, 11, 0.35)'}`,
+              color: isDark ? '#fbbf24' : '#b45309',
               textDecoration: 'none',
               transition: 'all 0.25s',
             }}
             onMouseEnter={(e) => {
               const el = e.currentTarget as HTMLElement;
-              el.style.background = 'linear-gradient(135deg, #fef3c7 0%, #fde68a 100%)';
+              el.style.background = isDark ? 'rgba(245, 158, 11, 0.25)' : 'linear-gradient(135deg, #fef3c7 0%, #fde68a 100%)';
               el.style.borderColor = '#f59e0b';
-              el.style.color = '#78350f';
+              el.style.color = isDark ? '#fff' : '#78350f';
               el.style.transform = 'translateY(-2px)';
             }}
             onMouseLeave={(e) => {
               const el = e.currentTarget as HTMLElement;
-              el.style.background = 'rgba(245, 158, 11, 0.08)';
-              el.style.borderColor = 'rgba(245, 158, 11, 0.35)';
-              el.style.color = '#b45309';
+              el.style.background = isDark ? 'rgba(245, 158, 11, 0.12)' : 'rgba(245, 158, 11, 0.08)';
+              el.style.borderColor = isDark ? 'rgba(245, 158, 11, 0.45)' : 'rgba(245, 158, 11, 0.35)';
+              el.style.color = isDark ? '#fbbf24' : '#b45309';
               el.style.transform = '';
             }}
           >
@@ -231,22 +236,22 @@ export const HeroLeftPanel = () => {
               borderRadius: 12,
               fontWeight: 700,
               fontSize: '0.92rem',
-              border: '1.5px solid #e2e8f0',
-              color: '#334155',
+              border: isDark ? '1.5px solid rgba(255,255,255,0.12)' : '1.5px solid #e2e8f0',
+              color: isDark ? '#f8fafc' : '#334155',
               textDecoration: 'none',
-              background: '#fff',
+              background: isDark ? '#131b2e' : '#fff',
               transition: 'all 0.25s',
             }}
             onMouseEnter={(e) => {
               const el = e.currentTarget as HTMLElement;
-              el.style.borderColor = '#cbd5e1';
-              el.style.color = '#0f172a';
+              el.style.borderColor = isDark ? 'rgba(255,255,255,0.3)' : '#cbd5e1';
+              el.style.color = isDark ? '#fbbf24' : '#0f172a';
               el.style.transform = 'translateY(-2px)';
             }}
             onMouseLeave={(e) => {
               const el = e.currentTarget as HTMLElement;
-              el.style.borderColor = '#e2e8f0';
-              el.style.color = '#334155';
+              el.style.borderColor = isDark ? 'rgba(255,255,255,0.12)' : '#e2e8f0';
+              el.style.color = isDark ? '#f8fafc' : '#334155';
               el.style.transform = '';
             }}
           >
@@ -269,12 +274,12 @@ export const HeroLeftPanel = () => {
                   width: 44,
                   height: 44,
                   borderRadius: 11,
-                  border: '1.5px solid #e2e8f0',
-                  background: '#fff',
+                  border: isDark ? '1.5px solid rgba(255,255,255,0.12)' : '1.5px solid #e2e8f0',
+                  background: isDark ? '#131b2e' : '#fff',
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
-                  color: '#64748b',
+                  color: isDark ? '#cbd5e1' : '#64748b',
                   textDecoration: 'none',
                   transition: 'all 0.2s',
                 }}
@@ -286,8 +291,8 @@ export const HeroLeftPanel = () => {
                 }}
                 onMouseLeave={(e) => {
                   const el = e.currentTarget as HTMLElement;
-                  el.style.borderColor = '#e2e8f0';
-                  el.style.color = '#64748b';
+                  el.style.borderColor = isDark ? 'rgba(255,255,255,0.12)' : '#e2e8f0';
+                  el.style.color = isDark ? '#cbd5e1' : '#64748b';
                   el.style.transform = '';
                 }}
               >
@@ -303,8 +308,8 @@ export const HeroLeftPanel = () => {
             display: 'grid',
             gridTemplateColumns: 'repeat(3, 1fr)',
             gap: 16,
-            borderTop: '1px solid #f1f5f9',
-            borderBottom: '1px solid #f1f5f9',
+            borderTop: isDark ? '1px solid rgba(255,255,255,0.08)' : '1px solid #f1f5f9',
+            borderBottom: isDark ? '1px solid rgba(255,255,255,0.08)' : '1px solid #f1f5f9',
             padding: '18px 0',
             marginBottom: 20,
           }}
@@ -315,14 +320,14 @@ export const HeroLeftPanel = () => {
                 style={{
                   fontSize: '2.1rem',
                   fontWeight: 900,
-                  color: i === 0 ? '#f59e0b' : '#0f172a',
+                  color: i === 0 ? '#f59e0b' : isDark ? '#f8fafc' : '#0f172a',
                   lineHeight: 1,
                   letterSpacing: '-0.03em',
                 }}
               >
                 <CountUp to={s.number} suffix={s.suffix} />
               </div>
-              <div style={{ fontSize: '0.75rem', color: '#64748b', marginTop: 6, fontWeight: 600 }}>
+              <div style={{ fontSize: '0.75rem', color: isDark ? '#94a3b8' : '#64748b', marginTop: 6, fontWeight: 600 }}>
                 {s.label}
               </div>
             </div>
@@ -337,19 +342,20 @@ export const HeroLeftPanel = () => {
             gap: 10,
             padding: '8px 14px',
             borderRadius: 10,
-            background: '#f8fafc',
-            border: '1px solid #e2e8f0',
+            background: isDark ? 'rgba(255,255,255,0.04)' : '#f8fafc',
+            border: isDark ? '1px solid rgba(255,255,255,0.08)' : '1px solid #e2e8f0',
           }}
         >
           <Mail size={13} style={{ color: '#f59e0b' }} />
           <a
             href={`mailto:${CONTACT.email}`}
-            style={{ fontSize: '0.84rem', color: '#334155', fontWeight: 700, textDecoration: 'none' }}
+            style={{ fontSize: '0.84rem', color: isDark ? '#cbd5e1' : '#334155', fontWeight: 700, textDecoration: 'none' }}
           >
             {CONTACT.email}
           </a>
         </div>
       </div>
+
 
       {/* ── Engineering Highlights Bar ── */}
       <div

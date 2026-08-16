@@ -1,12 +1,15 @@
 import { useState, useEffect } from 'react';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { REPO_STATEMENTS } from '../../data/portfolio';
+import { useTheme } from '../../context/ThemeContext';
 
 export const AnimatedStatement = () => {
+  const { isDark } = useTheme();
   const [activeIdx, setActiveIdx] = useState(0);
   const [displayedFrom, setDisplayedFrom] = useState('');
   const [isDeleting, setIsDeleting] = useState(false);
   const [isPaused, setIsPaused] = useState(false);
+
 
   const current = REPO_STATEMENTS[activeIdx] || REPO_STATEMENTS[0];
 
@@ -58,7 +61,7 @@ export const AnimatedStatement = () => {
         style={{
           fontSize: 'clamp(1.18rem, 2.1vw, 1.4rem)',
           lineHeight: 1.75,
-          color: '#334155',
+          color: isDark ? '#cbd5e1' : '#334155',
           margin: '0 0 18px',
           fontWeight: 450,
           minHeight: '4.6rem',
@@ -70,10 +73,10 @@ export const AnimatedStatement = () => {
             display: 'inline-flex',
             alignItems: 'center',
             gap: 6,
-            color: '#0f172a',
+            color: isDark ? '#f8fafc' : '#0f172a',
             fontWeight: 800,
-            background: current.bgLight || 'rgba(245, 158, 11, 0.12)',
-            border: `1.5px solid ${current.borderColor || 'rgba(245, 158, 11, 0.35)'}`,
+            background: isDark ? 'rgba(245, 158, 11, 0.18)' : current.bgLight || 'rgba(245, 158, 11, 0.12)',
+            border: `1.5px solid ${isDark ? 'rgba(245, 158, 11, 0.5)' : current.borderColor || 'rgba(245, 158, 11, 0.35)'}`,
             padding: '3px 12px',
             borderRadius: '8px',
             whiteSpace: 'nowrap',
@@ -113,8 +116,8 @@ export const AnimatedStatement = () => {
             gap: 10,
             padding: '6px 14px',
             borderRadius: 8,
-            background: '#f8fafc',
-            border: '1px solid #e2e8f0',
+            background: isDark ? '#0d131f' : '#f8fafc',
+            border: isDark ? '1px solid rgba(255,255,255,0.1)' : '1px solid #e2e8f0',
             borderLeft: `3.5px solid ${current.color}`,
             boxShadow: '0 2px 8px rgba(0,0,0,0.03)',
           }}
@@ -122,7 +125,7 @@ export const AnimatedStatement = () => {
           <span
             style={{
               fontSize: '0.68rem',
-              color: '#64748b',
+              color: isDark ? '#94a3b8' : '#64748b',
               fontWeight: 700,
               textTransform: 'uppercase',
               letterSpacing: '0.08em',
@@ -130,8 +133,8 @@ export const AnimatedStatement = () => {
           >
             {current.tag || 'Project'}
           </span>
-          <span style={{ width: 1, height: 12, background: '#e2e8f0', display: 'inline-block' }} />
-          <span style={{ fontSize: '0.82rem', fontWeight: 800, color: '#0f172a' }}>
+          <span style={{ width: 1, height: 12, background: isDark ? 'rgba(255,255,255,0.15)' : '#e2e8f0', display: 'inline-block' }} />
+          <span style={{ fontSize: '0.82rem', fontWeight: 800, color: isDark ? '#f8fafc' : '#0f172a' }}>
             {current.project}
           </span>
         </div>
@@ -144,13 +147,13 @@ export const AnimatedStatement = () => {
               width: 26,
               height: 26,
               borderRadius: '50%',
-              border: '1px solid #e2e8f0',
-              background: '#fff',
+              border: isDark ? '1px solid rgba(255,255,255,0.12)' : '1px solid #e2e8f0',
+              background: isDark ? '#1e293b' : '#fff',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
               cursor: 'pointer',
-              color: '#64748b',
+              color: isDark ? '#cbd5e1' : '#64748b',
               padding: 0,
               transition: 'all 0.2s',
               boxShadow: '0 1px 4px rgba(0,0,0,0.04)',
@@ -174,7 +177,7 @@ export const AnimatedStatement = () => {
                   width: i === activeIdx ? 22 : 6,
                   height: 6,
                   borderRadius: 99,
-                  background: i === activeIdx ? current.color : '#e2e8f0',
+                  background: i === activeIdx ? current.color : isDark ? 'rgba(255,255,255,0.15)' : '#e2e8f0',
                   border: 'none',
                   padding: 0,
                   cursor: 'pointer',
@@ -190,13 +193,13 @@ export const AnimatedStatement = () => {
               width: 26,
               height: 26,
               borderRadius: '50%',
-              border: '1px solid #e2e8f0',
-              background: '#fff',
+              border: isDark ? '1px solid rgba(255,255,255,0.12)' : '1px solid #e2e8f0',
+              background: isDark ? '#1e293b' : '#fff',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
               cursor: 'pointer',
-              color: '#64748b',
+              color: isDark ? '#cbd5e1' : '#64748b',
               padding: 0,
               transition: 'all 0.2s',
               boxShadow: '0 1px 4px rgba(0,0,0,0.04)',
@@ -210,3 +213,4 @@ export const AnimatedStatement = () => {
     </div>
   );
 };
+
