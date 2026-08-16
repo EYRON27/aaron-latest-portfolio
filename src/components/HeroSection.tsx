@@ -1,8 +1,8 @@
 import React, { useState, useEffect, useRef } from 'react';
 import {
   Mail, Github, Linkedin, ArrowUpRight,
-  Globe, Briefcase,
-  FileText, Send, ChevronLeft, ChevronRight
+  Globe, Briefcase, FileText, ChevronLeft, ChevronRight,
+  Terminal, Sparkles, MapPin, Code2, Cpu
 } from 'lucide-react';
 
 
