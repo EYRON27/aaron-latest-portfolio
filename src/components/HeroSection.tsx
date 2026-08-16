@@ -301,9 +301,6 @@ export const AnimatedHeroStatement = () => {
 
 // ── Hero Section (Spacious, Elegant, Uncluttered) ─────────────────────────────
 export function HeroSection() {
-  const [email, setEmail] = useState('');
-  const [subscribed, setSubscribed] = useState(false);
-
   return (
     <section
       id="home"
@@ -746,10 +743,10 @@ export function HeroSection() {
         </div>
       </div>
 
-      {/* ── RIGHT PANEL ── */}
+      {/* ── RIGHT PANEL (Bespoke Developer Showcase) ── */}
       <div
         style={{
-          background: 'linear-gradient(150deg, #faf9f6 0%, #f0ebe1 100%)',
+          background: 'linear-gradient(150deg, #faf8f5 0%, #f1ece1 50%, #e8e0d0 100%)',
           display: 'flex',
           flexDirection: 'column',
           alignItems: 'center',
@@ -757,270 +754,332 @@ export function HeroSection() {
           position: 'relative',
           minHeight: 'calc(100vh - 64px)',
           overflow: 'hidden',
-          padding: '48px 40px',
+          padding: '40px 32px',
         }}
       >
-        {/* ── Decorative geometric blob behind card ── */}
+        {/* Ambient atmospheric glow */}
         <div
           style={{
             position: 'absolute',
             top: '50%',
             left: '50%',
-            transform: 'translate(-58%, -52%)',
-            width: 420,
-            height: 420,
-            borderRadius: '60% 40% 55% 45% / 45% 55% 45% 55%',
-            background: 'linear-gradient(135deg, #f97316 0%, #f59e0b 55%, #fbbf24 100%)',
-            opacity: 0.18,
-            filter: 'blur(2px)',
-            zIndex: 0,
-          }}
-        />
-        {/* Second smaller shape for depth */}
-        <div
-          style={{
-            position: 'absolute',
-            top: '30%',
-            right: '12%',
-            width: 180,
-            height: 180,
+            transform: 'translate(-50%, -50%)',
+            width: 520,
+            height: 520,
             borderRadius: '50%',
-            background: 'linear-gradient(135deg, #0f172a 0%, #1e293b 100%)',
-            opacity: 0.06,
+            background: 'radial-gradient(circle, rgba(245,158,11,0.18) 0%, rgba(249,115,22,0.08) 45%, transparent 70%)',
+            filter: 'blur(30px)',
+            pointerEvents: 'none',
             zIndex: 0,
           }}
         />
-        {/* Subtle dot grid pattern */}
+
+        {/* Minimal dot matrix background */}
         <div
           style={{
             position: 'absolute',
             inset: 0,
-            backgroundImage: 'radial-gradient(circle, rgba(15,23,42,0.08) 1px, transparent 1px)',
-            backgroundSize: '28px 28px',
+            backgroundImage: 'radial-gradient(circle, rgba(15,23,42,0.07) 1px, transparent 1px)',
+            backgroundSize: '24px 24px',
             zIndex: 0,
+            pointerEvents: 'none',
           }}
         />
 
-        {/* ── Floating mini-stat: Experience ── */}
-        <div
-          style={{
-            position: 'absolute',
-            top: '18%',
-            left: '10%',
-            background: '#0f172a',
-            borderRadius: 14,
-            padding: '12px 18px',
-            zIndex: 4,
-            boxShadow: '0 12px 32px rgba(15,23,42,0.2)',
-            animation: 'float-badge 5s ease-in-out infinite',
-          }}
-        >
-          <div style={{ fontSize: '1.5rem', fontWeight: 900, color: '#f59e0b', lineHeight: 1 }}>2+</div>
-          <div style={{ fontSize: '0.65rem', fontWeight: 700, color: '#94a3b8', textTransform: 'uppercase', letterSpacing: '0.08em', marginTop: 3 }}>
-            Yrs Experience
-          </div>
-        </div>
-
-        {/* ── Floating mini-stat: Projects ── */}
-        <div
-          style={{
-            position: 'absolute',
-            top: '22%',
-            right: '8%',
-            background: '#fff',
-            borderRadius: 14,
-            padding: '12px 18px',
-            zIndex: 4,
-            boxShadow: '0 12px 32px rgba(0,0,0,0.1)',
-            border: '1px solid #f1f5f9',
-            animation: 'float-badge 5s ease-in-out infinite',
-            animationDelay: '1.2s',
-          }}
-        >
-          <div style={{ fontSize: '1.5rem', fontWeight: 900, color: '#0f172a', lineHeight: 1 }}>9+</div>
-          <div style={{ fontSize: '0.65rem', fontWeight: 700, color: '#64748b', textTransform: 'uppercase', letterSpacing: '0.08em', marginTop: 3 }}>
-            Projects Built
-          </div>
-        </div>
-
-        {/* ── Floating mini-stat: Available badge ── */}
-        <div
-          style={{
-            position: 'absolute',
-            bottom: '24%',
-            left: '8%',
-            background: '#fff',
-            borderRadius: 99,
-            padding: '8px 14px',
-            zIndex: 4,
-            boxShadow: '0 8px 24px rgba(0,0,0,0.08)',
-            display: 'flex',
-            alignItems: 'center',
-            gap: 7,
-            animation: 'float-badge 5s ease-in-out infinite',
-            animationDelay: '2.4s',
-          }}
-        >
-          <span
-            style={{
-              width: 8,
-              height: 8,
-              borderRadius: '50%',
-              background: '#22c55e',
-              display: 'inline-block',
-              boxShadow: '0 0 0 3px rgba(34,197,94,0.25)',
-            }}
-          />
-          <span style={{ fontSize: '0.72rem', fontWeight: 700, color: '#15803d' }}>Open to Work</span>
-        </div>
-
-        {/* ── Floating mini-stat: Certs ── */}
-        <div
-          style={{
-            position: 'absolute',
-            bottom: '22%',
-            right: '6%',
-            background: 'linear-gradient(135deg, #f59e0b, #ea580c)',
-            borderRadius: 14,
-            padding: '12px 18px',
-            zIndex: 4,
-            boxShadow: '0 12px 28px rgba(249,115,22,0.35)',
-            animation: 'float-badge 5s ease-in-out infinite',
-            animationDelay: '3.6s',
-          }}
-        >
-          <div style={{ fontSize: '1.5rem', fontWeight: 900, color: '#fff', lineHeight: 1 }}>9+</div>
-          <div style={{ fontSize: '0.65rem', fontWeight: 700, color: 'rgba(255,255,255,0.8)', textTransform: 'uppercase', letterSpacing: '0.08em', marginTop: 3 }}>
-            Certs
-          </div>
-        </div>
-
-        {/* ── Main Portrait Card ── */}
+        {/* ── Developer Identity & Tech Showcase Card ── */}
         <div
           style={{
             position: 'relative',
-            zIndex: 3,
-            width: 270,
-            borderRadius: 28,
+            zIndex: 2,
+            width: '100%',
+            maxWidth: 410,
+            background: '#0d131f',
+            borderRadius: 24,
+            border: '1px solid rgba(255,255,255,0.1)',
+            boxShadow: '0 28px 70px rgba(15,23,42,0.35), 0 0 0 1px rgba(255,255,255,0.05)',
             overflow: 'hidden',
-            boxShadow: '0 32px 80px rgba(15,23,42,0.22), 0 0 0 1px rgba(255,255,255,0.9)',
-            border: '5px solid #fff',
-            background: '#f1f5f9',
+            color: '#fff',
           }}
         >
-          {/* Photo */}
-          <img
-            src={encodeURI(PERSONAL.photo)}
-            alt={PERSONAL.name}
-            style={{
-              width: '100%',
-              aspectRatio: '3 / 4',
-              objectFit: 'cover',
-              objectPosition: 'center 15%',
-              display: 'block',
-            }}
-            onError={(e) => {
-              const el = e.currentTarget as HTMLElement;
-              el.style.display = 'none';
-            }}
-          />
-          {/* Bottom name strip */}
+          {/* Card Header / Status */}
           <div
             style={{
-              padding: '16px 20px',
-              background: '#0f172a',
-            }}
-          >
-            <div style={{ fontWeight: 900, fontSize: '1rem', color: '#fff', letterSpacing: '-0.02em' }}>
-              Aaron M.{' '}
-              <span
-                style={{
-                  background: 'linear-gradient(90deg, #f97316, #f59e0b)',
-                  WebkitBackgroundClip: 'text',
-                  WebkitTextFillColor: 'transparent',
-                }}
-              >
-                Cañada
-              </span>
-            </div>
-            <div style={{ fontSize: '0.72rem', color: '#64748b', fontWeight: 600, marginTop: 3 }}>
-              Front-End AI Engineer · Full-Stack
-            </div>
-            {/* Tech row */}
-            <div style={{ display: 'flex', gap: 6, marginTop: 12, flexWrap: 'wrap' }}>
-              {['React', 'TypeScript', 'Figma', 'Flutter'].map((t) => (
-                <span
-                  key={t}
-                  style={{
-                    fontSize: '0.62rem',
-                    fontWeight: 700,
-                    color: '#94a3b8',
-                    background: 'rgba(255,255,255,0.06)',
-                    border: '1px solid rgba(255,255,255,0.1)',
-                    padding: '3px 8px',
-                    borderRadius: 5,
-                  }}
-                >
-                  {t}
-                </span>
-              ))}
-            </div>
-          </div>
-        </div>
-
-        {/* ── Newsletter subscribe at bottom ── */}
-        <div style={{ position: 'relative', marginTop: 32, width: '100%', maxWidth: 300, zIndex: 3 }}>
-          <input
-            type="email"
-            placeholder="Subscribe to newsletter"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            style={{
-              width: '100%',
-              padding: '11px 46px 11px 16px',
-              borderRadius: 10,
-              border: '1.5px solid rgba(15,23,42,0.12)',
-              fontSize: '0.78rem',
-              background: '#fff',
-              outline: 'none',
-              boxSizing: 'border-box',
-              boxShadow: '0 4px 16px rgba(0,0,0,0.06)',
-              color: '#334155',
-            }}
-          />
-          <button
-            onClick={() => { if (email) setSubscribed(true); }}
-            style={{
-              position: 'absolute',
-              right: 5,
-              top: '50%',
-              transform: 'translateY(-50%)',
-              width: 34,
-              height: 34,
-              borderRadius: 8,
-              background: subscribed ? '#22c55e' : 'linear-gradient(135deg, #f59e0b, #f97316)',
-              border: 'none',
-              cursor: 'pointer',
+              padding: '14px 20px',
+              background: 'rgba(255,255,255,0.03)',
+              borderBottom: '1px solid rgba(255,255,255,0.07)',
               display: 'flex',
               alignItems: 'center',
-              justifyContent: 'center',
-              color: '#fff',
-              fontWeight: 800,
-              fontSize: '0.8rem',
-              transition: 'all 0.2s',
-              boxShadow: '0 4px 12px rgba(249,115,22,0.35)',
+              justifyContent: 'space-between',
             }}
           >
-            {subscribed ? '✓' : <Send size={13} />}
-          </button>
-          {subscribed && (
-            <div style={{ textAlign: 'center', marginTop: 8, fontSize: '0.72rem', color: '#22c55e', fontWeight: 600 }}>
-              Thanks for subscribing!
+            <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+              <span style={{ width: 8, height: 8, borderRadius: '50%', background: '#ef4444', opacity: 0.8 }} />
+              <span style={{ width: 8, height: 8, borderRadius: '50%', background: '#f59e0b', opacity: 0.8 }} />
+              <span style={{ width: 8, height: 8, borderRadius: '50%', background: '#10b981', opacity: 0.8 }} />
+              <span style={{ fontSize: '0.66rem', fontWeight: 800, color: '#64748b', marginLeft: 6, letterSpacing: '0.08em', textTransform: 'uppercase' }}>
+                SPEC // AARON.DEV
+              </span>
             </div>
-          )}
+
+            <div
+              style={{
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: 6,
+                background: 'rgba(34,197,94,0.12)',
+                border: '1px solid rgba(34,197,94,0.3)',
+                padding: '4px 10px',
+                borderRadius: 99,
+              }}
+            >
+              <span
+                style={{
+                  width: 6,
+                  height: 6,
+                  borderRadius: '50%',
+                  background: '#22c55e',
+                  boxShadow: '0 0 0 2px rgba(34,197,94,0.4)',
+                }}
+              />
+              <span style={{ fontSize: '0.64rem', fontWeight: 700, color: '#4ade80', letterSpacing: '0.04em' }}>
+                Open to Work
+              </span>
+            </div>
+          </div>
+
+          {/* Profile Content Body */}
+          <div style={{ padding: '24px 24px 20px' }}>
+            {/* Top Identity Row: Photo + Titles */}
+            <div style={{ display: 'flex', gap: 18, alignItems: 'center', marginBottom: 20 }}>
+              {/* Photo Frame */}
+              <div
+                style={{
+                  position: 'relative',
+                  width: 96,
+                  height: 110,
+                  borderRadius: 18,
+                  overflow: 'hidden',
+                  flexShrink: 0,
+                  border: '2px solid rgba(245,158,11,0.5)',
+                  boxShadow: '0 8px 24px rgba(0,0,0,0.4)',
+                  background: '#1e293b',
+                }}
+              >
+                <img
+                  src={encodeURI(PERSONAL.photo)}
+                  alt={PERSONAL.name}
+                  style={{
+                    width: '100%',
+                    height: '100%',
+                    objectFit: 'cover',
+                    objectPosition: 'center 15%',
+                    display: 'block',
+                  }}
+                  onError={(e) => {
+                    const el = e.currentTarget as HTMLElement;
+                    el.style.display = 'none';
+                  }}
+                />
+              </div>
+
+              {/* Names & Role */}
+              <div style={{ flex: 1, minWidth: 0 }}>
+                <div style={{ fontSize: '1.25rem', fontWeight: 900, color: '#fff', lineHeight: 1.2, letterSpacing: '-0.02em' }}>
+                  Aaron M.{' '}
+                  <span
+                    style={{
+                      background: 'linear-gradient(90deg, #f97316, #f59e0b)',
+                      WebkitBackgroundClip: 'text',
+                      WebkitTextFillColor: 'transparent',
+                    }}
+                  >
+                    Cañada
+                  </span>
+                </div>
+                <div style={{ fontSize: '0.8rem', fontWeight: 700, color: '#f59e0b', marginTop: 4 }}>
+                  Front-End AI Engineer
+                </div>
+                <div style={{ fontSize: '0.72rem', color: '#94a3b8', marginTop: 2, display: 'flex', alignItems: 'center', gap: 4 }}>
+                  <Briefcase size={11} style={{ color: '#f59e0b' }} /> FlyRank AI · Remote
+                </div>
+                <div style={{ fontSize: '0.7rem', color: '#64748b', marginTop: 2, display: 'flex', alignItems: 'center', gap: 4 }}>
+                  <MapPin size={11} /> Quezon City, Philippines
+                </div>
+              </div>
+            </div>
+
+            {/* Metrics Row */}
+            <div
+              style={{
+                display: 'grid',
+                gridTemplateColumns: 'repeat(3, 1fr)',
+                gap: 8,
+                background: 'rgba(255,255,255,0.03)',
+                border: '1px solid rgba(255,255,255,0.06)',
+                borderRadius: 14,
+                padding: '12px 14px',
+                marginBottom: 20,
+                textAlign: 'center',
+              }}
+            >
+              <div>
+                <div style={{ fontSize: '1.25rem', fontWeight: 900, color: '#f59e0b', lineHeight: 1 }}>2+</div>
+                <div style={{ fontSize: '0.62rem', color: '#94a3b8', fontWeight: 600, marginTop: 4, textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+                  Yrs Exp
+                </div>
+              </div>
+              <div style={{ borderLeft: '1px solid rgba(255,255,255,0.08)', borderRight: '1px solid rgba(255,255,255,0.08)' }}>
+                <div style={{ fontSize: '1.25rem', fontWeight: 900, color: '#fff', lineHeight: 1 }}>9+</div>
+                <div style={{ fontSize: '0.62rem', color: '#94a3b8', fontWeight: 600, marginTop: 4, textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+                  Projects
+                </div>
+              </div>
+              <div>
+                <div style={{ fontSize: '1.25rem', fontWeight: 900, color: '#38bdf8', lineHeight: 1 }}>9+</div>
+                <div style={{ fontSize: '0.62rem', color: '#94a3b8', fontWeight: 600, marginTop: 4, textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+                  Certs
+                </div>
+              </div>
+            </div>
+
+            {/* Core Tech Stack Matrix */}
+            <div style={{ marginBottom: 18 }}>
+              <div style={{ fontSize: '0.66rem', fontWeight: 700, color: '#64748b', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: 8, display: 'flex', alignItems: 'center', gap: 5 }}>
+                <Code2 size={12} style={{ color: '#f59e0b' }} /> Core Stack & Tooling
+              </div>
+              <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6 }}>
+                {[
+                  { name: 'React', color: '#61dafb' },
+                  { name: 'TypeScript', color: '#3178c6' },
+                  { name: 'Next.js', color: '#ffffff' },
+                  { name: 'Tailwind CSS', color: '#38bdf8' },
+                  { name: 'AI/LLM UI', color: '#f59e0b' },
+                  { name: 'Figma', color: '#f24e1e' },
+                  { name: 'Node.js', color: '#22c55e' },
+                ].map((t) => (
+                  <span
+                    key={t.name}
+                    style={{
+                      fontSize: '0.68rem',
+                      fontWeight: 700,
+                      color: '#e2e8f0',
+                      background: 'rgba(255,255,255,0.05)',
+                      border: '1px solid rgba(255,255,255,0.08)',
+                      padding: '4px 9px',
+                      borderRadius: 7,
+                      display: 'inline-flex',
+                      alignItems: 'center',
+                      gap: 5,
+                    }}
+                  >
+                    <span style={{ width: 5, height: 5, borderRadius: '50%', background: t.color }} />
+                    {t.name}
+                  </span>
+                ))}
+              </div>
+            </div>
+
+            {/* Code / Mission Snippet Terminal Box */}
+            <div
+              style={{
+                background: 'rgba(0,0,0,0.45)',
+                border: '1px solid rgba(255,255,255,0.06)',
+                borderRadius: 12,
+                padding: '10px 14px',
+                fontFamily: 'ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace',
+                fontSize: '0.7rem',
+                lineHeight: 1.5,
+              }}
+            >
+              <div style={{ color: '#64748b', display: 'flex', alignItems: 'center', gap: 6, marginBottom: 4 }}>
+                <Terminal size={11} style={{ color: '#10b981' }} />
+                <span>mission.config.ts</span>
+              </div>
+              <div>
+                <span style={{ color: '#c084fc' }}>const</span> <span style={{ color: '#38bdf8' }}>focus</span> ={' '}
+                <span style={{ color: '#fde047' }}>"Crafting AI-augmented interfaces that users love."</span>;
+              </div>
+            </div>
+          </div>
+
+          {/* Card Footer: Quick Actions */}
+          <div
+            style={{
+              padding: '12px 24px',
+              background: 'rgba(255,255,255,0.02)',
+              borderTop: '1px solid rgba(255,255,255,0.06)',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+            }}
+          >
+            <div style={{ display: 'flex', gap: 8 }}>
+              <a
+                href={CONTACT.github.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                title="GitHub"
+                style={{
+                  color: '#94a3b8',
+                  background: 'rgba(255,255,255,0.06)',
+                  padding: '6px',
+                  borderRadius: 6,
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  textDecoration: 'none',
+                  transition: 'all 0.2s',
+                }}
+                onMouseEnter={(e) => { (e.currentTarget as HTMLElement).style.color = '#fff'; (e.currentTarget as HTMLElement).style.background = 'rgba(255,255,255,0.12)'; }}
+                onMouseLeave={(e) => { (e.currentTarget as HTMLElement).style.color = '#94a3b8'; (e.currentTarget as HTMLElement).style.background = 'rgba(255,255,255,0.06)'; }}
+              >
+                <Github size={14} />
+              </a>
+              <a
+                href={CONTACT.linkedin.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                title="LinkedIn"
+                style={{
+                  color: '#94a3b8',
+                  background: 'rgba(255,255,255,0.06)',
+                  padding: '6px',
+                  borderRadius: 6,
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  textDecoration: 'none',
+                  transition: 'all 0.2s',
+                }}
+                onMouseEnter={(e) => { (e.currentTarget as HTMLElement).style.color = '#38bdf8'; (e.currentTarget as HTMLElement).style.background = 'rgba(255,255,255,0.12)'; }}
+                onMouseLeave={(e) => { (e.currentTarget as HTMLElement).style.color = '#94a3b8'; (e.currentTarget as HTMLElement).style.background = 'rgba(255,255,255,0.06)'; }}
+              >
+                <Linkedin size={14} />
+              </a>
+            </div>
+
+            <a
+              href="#contact"
+              style={{
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: 5,
+                fontSize: '0.72rem',
+                fontWeight: 800,
+                color: '#f59e0b',
+                textDecoration: 'none',
+                transition: 'all 0.2s',
+              }}
+              onMouseEnter={(e) => { (e.currentTarget as HTMLElement).style.color = '#f97316'; }}
+              onMouseLeave={(e) => { (e.currentTarget as HTMLElement).style.color = '#f59e0b'; }}
+            >
+              Get in touch <ArrowUpRight size={13} />
+            </a>
+          </div>
         </div>
       </div>
     </section>
   );
 }
+
 
