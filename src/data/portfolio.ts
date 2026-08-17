@@ -63,7 +63,7 @@ export const STATS = [
 // ── Tech pills shown in About ─────────────────────────────────
 export const TECH_PILLS = [
   'React', 'TypeScript', 'Tailwind CSS', 'Flutter',
-  'Node.js', 'Figma', 'Firebase', 'Git',
+  'Node.js', 'Figma', 'Firebase', 'Supabase', 'Git',
 ];
 
 // ── Skills ────────────────────────────────────────────────────
@@ -81,7 +81,7 @@ export const SKILL_CATEGORIES = [
   {
     title: 'Databases',
     color: '#06b6d4',
-    skills: ['MySQL', 'MSSQL', 'Firebase'],
+    skills: ['MySQL', 'MSSQL', 'Firebase', 'Supabase'],
   },
   {
     title: 'Tools',
@@ -101,7 +101,7 @@ export const EDUCATION = [
     degree: 'Bachelor of Science in Information Technology',
     institution: 'Quezon City University',
     period: '2023 - Present',
-    description: 'Currently pursuing IT degree. Learning modern web technologies such as React, PHP, and MySQL.',
+    description: 'Currently pursuing IT degree. Specializing in modern web technologies, AI integrations, TypeScript, React, and full-stack software engineering.',
     highlights: [
       'Building personal projects to enhance development skills',
       'Focused on web development and modern frameworks',

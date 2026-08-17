@@ -4,10 +4,10 @@ import {
   Mail, Github, Linkedin, ArrowUpRight, ExternalLink,
   Monitor, ChevronDown, Film, Moon, Sun, Send,
   Code2, Layers, Smartphone, Globe, Briefcase, X,
-  FileText, Download, Sparkles
+  FileText, Download, Sparkles, Calendar, GraduationCap
 } from 'lucide-react';
 import { CONTACT, STATS, PROJECTS, EXPERIENCE, PERSONAL, EDUCATION, CERTIFICATIONS } from './data/portfolio';
-import { HeroSection } from './components/HeroSection';
+import { HeroSection } from './components/landing';
 
 // ── SVG logos ─────────────────────────────────────────────────────────────────
 const WindowsLogo = () => (
@@ -149,21 +149,14 @@ const FloatingCertPreview = ({ image, name, visible, x, y }: FloatingCertPreview
 
 
 
+import { useTheme } from './context/ThemeContext';
+
 // ── Top Navigation ────────────────────────────────────────────────────────────
 const TopNav = () => {
   const navigate = useNavigate();
+  const { isDark, toggleTheme } = useTheme();
   const [showUI, setShowUI] = useState(false);
-  const [isDark, setIsDark] = useState(() => {
-    const s = localStorage.getItem('darkMode');
-    return s !== null ? JSON.parse(s) : false;
-  });
   const dropRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    localStorage.setItem('darkMode', JSON.stringify(isDark));
-    if (isDark) document.documentElement.classList.add('dark');
-    else document.documentElement.classList.remove('dark');
-  }, [isDark]);
 
   useEffect(() => {
     const h = (e: MouseEvent) => {
@@ -176,68 +169,187 @@ const TopNav = () => {
   const navLinks = ['Home', 'About', 'Works', 'Education', 'Projects', 'Services'];
 
   return (
-    <nav style={{
-      position: 'fixed', top: 0, left: 0, right: 0, zIndex: 100,
-      background: 'rgba(255,255,255,0.97)', backdropFilter: 'blur(12px)',
-      borderBottom: '1px solid rgba(0,0,0,0.06)',
-      display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-      padding: '0 40px', height: 64,
-    }}>
+    <nav
+      style={{
+        position: 'fixed',
+        top: 0,
+        left: 0,
+        right: 0,
+        zIndex: 100,
+        background: isDark ? 'rgba(9, 13, 22, 0.92)' : 'rgba(255,255,255,0.97)',
+        backdropFilter: 'blur(12px)',
+        borderBottom: isDark ? '1px solid rgba(255,255,255,0.08)' : '1px solid rgba(0,0,0,0.06)',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+        padding: '0 40px',
+        height: 64,
+        transition: 'background 0.3s ease, border-color 0.3s ease',
+      }}
+    >
       {/* Brand */}
-      <a href="/" style={{ fontWeight: 900, fontSize: '1.25rem', letterSpacing: '-0.04em', color: '#111', textDecoration: 'none' }}>
+      <a
+        href="/"
+        style={{
+          fontWeight: 900,
+          fontSize: '1.25rem',
+          letterSpacing: '-0.04em',
+          color: isDark ? '#f8fafc' : '#111',
+          textDecoration: 'none',
+        }}
+      >
         Aarvieve<span style={{ color: '#f59e0b' }}>.</span>
       </a>
 
       {/* Links */}
       <div style={{ display: 'flex', alignItems: 'center', gap: 28 }}>
-        {navLinks.map(l => (
-          <a key={l} href={`#${l.toLowerCase()}`}
-            style={{ fontSize: '0.88rem', fontWeight: 500, color: '#555', textDecoration: 'none', transition: 'color 0.2s' }}
-            onMouseEnter={e => (e.currentTarget.style.color = '#111')}
-            onMouseLeave={e => (e.currentTarget.style.color = '#555')}
-          >{l}</a>
+        {navLinks.map((l) => (
+          <a
+            key={l}
+            href={`#${l.toLowerCase()}`}
+            style={{
+              fontSize: '0.88rem',
+              fontWeight: 500,
+              color: isDark ? '#94a3b8' : '#555',
+              textDecoration: 'none',
+              transition: 'color 0.2s',
+            }}
+            onMouseEnter={(e) => (e.currentTarget.style.color = isDark ? '#f8fafc' : '#111')}
+            onMouseLeave={(e) => (e.currentTarget.style.color = isDark ? '#94a3b8' : '#555')}
+          >
+            {l}
+          </a>
         ))}
       </div>
 
       {/* Right controls */}
       <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
         {/* Dark mode */}
-        <button onClick={() => setIsDark(!isDark)}
-          style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#888', padding: 6, display: 'flex' }}>
-          {isDark ? <Sun size={16} /> : <Moon size={16} />}
+        <button
+          onClick={toggleTheme}
+          style={{
+            background: isDark ? 'rgba(255,255,255,0.08)' : 'rgba(0,0,0,0.04)',
+            border: isDark ? '1px solid rgba(255,255,255,0.1)' : '1px solid rgba(0,0,0,0.06)',
+            borderRadius: 8,
+            cursor: 'pointer',
+            color: isDark ? '#fbbf24' : '#64748b',
+            padding: '7px 9px',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            transition: 'all 0.2s',
+          }}
+          title={isDark ? 'Switch to Light Mode' : 'Switch to Dark Mode'}
+        >
+          {isDark ? <Sun size={15} /> : <Moon size={15} />}
         </button>
 
         {/* UI Mode */}
         <div ref={dropRef} style={{ position: 'relative' }}>
-          <button onClick={() => setShowUI(v => !v)}
-            style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: '0.8rem', fontWeight: 500, border: '1.5px solid #ddd', borderRadius: 8, padding: '7px 14px', cursor: 'pointer', background: 'transparent', color: '#555', transition: 'border-color 0.2s' }}
-            onMouseEnter={e => (e.currentTarget.style.borderColor = '#f59e0b')}
-            onMouseLeave={e => (e.currentTarget.style.borderColor = '#ddd')}
+          <button
+            onClick={() => setShowUI((v) => !v)}
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: 6,
+              fontSize: '0.8rem',
+              fontWeight: 500,
+              border: isDark ? '1.5px solid rgba(255,255,255,0.15)' : '1.5px solid #ddd',
+              borderRadius: 8,
+              padding: '7px 14px',
+              cursor: 'pointer',
+              background: isDark ? 'rgba(255,255,255,0.04)' : 'transparent',
+              color: isDark ? '#cbd5e1' : '#555',
+              transition: 'border-color 0.2s',
+            }}
+            onMouseEnter={(e) => (e.currentTarget.style.borderColor = '#f59e0b')}
+            onMouseLeave={(e) => (e.currentTarget.style.borderColor = isDark ? 'rgba(255,255,255,0.15)' : '#ddd')}
           >
             <Monitor size={13} /> UI Mode
-            <ChevronDown size={11} style={{ transition: 'transform 0.2s', transform: showUI ? 'rotate(180deg)' : 'none' }} />
+            <ChevronDown
+              size={11}
+              style={{ transition: 'transform 0.2s', transform: showUI ? 'rotate(180deg)' : 'none' }}
+            />
           </button>
           {showUI && (
-            <div style={{
-              position: 'absolute', top: 'calc(100% + 8px)', right: 0,
-              width: 192, background: '#fff', border: '1px solid #eee',
-              borderRadius: 14, overflow: 'hidden', boxShadow: '0 20px 60px rgba(0,0,0,0.14)',
-            }}>
-              <div style={{ padding: '8px 14px 4px', fontSize: '0.6rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.15em', color: '#aaa' }}>Choose UI</div>
+            <div
+              style={{
+                position: 'absolute',
+                top: 'calc(100% + 8px)',
+                right: 0,
+                width: 192,
+                background: isDark ? '#0d131f' : '#fff',
+                border: isDark ? '1px solid rgba(255,255,255,0.12)' : '1px solid #eee',
+                borderRadius: 14,
+                overflow: 'hidden',
+                boxShadow: '0 20px 60px rgba(0,0,0,0.3)',
+              }}
+            >
+              <div
+                style={{
+                  padding: '8px 14px 4px',
+                  fontSize: '0.6rem',
+                  fontWeight: 700,
+                  textTransform: 'uppercase',
+                  letterSpacing: '0.15em',
+                  color: isDark ? '#64748b' : '#aaa',
+                }}
+              >
+                Choose UI
+              </div>
               {[
                 { label: 'macOS Mode', sub: 'Mac-style UI', path: '/macos', icon: <AppleLogo />, bg: '#1a1a1a' },
                 { label: 'Windows Mode', sub: 'Win 11-style', path: '/windows', icon: <WindowsLogo />, bg: '#0078d4' },
-                { label: 'Cinematic Mode', sub: 'Animated full UI', path: '/cinematic', icon: <Film size={12} />, bg: 'linear-gradient(135deg,#f59e0b,#7c3aed)' },
-              ].map(item => (
-                <button key={item.path} onClick={() => { navigate(item.path); setShowUI(false); }}
-                  style={{ width: '100%', display: 'flex', alignItems: 'center', gap: 10, padding: '10px 14px', background: 'transparent', border: 'none', cursor: 'pointer', textAlign: 'left', transition: 'background 0.15s' }}
-                  onMouseEnter={e => (e.currentTarget.style.background = '#f9f9f9')}
-                  onMouseLeave={e => (e.currentTarget.style.background = 'transparent')}
+                {
+                  label: 'Cinematic Mode',
+                  sub: 'Animated full UI',
+                  path: '/cinematic',
+                  icon: <Film size={12} />,
+                  bg: 'linear-gradient(135deg,#f59e0b,#7c3aed)',
+                },
+              ].map((item) => (
+                <button
+                  key={item.path}
+                  onClick={() => {
+                    navigate(item.path);
+                    setShowUI(false);
+                  }}
+                  style={{
+                    width: '100%',
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: 10,
+                    padding: '10px 14px',
+                    background: 'transparent',
+                    border: 'none',
+                    cursor: 'pointer',
+                    textAlign: 'left',
+                    transition: 'background 0.15s',
+                  }}
+                  onMouseEnter={(e) => (e.currentTarget.style.background = isDark ? 'rgba(255,255,255,0.06)' : '#f9f9f9')}
+                  onMouseLeave={(e) => (e.currentTarget.style.background = 'transparent')}
                 >
-                  <span style={{ width: 28, height: 28, borderRadius: 8, background: item.bg, display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#fff', flexShrink: 0, fontSize: '0.75rem' }}>{item.icon}</span>
+                  <span
+                    style={{
+                      width: 28,
+                      height: 28,
+                      borderRadius: 8,
+                      background: item.bg,
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      color: '#fff',
+                      flexShrink: 0,
+                      fontSize: '0.75rem',
+                    }}
+                  >
+                    {item.icon}
+                  </span>
                   <div>
-                    <div style={{ fontSize: '0.8rem', fontWeight: 600, color: '#222' }}>{item.label}</div>
-                    <div style={{ fontSize: '0.65rem', color: '#aaa' }}>{item.sub}</div>
+                    <div style={{ fontSize: '0.8rem', fontWeight: 600, color: isDark ? '#f8fafc' : '#222' }}>
+                      {item.label}
+                    </div>
+                    <div style={{ fontSize: '0.65rem', color: isDark ? '#64748b' : '#aaa' }}>{item.sub}</div>
                   </div>
                 </button>
               ))}
@@ -246,10 +358,31 @@ const TopNav = () => {
         </div>
 
         {/* Let's chat */}
-        <a href="#contact"
-          style={{ display: 'inline-flex', alignItems: 'center', gap: 6, fontSize: '0.82rem', fontWeight: 700, border: '2px solid #111', borderRadius: 8, padding: '8px 20px', color: '#111', textDecoration: 'none', transition: 'all 0.2s' }}
-          onMouseEnter={e => { const el = e.currentTarget as HTMLElement; el.style.background = '#111'; el.style.color = '#fff'; }}
-          onMouseLeave={e => { const el = e.currentTarget as HTMLElement; el.style.background = 'transparent'; el.style.color = '#111'; }}
+        <a
+          href="#contact"
+          style={{
+            display: 'inline-flex',
+            alignItems: 'center',
+            gap: 6,
+            fontSize: '0.82rem',
+            fontWeight: 700,
+            border: isDark ? '2px solid #f59e0b' : '2px solid #111',
+            borderRadius: 8,
+            padding: '8px 20px',
+            color: isDark ? '#f59e0b' : '#111',
+            textDecoration: 'none',
+            transition: 'all 0.2s',
+          }}
+          onMouseEnter={(e) => {
+            const el = e.currentTarget as HTMLElement;
+            el.style.background = isDark ? '#f59e0b' : '#111';
+            el.style.color = isDark ? '#0f172a' : '#fff';
+          }}
+          onMouseLeave={(e) => {
+            const el = e.currentTarget as HTMLElement;
+            el.style.background = 'transparent';
+            el.style.color = isDark ? '#f59e0b' : '#111';
+          }}
         >
           Let's chat
         </a>
@@ -262,8 +395,7 @@ const TopNav = () => {
 
 // ── Main App ──────────────────────────────────────────────────────────────────
 export default function App() {
-  const [email, setEmail] = useState('');
-  const [subscribed, setSubscribed] = useState(false);
+  const { isDark } = useTheme();
 
   // States for Project hover preview
   const [hoveredProjectIdx, setHoveredProjectIdx] = useState<number | null>(null);
@@ -284,16 +416,42 @@ export default function App() {
   ];
 
   return (
-    <div style={{ fontFamily: "'Inter', 'Segoe UI', sans-serif", minHeight: '100vh', background: '#fff' }}>
+    <div
+      style={{
+        fontFamily: "'Inter', 'Segoe UI', sans-serif",
+        minHeight: '100vh',
+        background: isDark ? '#090d16' : '#fff',
+        color: isDark ? '#f8fafc' : '#0f172a',
+        transition: 'background 0.3s ease, color 0.3s ease',
+      }}
+    >
       <TopNav />
       <HeroSection />
 
       {/* ── ABOUT ───────────────────────────────────────────────────────────── */}
-      <section id="about" style={{ padding: '80px 48px', background: '#fafafa', borderTop: '1px solid #f0f0f0' }}>
+      <section
+        id="about"
+        style={{
+          padding: '80px 48px',
+          background: isDark ? '#0b0f19' : '#fafafa',
+          borderTop: isDark ? '1px solid rgba(255,255,255,0.06)' : '1px solid #f0f0f0',
+          transition: 'background 0.3s ease',
+        }}
+      >
         <div style={{ maxWidth: 1120, margin: '0 auto', display: 'flex', flexDirection: 'column', gap: 40 }}>
           <div>
-            <div style={{ fontSize: '0.7rem', fontWeight: 700, letterSpacing: '0.2em', textTransform: 'uppercase', color: '#f59e0b', marginBottom: 8 }}>About Me</div>
-            <h2 style={{ fontSize: 'clamp(1.8rem,3vw,2.6rem)', fontWeight: 900, letterSpacing: '-0.04em', margin: 0 }}>
+            <div style={{ fontSize: '0.7rem', fontWeight: 700, letterSpacing: '0.2em', textTransform: 'uppercase', color: '#f59e0b', marginBottom: 8 }}>
+              About Me
+            </div>
+            <h2
+              style={{
+                fontSize: 'clamp(1.8rem,3vw,2.6rem)',
+                fontWeight: 900,
+                letterSpacing: '-0.04em',
+                margin: 0,
+                color: isDark ? '#f8fafc' : '#111',
+              }}
+            >
               Get to Know Me<span style={{ color: '#f59e0b' }}>.</span>
             </h2>
           </div>
@@ -302,14 +460,34 @@ export default function App() {
             {/* Bio text */}
             <div style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
               {PERSONAL.bio.map((paragraph, i) => (
-                <p key={i} style={{ margin: 0, fontSize: '0.95rem', lineHeight: 1.8, color: '#555' }}>
+                <p key={i} style={{ margin: 0, fontSize: '0.95rem', lineHeight: 1.8, color: isDark ? '#94a3b8' : '#555' }}>
                   {paragraph}
                 </p>
               ))}
               <div style={{ marginTop: 12 }}>
-                <a href="#contact" style={{ display: 'inline-flex', alignItems: 'center', gap: 8, padding: '12px 24px', borderRadius: 8, fontWeight: 700, fontSize: '0.85rem', background: '#111', color: '#fff', textDecoration: 'none', transition: 'background 0.2s' }}
-                  onMouseEnter={e => (e.currentTarget.style.background = '#f59e0b')}
-                  onMouseLeave={e => (e.currentTarget.style.background = '#111')}
+                <a
+                  href="#contact"
+                  style={{
+                    display: 'inline-flex',
+                    alignItems: 'center',
+                    gap: 8,
+                    padding: '12px 24px',
+                    borderRadius: 8,
+                    fontWeight: 700,
+                    fontSize: '0.85rem',
+                    background: isDark ? '#f59e0b' : '#111',
+                    color: isDark ? '#0f172a' : '#fff',
+                    textDecoration: 'none',
+                    transition: 'all 0.2s',
+                  }}
+                  onMouseEnter={(e) => {
+                    const el = e.currentTarget as HTMLElement;
+                    el.style.transform = 'translateY(-2px)';
+                  }}
+                  onMouseLeave={(e) => {
+                    const el = e.currentTarget as HTMLElement;
+                    el.style.transform = '';
+                  }}
                 >
                   Let's Talk
                 </a>
@@ -318,29 +496,60 @@ export default function App() {
 
             {/* Details Grid */}
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 20, alignContent: 'start' }}>
-              <div style={{ background: '#fff', padding: 24, borderRadius: 16, border: '1px solid #eee' }}>
-                <div style={{ fontSize: '0.7rem', color: '#aaa', fontWeight: 700, textTransform: 'uppercase', marginBottom: 8 }}>Location</div>
-                <div style={{ fontSize: '0.9rem', fontWeight: 600, color: '#222' }}>{PERSONAL.location}</div>
+              <div style={{ background: isDark ? '#111827' : '#fff', padding: 24, borderRadius: 16, border: isDark ? '1px solid rgba(255,255,255,0.08)' : '1px solid #eee' }}>
+                <div style={{ fontSize: '0.7rem', color: isDark ? '#64748b' : '#aaa', fontWeight: 700, textTransform: 'uppercase', marginBottom: 8 }}>
+                  Location
+                </div>
+                <div style={{ fontSize: '0.9rem', fontWeight: 600, color: isDark ? '#f8fafc' : '#222' }}>
+                  {PERSONAL.location}
+                </div>
               </div>
-              <div style={{ background: '#fff', padding: 24, borderRadius: 16, border: '1px solid #eee' }}>
-                <div style={{ fontSize: '0.7rem', color: '#aaa', fontWeight: 700, textTransform: 'uppercase', marginBottom: 8 }}>Status</div>
-                <div style={{ fontSize: '0.9rem', fontWeight: 600, color: '#22c55e' }}>{PERSONAL.availability}</div>
+              <div style={{ background: isDark ? '#111827' : '#fff', padding: 24, borderRadius: 16, border: isDark ? '1px solid rgba(255,255,255,0.08)' : '1px solid #eee' }}>
+                <div style={{ fontSize: '0.7rem', color: isDark ? '#64748b' : '#aaa', fontWeight: 700, textTransform: 'uppercase', marginBottom: 8 }}>
+                  Status
+                </div>
+                <div style={{ fontSize: '0.9rem', fontWeight: 600, color: '#22c55e' }}>
+                  {PERSONAL.availability}
+                </div>
               </div>
-              <div style={{ background: '#fff', padding: 24, borderRadius: 16, border: '1px solid #eee', gridColumn: '1 / -1' }}>
-                <div style={{ fontSize: '0.7rem', color: '#aaa', fontWeight: 700, textTransform: 'uppercase', marginBottom: 8 }}>Email</div>
-                <a href={`mailto:${CONTACT.email}`} style={{ fontSize: '0.9rem', fontWeight: 600, color: '#222', textDecoration: 'none' }}>{CONTACT.email}</a>
+              <div style={{ background: isDark ? '#111827' : '#fff', padding: 24, borderRadius: 16, border: isDark ? '1px solid rgba(255,255,255,0.08)' : '1px solid #eee', gridColumn: '1 / -1' }}>
+                <div style={{ fontSize: '0.7rem', color: isDark ? '#64748b' : '#aaa', fontWeight: 700, textTransform: 'uppercase', marginBottom: 8 }}>
+                  Email
+                </div>
+                <a href={`mailto:${CONTACT.email}`} style={{ fontSize: '0.9rem', fontWeight: 600, color: isDark ? '#f8fafc' : '#222', textDecoration: 'none' }}>
+                  {CONTACT.email}
+                </a>
               </div>
             </div>
           </div>
         </div>
       </section>
+
       {/* ── SERVICES ────────────────────────────────────────────────────────── */}
-      <section id="services" style={{ padding: '80px 48px', borderTop: '1px solid #f0f0f0' }}>
+      <section
+        id="services"
+        style={{
+          padding: '80px 48px',
+          background: isDark ? '#090d16' : '#fff',
+          borderTop: isDark ? '1px solid rgba(255,255,255,0.06)' : '1px solid #f0f0f0',
+          transition: 'background 0.3s ease',
+        }}
+      >
         <div style={{ maxWidth: 1120, margin: '0 auto' }}>
           <div style={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'space-between', marginBottom: 48 }}>
             <div>
-              <div style={{ fontSize: '0.7rem', fontWeight: 700, letterSpacing: '0.2em', textTransform: 'uppercase', color: '#f59e0b', marginBottom: 8 }}>What I Do</div>
-              <h2 style={{ fontSize: 'clamp(1.8rem,3vw,2.6rem)', fontWeight: 900, letterSpacing: '-0.04em', margin: 0 }}>
+              <div style={{ fontSize: '0.7rem', fontWeight: 700, letterSpacing: '0.2em', textTransform: 'uppercase', color: '#f59e0b', marginBottom: 8 }}>
+                What I Do
+              </div>
+              <h2
+                style={{
+                  fontSize: 'clamp(1.8rem,3vw,2.6rem)',
+                  fontWeight: 900,
+                  letterSpacing: '-0.04em',
+                  margin: 0,
+                  color: isDark ? '#f8fafc' : '#111',
+                }}
+              >
                 How Can I Help<span style={{ color: '#f59e0b' }}>?</span>
               </h2>
             </div>
@@ -349,17 +558,39 @@ export default function App() {
             </a>
           </div>
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(220px,1fr))', gap: 20 }}>
-            {skills.map(s => (
-              <div key={s.label}
-                style={{ border: '2px solid #f0f0f0', borderRadius: 20, padding: '32px 24px', cursor: 'default', transition: 'all 0.25s' }}
-                onMouseEnter={e => { const el = e.currentTarget as HTMLElement; el.style.borderColor = s.color; el.style.transform = 'translateY(-5px)'; el.style.boxShadow = `0 20px 48px ${s.color}20`; }}
-                onMouseLeave={e => { const el = e.currentTarget as HTMLElement; el.style.borderColor = '#f0f0f0'; el.style.transform = ''; el.style.boxShadow = ''; }}
+            {skills.map((s) => (
+              <div
+                key={s.label}
+                style={{
+                  background: isDark ? '#0d131f' : '#fff',
+                  border: isDark ? '1px solid rgba(255,255,255,0.08)' : '2px solid #f0f0f0',
+                  borderRadius: 20,
+                  padding: '32px 24px',
+                  cursor: 'default',
+                  transition: 'all 0.25s',
+                }}
+                onMouseEnter={(e) => {
+                  const el = e.currentTarget as HTMLElement;
+                  el.style.borderColor = s.color;
+                  el.style.transform = 'translateY(-5px)';
+                  el.style.boxShadow = `0 20px 48px ${s.color}20`;
+                }}
+                onMouseLeave={(e) => {
+                  const el = e.currentTarget as HTMLElement;
+                  el.style.borderColor = isDark ? 'rgba(255,255,255,0.08)' : '#f0f0f0';
+                  el.style.transform = '';
+                  el.style.boxShadow = '';
+                }}
               >
                 <div style={{ width: 52, height: 52, borderRadius: 14, background: s.color + '18', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: 20, color: s.color }}>
                   {s.icon}
                 </div>
-                <div style={{ fontWeight: 800, fontSize: '1rem', marginBottom: 6, color: '#111' }}>{s.label}</div>
-                <div style={{ fontSize: '0.78rem', color: s.color, fontWeight: 700 }}>{s.count} Projects</div>
+                <div style={{ fontWeight: 800, fontSize: '1rem', marginBottom: 6, color: isDark ? '#f8fafc' : '#111' }}>
+                  {s.label}
+                </div>
+                <div style={{ fontSize: '0.78rem', color: s.color, fontWeight: 700 }}>
+                  {s.count} Projects
+                </div>
               </div>
             ))}
           </div>
@@ -367,12 +598,30 @@ export default function App() {
       </section>
 
       {/* ── EXPERIENCE (Works) ──────────────────────────────────────────────── */}
-      <section id="works" style={{ padding: '80px 48px', background: '#fff', borderTop: '1px solid #f0f0f0' }}>
+      <section
+        id="works"
+        style={{
+          padding: '80px 48px',
+          background: isDark ? '#0b0f19' : '#fff',
+          borderTop: isDark ? '1px solid rgba(255,255,255,0.06)' : '1px solid #f0f0f0',
+          transition: 'background 0.3s ease',
+        }}
+      >
         <div style={{ maxWidth: 1120, margin: '0 auto' }}>
           <div style={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'space-between', marginBottom: 48, flexWrap: 'wrap', gap: 16 }}>
             <div>
-              <div style={{ fontSize: '0.7rem', fontWeight: 700, letterSpacing: '0.2em', textTransform: 'uppercase', color: '#f59e0b', marginBottom: 8 }}>Experience</div>
-              <h2 style={{ fontSize: 'clamp(1.8rem,3vw,2.6rem)', fontWeight: 900, letterSpacing: '-0.04em', margin: 0 }}>
+              <div style={{ fontSize: '0.7rem', fontWeight: 700, letterSpacing: '0.2em', textTransform: 'uppercase', color: '#f59e0b', marginBottom: 8 }}>
+                Experience
+              </div>
+              <h2
+                style={{
+                  fontSize: 'clamp(1.8rem,3vw,2.6rem)',
+                  fontWeight: 900,
+                  letterSpacing: '-0.04em',
+                  margin: 0,
+                  color: isDark ? '#f8fafc' : '#111',
+                }}
+              >
                 Professional Experience<span style={{ color: '#f59e0b' }}>.</span>
               </h2>
             </div>
@@ -380,24 +629,37 @@ export default function App() {
 
           <div style={{ display: 'flex', flexDirection: 'column', gap: 24 }}>
             {EXPERIENCE.map((exp, i) => (
-              <div key={i} style={{
-                background: '#1a1a1a',
-                borderRadius: 20,
-                padding: '32px',
-                color: '#fff',
-                display: 'flex',
-                gap: 24,
-                boxShadow: '0 20px 40px rgba(0,0,0,0.08)',
-                flexDirection: 'row'
-              }}>
+              <div
+                key={i}
+                style={{
+                  background: isDark ? '#0d131f' : '#1a1a1a',
+                  border: isDark ? '1px solid rgba(255,255,255,0.08)' : 'none',
+                  borderRadius: 20,
+                  padding: '32px',
+                  color: '#fff',
+                  display: 'flex',
+                  gap: 24,
+                  boxShadow: '0 20px 40px rgba(0,0,0,0.18)',
+                  flexDirection: 'row',
+                }}
+              >
                 {/* Logo Box */}
-                <div style={{
-                  width: 64, height: 64, borderRadius: 12,
-                  background: '#0a0a0a', border: '1px solid #333',
-                  display: 'flex', alignItems: 'center', justifyContent: 'center',
-                  flexShrink: 0
-                }}>
-                  <span style={{ color: '#22c55e', fontSize: '2rem', fontWeight: 900, fontFamily: 'serif', fontStyle: 'italic' }}>y</span>
+                <div
+                  style={{
+                    width: 64,
+                    height: 64,
+                    borderRadius: 12,
+                    background: isDark ? '#1e293b' : '#0a0a0a',
+                    border: '1px solid rgba(255,255,255,0.1)',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    flexShrink: 0,
+                  }}
+                >
+                  <span style={{ color: '#22c55e', fontSize: '2rem', fontWeight: 900, fontFamily: 'serif', fontStyle: 'italic' }}>
+                    y
+                  </span>
                 </div>
 
                 {/* Content */}
@@ -419,14 +681,26 @@ export default function App() {
 
                   {/* Link Card */}
                   {exp.link && (
-                    <a href={exp.link.url} target="_blank" rel="noopener noreferrer" style={{
-                      display: 'inline-flex', alignItems: 'center', gap: 12,
-                      background: '#2a2a2a', padding: '10px 16px', borderRadius: 10,
-                      textDecoration: 'none', color: '#fff', fontSize: '0.85rem', fontWeight: 600,
-                      transition: 'background 0.2s'
-                    }}
-                      onMouseEnter={e => (e.currentTarget.style.background = '#333')}
-                      onMouseLeave={e => (e.currentTarget.style.background = '#2a2a2a')}
+                    <a
+                      href={exp.link.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      style={{
+                        display: 'inline-flex',
+                        alignItems: 'center',
+                        gap: 12,
+                        background: isDark ? '#1e293b' : '#2a2a2a',
+                        padding: '10px 16px',
+                        borderRadius: 10,
+                        textDecoration: 'none',
+                        color: '#fff',
+                        fontSize: '0.85rem',
+                        fontWeight: 600,
+                        transition: 'background 0.2s',
+                        border: '1px solid rgba(255,255,255,0.06)',
+                      }}
+                      onMouseEnter={(e) => (e.currentTarget.style.background = '#333')}
+                      onMouseLeave={(e) => (e.currentTarget.style.background = isDark ? '#1e293b' : '#2a2a2a')}
                     >
                       <div style={{ width: 36, height: 36, background: '#111', borderRadius: 8, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                         <ExternalLink size={16} color="#fff" />
@@ -442,33 +716,92 @@ export default function App() {
       </section>
 
       {/* ── EDUCATION & CERTIFICATIONS ─────────────────────────────────────── */}
-      <section id="education" style={{ padding: '80px 48px', background: '#fff', borderTop: '1px solid #f0f0f0' }}>
+      <section
+        id="education"
+        style={{
+          padding: '80px 48px',
+          background: isDark ? '#090d16' : '#fff',
+          borderTop: isDark ? '1px solid rgba(255,255,255,0.06)' : '1px solid #f0f0f0',
+          transition: 'background 0.3s ease',
+        }}
+      >
         <div style={{ maxWidth: 1120, margin: '0 auto' }}>
           <div style={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'space-between', marginBottom: 48, flexWrap: 'wrap', gap: 16 }}>
             <div>
-              <div style={{ fontSize: '0.7rem', fontWeight: 700, letterSpacing: '0.2em', textTransform: 'uppercase', color: '#f59e0b', marginBottom: 8 }}>Learning Journey</div>
-              <h2 style={{ fontSize: 'clamp(1.8rem,3vw,2.6rem)', fontWeight: 900, letterSpacing: '-0.04em', margin: 0 }}>
+              <div style={{ fontSize: '0.7rem', fontWeight: 700, letterSpacing: '0.2em', textTransform: 'uppercase', color: '#f59e0b', marginBottom: 8 }}>
+                Learning Journey
+              </div>
+              <h2
+                style={{
+                  fontSize: 'clamp(1.8rem,3vw,2.6rem)',
+                  fontWeight: 900,
+                  letterSpacing: '-0.04em',
+                  margin: 0,
+                  color: isDark ? '#f8fafc' : '#111',
+                }}
+              >
                 Education & Certs<span style={{ color: '#f59e0b' }}>.</span>
               </h2>
             </div>
           </div>
 
           <div style={{ display: 'flex', flexDirection: 'column', gap: 64 }}>
-
             {/* Education Section */}
             <div>
-              <h3 style={{ fontSize: '1.2rem', fontWeight: 800, marginBottom: 24, color: '#111', display: 'flex', alignItems: 'center', gap: 8 }}>
+              <h3 style={{ fontSize: '1.2rem', fontWeight: 800, marginBottom: 24, color: isDark ? '#f8fafc' : '#111', display: 'flex', alignItems: 'center', gap: 8 }}>
                 <span style={{ width: 12, height: 12, borderRadius: '50%', background: '#f59e0b', display: 'inline-block' }} />
                 Academic Background
               </h3>
               <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: 24 }}>
                 {EDUCATION.map((edu, i) => (
-                  <div key={i} style={{ padding: '24px', background: '#fafafa', borderRadius: 16, border: '1px solid #eee', position: 'relative' }}>
-                    <div style={{ position: 'absolute', left: 0, top: 24, bottom: 24, width: 3, background: '#f59e0b', borderRadius: '0 4px 4px 0' }} />
-                    <div style={{ fontSize: '0.75rem', fontWeight: 700, color: '#f59e0b', marginBottom: 4 }}>{edu.period}</div>
-                    <div style={{ fontSize: '1.1rem', fontWeight: 800, color: '#111', marginBottom: 4 }}>{edu.degree}</div>
-                    <div style={{ fontSize: '0.85rem', fontWeight: 600, color: '#666', marginBottom: 12 }}>{edu.institution}</div>
-                    <p style={{ fontSize: '0.85rem', color: '#777', lineHeight: 1.6, margin: 0 }}>{edu.description}</p>
+                  <div
+                    key={i}
+                    style={{
+                      padding: '26px',
+                      background: isDark ? '#0d131f' : '#fff',
+                      borderRadius: 16,
+                      border: isDark ? '1px solid rgba(255,255,255,0.08)' : '1px solid #eee',
+                      borderLeft: '4px solid #f59e0b',
+                      boxShadow: isDark ? '0 10px 25px rgba(0,0,0,0.2)' : '0 2px 10px rgba(0,0,0,0.03)',
+                      position: 'relative',
+                      transition: 'all 0.25s',
+                    }}
+                    onMouseEnter={(e) => {
+                      const el = e.currentTarget as HTMLElement;
+                      el.style.transform = 'translateY(-3px)';
+                      el.style.boxShadow = isDark ? '0 16px 32px rgba(245,158,11,0.12)' : '0 12px 24px rgba(0,0,0,0.06)';
+                    }}
+                    onMouseLeave={(e) => {
+                      const el = e.currentTarget as HTMLElement;
+                      el.style.transform = '';
+                      el.style.boxShadow = isDark ? '0 10px 25px rgba(0,0,0,0.2)' : '0 2px 10px rgba(0,0,0,0.03)';
+                    }}
+                  >
+                    <div
+                      style={{
+                        display: 'inline-flex',
+                        alignItems: 'center',
+                        gap: 6,
+                        padding: '4px 10px',
+                        borderRadius: 8,
+                        background: 'rgba(245,158,11,0.1)',
+                        color: '#f59e0b',
+                        fontSize: '0.75rem',
+                        fontWeight: 700,
+                        marginBottom: 10,
+                      }}
+                    >
+                      <Calendar size={12} /> {edu.period}
+                    </div>
+                    <div style={{ fontSize: '1.1rem', fontWeight: 800, color: isDark ? '#f8fafc' : '#111', marginBottom: 4, lineHeight: 1.3 }}>
+                      {edu.degree}
+                    </div>
+                    <div style={{ fontSize: '0.85rem', fontWeight: 600, color: isDark ? '#94a3b8' : '#666', marginBottom: 12, display: 'flex', alignItems: 'center', gap: 6 }}>
+                      <GraduationCap size={15} style={{ color: '#f59e0b' }} /> {edu.institution}
+                    </div>
+                    <p style={{ fontSize: '0.85rem', color: isDark ? '#cbd5e1' : '#64748b', lineHeight: 1.6, margin: 0 }}>
+                      {edu.description}
+                    </p>
                   </div>
                 ))}
               </div>
@@ -476,37 +809,48 @@ export default function App() {
 
             {/* Certifications Section */}
             <div>
-              <h3 style={{ fontSize: '1.2rem', fontWeight: 800, marginBottom: 24, color: '#111', display: 'flex', alignItems: 'center', gap: 8 }}>
+              <h3 style={{ fontSize: '1.2rem', fontWeight: 800, marginBottom: 24, color: isDark ? '#f8fafc' : '#111', display: 'flex', alignItems: 'center', gap: 8 }}>
                 <span style={{ width: 12, height: 12, borderRadius: '50%', background: '#8b5cf6', display: 'inline-block' }} />
                 Certifications
               </h3>
               <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(260px, 1fr))', gap: 16 }}>
                 {CERTIFICATIONS.map((cert, i) => (
-                  <div key={i}
+                  <div
+                    key={i}
                     onClick={() => setActiveCert(cert)}
                     style={{
-                      padding: '20px', background: '#fff', borderRadius: 16,
-                      border: '1px solid #eee', transition: 'all 0.25s', cursor: 'pointer'
+                      padding: '20px',
+                      background: isDark ? '#0d131f' : '#fff',
+                      borderRadius: 16,
+                      border: isDark ? '1px solid rgba(255,255,255,0.08)' : '1px solid #eee',
+                      transition: 'all 0.25s',
+                      cursor: 'pointer',
                     }}
-                    onMouseEnter={e => {
+                    onMouseEnter={(e) => {
                       const el = e.currentTarget as HTMLElement;
                       el.style.borderColor = '#8b5cf6';
                       el.style.transform = 'translateY(-4px)';
-                      el.style.boxShadow = '0 12px 32px rgba(139,92,246,0.12)';
+                      el.style.boxShadow = '0 12px 32px rgba(139,92,246,0.18)';
                       setHoveredCertIdx(i);
                     }}
-                    onMouseLeave={e => {
+                    onMouseLeave={(e) => {
                       const el = e.currentTarget as HTMLElement;
-                      el.style.borderColor = '#eee';
+                      el.style.borderColor = isDark ? 'rgba(255,255,255,0.08)' : '#eee';
                       el.style.transform = '';
                       el.style.boxShadow = '';
                       setHoveredCertIdx(null);
                     }}
-                    onMouseMove={e => setCertHoverPos({ x: e.clientX, y: e.clientY })}
+                    onMouseMove={(e) => setCertHoverPos({ x: e.clientX, y: e.clientY })}
                   >
-                    <div style={{ fontSize: '0.65rem', fontWeight: 700, color: '#8b5cf6', marginBottom: 6, textTransform: 'uppercase', letterSpacing: '0.08em' }}>{cert.issuer}</div>
-                    <div style={{ fontSize: '0.9rem', fontWeight: 800, color: '#111', marginBottom: 10, lineHeight: 1.3 }}>{cert.name}</div>
-                    <div style={{ fontSize: '0.75rem', color: '#888', fontWeight: 500 }}>{cert.date}</div>
+                    <div style={{ fontSize: '0.65rem', fontWeight: 700, color: '#8b5cf6', marginBottom: 6, textTransform: 'uppercase', letterSpacing: '0.08em' }}>
+                      {cert.issuer}
+                    </div>
+                    <div style={{ fontSize: '0.9rem', fontWeight: 800, color: isDark ? '#f8fafc' : '#111', marginBottom: 10, lineHeight: 1.3 }}>
+                      {cert.name}
+                    </div>
+                    <div style={{ fontSize: '0.75rem', color: isDark ? '#64748b' : '#888', fontWeight: 500 }}>
+                      {cert.date}
+                    </div>
                   </div>
                 ))}
               </div>
@@ -514,18 +858,41 @@ export default function App() {
           </div>
         </div>
       </section>
+
       {/* ── PROJECTS ─────────────────────────────────────────────────────────── */}
-      <section id="projects" style={{ padding: '80px 48px', background: '#fafafa', borderTop: '1px solid #f0f0f0' }}>
+      <section
+        id="projects"
+        style={{
+          padding: '80px 48px',
+          background: isDark ? '#0b0f19' : '#fafafa',
+          borderTop: isDark ? '1px solid rgba(255,255,255,0.06)' : '1px solid #f0f0f0',
+          transition: 'background 0.3s ease',
+        }}
+      >
         <div style={{ maxWidth: 1120, margin: '0 auto' }}>
           <div style={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'space-between', marginBottom: 48, flexWrap: 'wrap', gap: 16 }}>
             <div>
-              <div style={{ fontSize: '0.7rem', fontWeight: 700, letterSpacing: '0.2em', textTransform: 'uppercase', color: '#f59e0b', marginBottom: 8 }}>Portfolio</div>
-              <h2 style={{ fontSize: 'clamp(1.8rem,3vw,2.6rem)', fontWeight: 900, letterSpacing: '-0.04em', margin: 0 }}>
+              <div style={{ fontSize: '0.7rem', fontWeight: 700, letterSpacing: '0.2em', textTransform: 'uppercase', color: '#f59e0b', marginBottom: 8 }}>
+                Portfolio
+              </div>
+              <h2
+                style={{
+                  fontSize: 'clamp(1.8rem,3vw,2.6rem)',
+                  fontWeight: 900,
+                  letterSpacing: '-0.04em',
+                  margin: 0,
+                  color: isDark ? '#f8fafc' : '#111',
+                }}
+              >
                 My Latest Works<span style={{ color: '#f59e0b' }}>.</span>
               </h2>
             </div>
-            <a href="https://github.com/EYRON27" target="_blank" rel="noopener noreferrer"
-              style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: '0.82rem', fontWeight: 700, color: '#f59e0b', textDecoration: 'none' }}>
+            <a
+              href="https://github.com/EYRON27"
+              target="_blank"
+              rel="noopener noreferrer"
+              style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: '0.82rem', fontWeight: 700, color: '#f59e0b', textDecoration: 'none' }}
+            >
               Explore More <ArrowUpRight size={14} />
             </a>
           </div>
@@ -533,58 +900,113 @@ export default function App() {
           {/* Projects — from src/data/portfolio.ts → PROJECTS */}
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill,minmax(300px,1fr))', gap: 20 }}>
             {PROJECTS.map((p, i) => (
-              <div key={i}
-                style={{ background: '#fff', border: '2px solid #f0f0f0', borderRadius: 20, overflow: 'hidden', transition: 'all 0.25s', cursor: 'default' }}
-                onMouseEnter={e => {
+              <div
+                key={i}
+                style={{
+                  background: isDark ? '#0d131f' : '#fff',
+                  border: isDark ? '1px solid rgba(255,255,255,0.08)' : '2px solid #f0f0f0',
+                  borderRadius: 20,
+                  overflow: 'hidden',
+                  transition: 'all 0.25s',
+                  cursor: 'default',
+                }}
+                onMouseEnter={(e) => {
                   const el = e.currentTarget as HTMLElement;
                   el.style.borderColor = p.accent;
                   el.style.transform = 'translateY(-4px)';
-                  el.style.boxShadow = `0 20px 48px ${p.accent}18`;
+                  el.style.boxShadow = `0 20px 48px ${p.accent}22`;
                   setHoveredProjectIdx(i);
                 }}
-                onMouseLeave={e => {
+                onMouseLeave={(e) => {
                   const el = e.currentTarget as HTMLElement;
-                  el.style.borderColor = '#f0f0f0';
+                  el.style.borderColor = isDark ? 'rgba(255,255,255,0.08)' : '#f0f0f0';
                   el.style.transform = '';
                   el.style.boxShadow = '';
                   setHoveredProjectIdx(null);
                 }}
-                onMouseMove={e => setHoverPos({ x: e.clientX, y: e.clientY })}
+                onMouseMove={(e) => setHoverPos({ x: e.clientX, y: e.clientY })}
               >
                 {/* Thumbnail */}
                 <div style={{ height: 110, background: `linear-gradient(135deg,${p.accent}18,${p.accent}08)`, display: 'flex', alignItems: 'center', justifyContent: 'center', position: 'relative' }}>
                   <div style={{ width: 5, height: '100%', position: 'absolute', left: 0, top: 0, background: p.accent }} />
-                  <span style={{ fontSize: '2.2rem', fontWeight: 900, color: p.accent, opacity: 0.22, letterSpacing: '-0.05em' }}>{p.title.slice(0, 2).toUpperCase()}</span>
+                  <span style={{ fontSize: '2.2rem', fontWeight: 900, color: p.accent, opacity: 0.35, letterSpacing: '-0.05em' }}>
+                    {p.title.slice(0, 2).toUpperCase()}
+                  </span>
                 </div>
                 <div style={{ padding: '18px 22px' }}>
                   {/* Title + role badge */}
                   <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 8 }}>
-                    <div style={{ fontWeight: 800, fontSize: '0.95rem', color: '#111' }}>{p.title}</div>
-                    {p.role && <span style={{ fontSize: '0.6rem', fontWeight: 700, background: p.accent + '15', color: p.accent, padding: '3px 8px', borderRadius: 999, textTransform: 'uppercase', letterSpacing: '0.07em', whiteSpace: 'nowrap', marginLeft: 8 }}>{p.role}</span>}
+                    <div style={{ fontWeight: 800, fontSize: '0.95rem', color: isDark ? '#f8fafc' : '#111' }}>{p.title}</div>
+                    {p.role && (
+                      <span style={{ fontSize: '0.6rem', fontWeight: 700, background: p.accent + '18', color: p.accent, padding: '3px 8px', borderRadius: 999, textTransform: 'uppercase', letterSpacing: '0.07em', whiteSpace: 'nowrap', marginLeft: 8 }}>
+                        {p.role}
+                      </span>
+                    )}
                   </div>
-                  {/* Description — from portfolio.ts */}
-                  <p style={{ fontSize: '0.78rem', color: '#777', lineHeight: 1.6, margin: '0 0 12px' }}>
+                  {/* Description */}
+                  <p style={{ fontSize: '0.78rem', color: isDark ? '#94a3b8' : '#777', lineHeight: 1.6, margin: '0 0 12px' }}>
                     {p.description}
                   </p>
                   {/* Tech pills */}
                   <div style={{ display: 'flex', flexWrap: 'wrap', gap: 5, marginBottom: 14 }}>
-                    {p.technologies.map(t => (
-                      <span key={t} style={{ fontSize: '0.65rem', fontWeight: 600, padding: '3px 9px', borderRadius: 999, border: '1px solid #eee', color: '#666' }}>{t}</span>
+                    {p.technologies.map((t) => (
+                      <span
+                        key={t}
+                        style={{
+                          fontSize: '0.65rem',
+                          fontWeight: 600,
+                          padding: '3px 9px',
+                          borderRadius: 999,
+                          border: isDark ? '1px solid rgba(255,255,255,0.08)' : '1px solid #eee',
+                          background: isDark ? 'rgba(255,255,255,0.04)' : '#fff',
+                          color: isDark ? '#cbd5e1' : '#666',
+                        }}
+                      >
+                        {t}
+                      </span>
                     ))}
                   </div>
                   {/* Links */}
                   <div style={{ display: 'flex', gap: 14 }}>
-                    <a href={p.github} target="_blank" rel="noopener noreferrer"
-                      style={{ display: 'flex', alignItems: 'center', gap: 5, fontSize: '0.75rem', fontWeight: 700, color: '#888', textDecoration: 'none', transition: 'color 0.2s' }}
-                      onMouseEnter={e => (e.currentTarget.style.color = '#111')}
-                      onMouseLeave={e => (e.currentTarget.style.color = '#888')}
-                    ><Github size={13} /> Code</a>
+                    <a
+                      href={p.github}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      style={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: 5,
+                        fontSize: '0.75rem',
+                        fontWeight: 700,
+                        color: isDark ? '#94a3b8' : '#888',
+                        textDecoration: 'none',
+                        transition: 'color 0.2s',
+                      }}
+                      onMouseEnter={(e) => (e.currentTarget.style.color = isDark ? '#fff' : '#111')}
+                      onMouseLeave={(e) => (e.currentTarget.style.color = isDark ? '#94a3b8' : '#888')}
+                    >
+                      <Github size={13} /> Code
+                    </a>
                     {p.demo && (
-                      <a href={p.demo} target="_blank" rel="noopener noreferrer"
-                        style={{ display: 'flex', alignItems: 'center', gap: 5, fontSize: '0.75rem', fontWeight: 700, color: p.accent, textDecoration: 'none', transition: 'gap 0.2s' }}
-                        onMouseEnter={e => (e.currentTarget as HTMLElement).style.gap = '9px'}
-                        onMouseLeave={e => (e.currentTarget as HTMLElement).style.gap = '5px'}
-                      ><ArrowUpRight size={13} /> Live Demo</a>
+                      <a
+                        href={p.demo}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        style={{
+                          display: 'flex',
+                          alignItems: 'center',
+                          gap: 5,
+                          fontSize: '0.75rem',
+                          fontWeight: 700,
+                          color: p.accent,
+                          textDecoration: 'none',
+                          transition: 'gap 0.2s',
+                        }}
+                        onMouseEnter={(e) => ((e.currentTarget as HTMLElement).style.gap = '9px')}
+                        onMouseLeave={(e) => ((e.currentTarget as HTMLElement).style.gap = '5px')}
+                      >
+                        <ArrowUpRight size={13} /> Live Demo
+                      </a>
                     )}
                   </div>
                 </div>
@@ -595,41 +1017,114 @@ export default function App() {
       </section>
 
       {/* ── CONTACT ──────────────────────────────────────────────────────────── */}
-      <section id="contact" style={{ padding: '80px 48px', borderTop: '1px solid #f0f0f0' }}>
+      <section
+        id="contact"
+        style={{
+          padding: '80px 48px',
+          background: isDark ? '#090d16' : '#fff',
+          borderTop: isDark ? '1px solid rgba(255,255,255,0.06)' : '1px solid #f0f0f0',
+          transition: 'background 0.3s ease',
+        }}
+      >
         <div style={{ maxWidth: 1120, margin: '0 auto', display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 80, alignItems: 'center' }}>
           <div>
-            <div style={{ fontSize: '0.7rem', fontWeight: 700, letterSpacing: '0.2em', textTransform: 'uppercase', color: '#f59e0b', marginBottom: 8 }}>Get In Touch</div>
-            <h2 style={{ fontSize: 'clamp(2rem,3.5vw,3rem)', fontWeight: 900, letterSpacing: '-0.04em', lineHeight: 1.1, margin: '0 0 20px' }}>
+            <div style={{ fontSize: '0.7rem', fontWeight: 700, letterSpacing: '0.2em', textTransform: 'uppercase', color: '#f59e0b', marginBottom: 8 }}>
+              Get In Touch
+            </div>
+            <h2
+              style={{
+                fontSize: 'clamp(2rem,3.5vw,3rem)',
+                fontWeight: 900,
+                letterSpacing: '-0.04em',
+                lineHeight: 1.1,
+                margin: '0 0 20px',
+                color: isDark ? '#f8fafc' : '#111',
+              }}
+            >
               Let's make something<br />
               <span style={{ color: '#f59e0b' }}>amazing</span> together<span style={{ color: '#f59e0b' }}>.</span>
             </h2>
-            <p style={{ color: '#777', lineHeight: 1.7, fontSize: '0.95rem', margin: '0 0 32px' }}>
-              I'm always open to new projects, collaborations, or just a good conversation. Start by <a href="mailto:canadaaaronm@gmail.com" style={{ color: '#f59e0b', fontWeight: 700, textDecoration: 'none' }}>saying hi</a>.
+            <p style={{ color: isDark ? '#94a3b8' : '#777', lineHeight: 1.7, fontSize: '0.95rem', margin: '0 0 32px' }}>
+              I'm always open to new projects, collaborations, or just a good conversation. Start by{' '}
+              <a href="mailto:canadaaaronm@gmail.com" style={{ color: '#f59e0b', fontWeight: 700, textDecoration: 'none' }}>
+                saying hi
+              </a>
+              .
             </p>
-            <a href="mailto:canadaaaronm@gmail.com"
-              style={{ display: 'inline-flex', alignItems: 'center', gap: 8, padding: '13px 28px', borderRadius: 8, fontWeight: 800, fontSize: '0.88rem', background: '#111', color: '#fff', textDecoration: 'none', transition: 'background 0.2s, transform 0.2s' }}
-              onMouseEnter={e => { const el = e.currentTarget as HTMLElement; el.style.background = '#f59e0b'; el.style.transform = 'translateY(-2px)'; }}
-              onMouseLeave={e => { const el = e.currentTarget as HTMLElement; el.style.background = '#111'; el.style.transform = ''; }}
-            ><Mail size={16} /> Send Message</a>
+            <a
+              href="mailto:canadaaaronm@gmail.com"
+              style={{
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: 8,
+                padding: '13px 28px',
+                borderRadius: 8,
+                fontWeight: 800,
+                fontSize: '0.88rem',
+                background: isDark ? '#f59e0b' : '#111',
+                color: isDark ? '#0f172a' : '#fff',
+                textDecoration: 'none',
+                transition: 'all 0.2s',
+              }}
+              onMouseEnter={(e) => {
+                const el = e.currentTarget as HTMLElement;
+                el.style.transform = 'translateY(-2px)';
+              }}
+              onMouseLeave={(e) => {
+                const el = e.currentTarget as HTMLElement;
+                el.style.transform = '';
+              }}
+            >
+              <Mail size={16} /> Send Message
+            </a>
           </div>
           <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
             {/* Contact links — from src/data/portfolio.ts → CONTACT */}
             {[
               { icon: <Mail size={18} />, label: 'Email', val: CONTACT.email, href: `mailto:${CONTACT.email}`, color: '#f59e0b' },
-              { icon: <Github size={18} />, label: 'GitHub', val: CONTACT.github.url.replace('https://', ''), href: CONTACT.github.url, color: '#111' },
+              { icon: <Github size={18} />, label: 'GitHub', val: CONTACT.github.url.replace('https://', ''), href: CONTACT.github.url, color: isDark ? '#fff' : '#111' },
               { icon: <Linkedin size={18} />, label: 'LinkedIn', val: CONTACT.linkedin.handle, href: CONTACT.linkedin.url, color: '#0a66c2' },
-            ].map(l => (
-              <a key={l.label} href={l.href} target="_blank" rel="noopener noreferrer"
-                style={{ display: 'flex', alignItems: 'center', gap: 14, padding: '16px 20px', border: '2px solid #f0f0f0', borderRadius: 16, textDecoration: 'none', color: 'inherit', transition: 'all 0.25s' }}
-                onMouseEnter={e => { const el = e.currentTarget as HTMLElement; el.style.borderColor = l.color; el.style.transform = 'translateX(6px)'; el.style.boxShadow = `0 8px 24px ${l.color}18`; }}
-                onMouseLeave={e => { const el = e.currentTarget as HTMLElement; el.style.borderColor = '#f0f0f0'; el.style.transform = ''; el.style.boxShadow = ''; }}
+            ].map((l) => (
+              <a
+                key={l.label}
+                href={l.href}
+                target="_blank"
+                rel="noopener noreferrer"
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: 14,
+                  padding: '16px 20px',
+                  background: isDark ? '#0d131f' : '#fff',
+                  border: isDark ? '1px solid rgba(255,255,255,0.08)' : '2px solid #f0f0f0',
+                  borderRadius: 16,
+                  textDecoration: 'none',
+                  color: isDark ? '#f8fafc' : 'inherit',
+                  transition: 'all 0.25s',
+                }}
+                onMouseEnter={(e) => {
+                  const el = e.currentTarget as HTMLElement;
+                  el.style.borderColor = l.color;
+                  el.style.transform = 'translateX(6px)';
+                  el.style.boxShadow = `0 8px 24px ${l.color}20`;
+                }}
+                onMouseLeave={(e) => {
+                  const el = e.currentTarget as HTMLElement;
+                  el.style.borderColor = isDark ? 'rgba(255,255,255,0.08)' : '#f0f0f0';
+                  el.style.transform = '';
+                  el.style.boxShadow = '';
+                }}
               >
-                <span style={{ width: 40, height: 40, borderRadius: 10, background: l.color + '14', display: 'flex', alignItems: 'center', justifyContent: 'center', color: l.color, flexShrink: 0 }}>{l.icon}</span>
+                <span style={{ width: 40, height: 40, borderRadius: 10, background: l.color + '18', display: 'flex', alignItems: 'center', justifyContent: 'center', color: l.color, flexShrink: 0 }}>
+                  {l.icon}
+                </span>
                 <div>
-                  <div style={{ fontSize: '0.62rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.1em', color: '#aaa' }}>{l.label}</div>
-                  <div style={{ fontSize: '0.85rem', fontWeight: 700, color: '#111' }}>{l.val}</div>
+                  <div style={{ fontSize: '0.62rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.1em', color: isDark ? '#64748b' : '#aaa' }}>
+                    {l.label}
+                  </div>
+                  <div style={{ fontSize: '0.85rem', fontWeight: 700, color: isDark ? '#f8fafc' : '#111' }}>{l.val}</div>
                 </div>
-                <ArrowUpRight size={14} style={{ marginLeft: 'auto', color: '#ccc' }} />
+                <ArrowUpRight size={14} style={{ marginLeft: 'auto', color: isDark ? '#64748b' : '#ccc' }} />
               </a>
             ))}
           </div>
@@ -637,8 +1132,10 @@ export default function App() {
       </section>
 
       {/* ── FOOTER ───────────────────────────────────────────────────────────── */}
-      <footer style={{ background: '#111', color: '#fff', padding: '28px 48px', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-        <span style={{ fontWeight: 900, fontSize: '1.1rem', letterSpacing: '-0.04em' }}>Aarvieve<span style={{ color: '#f59e0b' }}>.</span></span>
+      <footer style={{ background: isDark ? '#05070d' : '#111', color: '#fff', padding: '28px 48px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', borderTop: isDark ? '1px solid rgba(255,255,255,0.06)' : 'none' }}>
+        <span style={{ fontWeight: 900, fontSize: '1.1rem', letterSpacing: '-0.04em' }}>
+          Aarvieve<span style={{ color: '#f59e0b' }}>.</span>
+        </span>
         <span style={{ fontSize: '0.75rem', color: '#888' }}>© 2025 Aaron M. Cañada · All Rights Reserved</span>
         <span style={{ fontSize: '0.7rem', color: '#555' }}>Design by Aarvieve</span>
       </footer>
@@ -666,11 +1163,11 @@ export default function App() {
             justifyContent: 'center',
             zIndex: 100000,
             cursor: 'zoom-out',
-            animation: 'fadeIn 0.2s ease-out'
+            animation: 'fadeIn 0.2s ease-out',
           }}
         >
           <div
-            onClick={e => e.stopPropagation()}
+            onClick={(e) => e.stopPropagation()}
             style={{
               position: 'relative',
               maxWidth: '90%',
@@ -679,7 +1176,7 @@ export default function App() {
               flexDirection: 'column',
               alignItems: 'center',
               gap: 16,
-              animation: 'scaleUp 0.25s cubic-bezier(0.34, 1.3, 0.64, 1)'
+              animation: 'scaleUp 0.25s cubic-bezier(0.34, 1.3, 0.64, 1)',
             }}
           >
             <button
@@ -698,10 +1195,10 @@ export default function App() {
                 justifyContent: 'center',
                 color: '#fff',
                 cursor: 'pointer',
-                transition: 'background 0.2s'
+                transition: 'background 0.2s',
               }}
-              onMouseEnter={e => (e.currentTarget.style.background = 'rgba(255, 255, 255, 0.2)')}
-              onMouseLeave={e => (e.currentTarget.style.background = 'rgba(255, 255, 255, 0.1)')}
+              onMouseEnter={(e) => (e.currentTarget.style.background = 'rgba(255, 255, 255, 0.2)')}
+              onMouseLeave={(e) => (e.currentTarget.style.background = 'rgba(255, 255, 255, 0.1)')}
             >
               <X size={20} />
             </button>
@@ -714,7 +1211,7 @@ export default function App() {
                 borderRadius: 12,
                 boxShadow: '0 25px 50px -12px rgba(0,0,0,0.5)',
                 border: '1px solid rgba(255, 255, 255, 0.1)',
-                objectFit: 'contain'
+                objectFit: 'contain',
               }}
             />
             <div style={{ color: '#fff', fontSize: '1rem', fontWeight: 700, textAlign: 'center', maxWidth: 600 }}>
@@ -761,3 +1258,4 @@ export default function App() {
     </div>
   );
 }
+
