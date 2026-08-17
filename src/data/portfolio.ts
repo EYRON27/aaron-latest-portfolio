@@ -101,7 +101,7 @@ export const EDUCATION = [
     degree: 'Bachelor of Science in Information Technology',
     institution: 'Quezon City University',
     period: '2023 - Present',
-    description: 'Currently pursuing IT degree. Learning modern web technologies such as React, PHP, and MySQL.',
+    description: 'Currently pursuing IT degree. Specializing in modern web technologies, AI integrations, TypeScript, React, and full-stack software engineering.',
     highlights: [
       'Building personal projects to enhance development skills',
       'Focused on web development and modern frameworks',

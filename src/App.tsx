@@ -4,7 +4,7 @@ import {
   Mail, Github, Linkedin, ArrowUpRight, ExternalLink,
   Monitor, ChevronDown, Film, Moon, Sun, Send,
   Code2, Layers, Smartphone, Globe, Briefcase, X,
-  FileText, Download, Sparkles
+  FileText, Download, Sparkles, Calendar, GraduationCap
 } from 'lucide-react';
 import { CONTACT, STATS, PROJECTS, EXPERIENCE, PERSONAL, EDUCATION, CERTIFICATIONS } from './data/portfolio';
 import { HeroSection } from './components/landing';
@@ -757,18 +757,51 @@ export default function App() {
                   <div
                     key={i}
                     style={{
-                      padding: '24px',
-                      background: isDark ? '#0d131f' : '#fafafa',
+                      padding: '26px',
+                      background: isDark ? '#0d131f' : '#fff',
                       borderRadius: 16,
                       border: isDark ? '1px solid rgba(255,255,255,0.08)' : '1px solid #eee',
+                      borderLeft: '4px solid #f59e0b',
+                      boxShadow: isDark ? '0 10px 25px rgba(0,0,0,0.2)' : '0 2px 10px rgba(0,0,0,0.03)',
                       position: 'relative',
+                      transition: 'all 0.25s',
+                    }}
+                    onMouseEnter={(e) => {
+                      const el = e.currentTarget as HTMLElement;
+                      el.style.transform = 'translateY(-3px)';
+                      el.style.boxShadow = isDark ? '0 16px 32px rgba(245,158,11,0.12)' : '0 12px 24px rgba(0,0,0,0.06)';
+                    }}
+                    onMouseLeave={(e) => {
+                      const el = e.currentTarget as HTMLElement;
+                      el.style.transform = '';
+                      el.style.boxShadow = isDark ? '0 10px 25px rgba(0,0,0,0.2)' : '0 2px 10px rgba(0,0,0,0.03)';
                     }}
                   >
-                    <div style={{ position: 'absolute', left: 0, top: 24, bottom: 24, width: 3, background: '#f59e0b', borderRadius: '0 4px 4px 0' }} />
-                    <div style={{ fontSize: '0.75rem', fontWeight: 700, color: '#f59e0b', marginBottom: 4 }}>{edu.period}</div>
-                    <div style={{ fontSize: '1.1rem', fontWeight: 800, color: isDark ? '#f8fafc' : '#111', marginBottom: 4 }}>{edu.degree}</div>
-                    <div style={{ fontSize: '0.85rem', fontWeight: 600, color: isDark ? '#94a3b8' : '#666', marginBottom: 12 }}>{edu.institution}</div>
-                    <p style={{ fontSize: '0.85rem', color: isDark ? '#cbd5e1' : '#777', lineHeight: 1.6, margin: 0 }}>{edu.description}</p>
+                    <div
+                      style={{
+                        display: 'inline-flex',
+                        alignItems: 'center',
+                        gap: 6,
+                        padding: '4px 10px',
+                        borderRadius: 8,
+                        background: 'rgba(245,158,11,0.1)',
+                        color: '#f59e0b',
+                        fontSize: '0.75rem',
+                        fontWeight: 700,
+                        marginBottom: 10,
+                      }}
+                    >
+                      <Calendar size={12} /> {edu.period}
+                    </div>
+                    <div style={{ fontSize: '1.1rem', fontWeight: 800, color: isDark ? '#f8fafc' : '#111', marginBottom: 4, lineHeight: 1.3 }}>
+                      {edu.degree}
+                    </div>
+                    <div style={{ fontSize: '0.85rem', fontWeight: 600, color: isDark ? '#94a3b8' : '#666', marginBottom: 12, display: 'flex', alignItems: 'center', gap: 6 }}>
+                      <GraduationCap size={15} style={{ color: '#f59e0b' }} /> {edu.institution}
+                    </div>
+                    <p style={{ fontSize: '0.85rem', color: isDark ? '#cbd5e1' : '#64748b', lineHeight: 1.6, margin: 0 }}>
+                      {edu.description}
+                    </p>
                   </div>
                 ))}
               </div>
