@@ -1,6 +1,8 @@
+import { useState } from 'react';
 import {
   Mail, Github, Linkedin, ArrowUpRight,
-  Briefcase, FileText, Sparkles
+  Briefcase, FileText, Sparkles, GraduationCap, CheckCircle2,
+  Code2, ExternalLink
 } from 'lucide-react';
 import { PERSONAL, CONTACT, STATS } from '../../data/portfolio';
 import { Typewriter } from './Typewriter';
@@ -14,27 +16,31 @@ export const HeroLeftPanel = () => {
   return (
     <div
       style={{
-        padding: 'clamp(36px, 5vh, 56px) clamp(36px, 5vw, 64px)',
+        padding: 'clamp(28px, 4vh, 48px) clamp(28px, 4vw, 56px)',
         display: 'flex',
         flexDirection: 'column',
         justifyContent: 'space-between',
         minHeight: 'calc(100vh - 64px)',
-        background: isDark ? '#090d16' : '#fff',
+        background: isDark ? '#090d16' : '#ffffff',
         transition: 'background 0.3s ease',
+        position: 'relative',
+        zIndex: 1,
       }}
     >
       <div>
-        {/* ── Top Status Badges ── */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 22, flexWrap: 'wrap' }}>
+        {/* ── Top Verified & Status Badges ── */}
+        <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 20, flexWrap: 'wrap' }}>
+          {/* Live Availability Pill */}
           <div
             style={{
               display: 'inline-flex',
               alignItems: 'center',
               gap: 8,
-              background: 'rgba(34, 197, 94, 0.08)',
-              border: '1px solid rgba(34, 197, 94, 0.25)',
-              padding: '6px 14px',
+              background: isDark ? 'rgba(34, 197, 94, 0.12)' : 'rgba(34, 197, 94, 0.08)',
+              border: isDark ? '1px solid rgba(34, 197, 94, 0.3)' : '1px solid rgba(34, 197, 94, 0.25)',
+              padding: '5px 13px',
               borderRadius: 99,
+              boxShadow: '0 2px 8px rgba(34, 197, 94, 0.1)',
             }}
           >
             <span style={{ position: 'relative', display: 'inline-flex', width: 7, height: 7 }}>
@@ -44,74 +50,121 @@ export const HeroLeftPanel = () => {
                   inset: 0,
                   borderRadius: '50%',
                   background: '#22c55e',
-                  animation: 'ping 1.5s ease-out infinite',
-                  opacity: 0.6,
+                  animation: 'ping 1.6s ease-out infinite',
+                  opacity: 0.75,
                 }}
               />
               <span style={{ width: 7, height: 7, borderRadius: '50%', background: '#22c55e', display: 'block' }} />
             </span>
             <span
               style={{
-                fontSize: '0.72rem',
-                fontWeight: 700,
-                color: '#15803d',
+                fontSize: '0.7rem',
+                fontWeight: 750,
+                color: isDark ? '#4ade80' : '#15803d',
                 letterSpacing: '0.06em',
                 textTransform: 'uppercase',
               }}
             >
-              Available for projects
+              Available for Projects
             </span>
           </div>
 
-          <div
+          {/* Current Role Badge */}
+          <a
+            href="https://www.linkedin.com/posts/ca%C3%B1ada-aaron-m-352572352_flyrank-is-building-the-autopilot-for-organic-activity-7470102063142588416-0XyC"
+            target="_blank"
+            rel="noopener noreferrer"
             style={{
               display: 'inline-flex',
               alignItems: 'center',
               gap: 6,
-              background: 'rgba(245, 158, 11, 0.08)',
-              border: '1px solid rgba(245, 158, 11, 0.25)',
-              padding: '6px 14px',
+              background: isDark ? 'rgba(245, 158, 11, 0.12)' : 'rgba(245, 158, 11, 0.08)',
+              border: isDark ? '1px solid rgba(245, 158, 11, 0.35)' : '1px solid rgba(245, 158, 11, 0.3)',
+              padding: '5px 13px',
               borderRadius: 99,
+              textDecoration: 'none',
+              transition: 'all 0.2s ease',
+            }}
+            onMouseEnter={(e) => {
+              const el = e.currentTarget as HTMLElement;
+              el.style.transform = 'translateY(-1px)';
+              el.style.borderColor = '#f59e0b';
+            }}
+            onMouseLeave={(e) => {
+              const el = e.currentTarget as HTMLElement;
+              el.style.transform = '';
+              el.style.borderColor = isDark ? 'rgba(245, 158, 11, 0.35)' : 'rgba(245, 158, 11, 0.3)';
             }}
           >
             <Briefcase size={12} style={{ color: '#f59e0b' }} />
             <span
               style={{
                 fontSize: '0.7rem',
-                fontWeight: 700,
-                color: '#b45309',
+                fontWeight: 750,
+                color: isDark ? '#fbbf24' : '#b45309',
                 letterSpacing: '0.05em',
                 textTransform: 'uppercase',
               }}
             >
               Front-End AI Engineer @ FlyRank
             </span>
+            <ExternalLink size={10} style={{ color: '#f59e0b', opacity: 0.8 }} />
+          </a>
+
+          {/* Education Tag */}
+          <div
+            style={{
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: 6,
+              background: isDark ? 'rgba(99, 102, 241, 0.12)' : 'rgba(99, 102, 241, 0.08)',
+              border: isDark ? '1px solid rgba(99, 102, 241, 0.3)' : '1px solid rgba(99, 102, 241, 0.25)',
+              padding: '5px 13px',
+              borderRadius: 99,
+            }}
+          >
+            <GraduationCap size={12} style={{ color: '#818cf8' }} />
+            <span
+              style={{
+                fontSize: '0.7rem',
+                fontWeight: 750,
+                color: isDark ? '#a5b4fc' : '#4338ca',
+                letterSpacing: '0.05em',
+                textTransform: 'uppercase',
+              }}
+            >
+              QCU BSIT
+            </span>
           </div>
         </div>
 
-        {/* ── Headline & Titles ── */}
-        <div style={{ marginBottom: 24 }}>
-          <span
+        {/* ── Main Name & Animated Roles ── */}
+        <div style={{ marginBottom: 18 }}>
+          <div
             style={{
-              fontSize: '0.85rem',
-              fontWeight: 700,
+              display: 'flex',
+              alignItems: 'center',
+              gap: 8,
+              fontSize: '0.82rem',
+              fontWeight: 800,
               color: isDark ? '#94a3b8' : '#64748b',
-              display: 'block',
               textTransform: 'uppercase',
-              letterSpacing: '0.14em',
-              marginBottom: 8,
+              letterSpacing: '0.16em',
+              marginBottom: 6,
             }}
           >
-            Hi! I Am
-          </span>
+            <Sparkles size={13} style={{ color: '#f59e0b' }} />
+            <span>Hello, I Am</span>
+          </div>
+
           <h1
             style={{
-              fontSize: 'clamp(2.8rem, 5.2vw, 4.4rem)',
-              fontWeight: 900,
-              lineHeight: 1.05,
+              fontSize: 'clamp(2.7rem, 4.8vw, 4.2rem)',
+              fontWeight: 950,
+              lineHeight: 1.08,
               letterSpacing: '-0.04em',
               color: isDark ? '#f8fafc' : '#0f172a',
-              margin: '0 0 14px',
+              margin: '0 0 10px',
             }}
           >
             Aaron M.{' '}
@@ -121,73 +174,109 @@ export const HeroLeftPanel = () => {
                 background: 'linear-gradient(135deg, #f97316 0%, #f59e0b 50%, #eab308 100%)',
                 WebkitBackgroundClip: 'text',
                 WebkitTextFillColor: 'transparent',
+                filter: 'drop-shadow(0 4px 18px rgba(245,158,11,0.25))',
               }}
             >
-              Cañada<span style={{ WebkitTextFillColor: '#f59e0b' }}>.</span>
+              Cañada.
             </span>
           </h1>
 
-          <div style={{ display: 'flex', alignItems: 'center', gap: 12, flexWrap: 'wrap' }}>
-            <span style={{ fontSize: 'clamp(1.1rem, 1.8vw, 1.35rem)', fontWeight: 700, color: isDark ? '#e2e8f0' : '#334155' }}>
-              <Typewriter
-                words={['Front-End AI Engineer', 'Full-Stack Developer', 'UI/UX Designer', 'Web Craftsman']}
-              />
-            </span>
+          {/* Dynamic Typewriter Role */}
+          <div
+            style={{
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: 10,
+              padding: '6px 14px',
+              borderRadius: 10,
+              background: isDark ? 'rgba(255, 255, 255, 0.04)' : '#f8fafc',
+              border: isDark ? '1px solid rgba(255, 255, 255, 0.08)' : '1px solid #e2e8f0',
+              boxShadow: '0 2px 8px rgba(0,0,0,0.04)',
+            }}
+          >
+            <Code2 size={15} style={{ color: '#f59e0b' }} />
             <span
               style={{
-                fontSize: '0.66rem',
-                fontWeight: 800,
-                background: isDark ? '#1e293b' : '#0f172a',
-                color: '#f59e0b',
-                padding: '4px 10px',
-                borderRadius: 6,
-                textTransform: 'uppercase',
-                letterSpacing: '0.08em',
-                border: isDark ? '1px solid rgba(245,158,11,0.3)' : 'none',
+                fontSize: 'clamp(0.95rem, 1.6vw, 1.2rem)',
+                fontWeight: 750,
+                color: isDark ? '#e2e8f0' : '#1e293b',
               }}
             >
-              QCU BSIT
+              <Typewriter
+                words={[
+                  'Front-End AI Engineer',
+                  'Full-Stack Developer',
+                  'UI/UX Architect',
+                  'Modern Web Craftsman',
+                ]}
+              />
             </span>
           </div>
         </div>
 
-        {/* ── Dynamic Statement ── */}
+        {/* ── Bio Summary with Tag Highlights ── */}
+        <p
+          style={{
+            fontSize: 'clamp(0.95rem, 1.5vw, 1.05rem)',
+            lineHeight: 1.7,
+            color: isDark ? '#94a3b8' : '#475569',
+            maxWidth: 620,
+            marginBottom: 24,
+            fontWeight: 450,
+          }}
+        >
+          Specializing in bridging intricate backend architectures with fast, accessible, and cinematic web interfaces. Building with{' '}
+          <strong style={{ color: isDark ? '#f8fafc' : '#0f172a', fontWeight: 700 }}>React</strong>,{' '}
+          <strong style={{ color: isDark ? '#f8fafc' : '#0f172a', fontWeight: 700 }}>TypeScript</strong>,{' '}
+          <strong style={{ color: isDark ? '#f8fafc' : '#0f172a', fontWeight: 700 }}>Next.js</strong>, and{' '}
+          <strong style={{ color: '#f59e0b', fontWeight: 750 }}>AI-Driven UI systems</strong>.
+        </p>
+
+        {/* ── Dynamic Impact Statement Widget ── */}
         <AnimatedStatement />
 
-        {/* ── Call to Actions ── */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 28, flexWrap: 'wrap' }}>
-          {/* Hire Me */}
+        {/* ── High-Impact Call to Actions ── */}
+        <div
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: 12,
+            marginBottom: 28,
+            flexWrap: 'wrap',
+          }}
+        >
+          {/* Primary CTA: Hire Me */}
           <a
             href="#contact"
             style={{
               display: 'inline-flex',
               alignItems: 'center',
               gap: 8,
-              padding: '13px 28px',
+              padding: '12px 26px',
               borderRadius: 12,
               fontWeight: 800,
-              fontSize: '0.92rem',
+              fontSize: '0.9rem',
               background: 'linear-gradient(135deg, #f97316 0%, #f59e0b 100%)',
               color: '#fff',
               textDecoration: 'none',
-              boxShadow: '0 8px 24px rgba(249,115,22,0.32)',
-              transition: 'all 0.25s',
+              boxShadow: '0 8px 24px rgba(249,115,22,0.35)',
+              transition: 'all 0.25s ease',
             }}
             onMouseEnter={(e) => {
               const el = e.currentTarget as HTMLElement;
               el.style.transform = 'translateY(-2px)';
-              el.style.boxShadow = '0 12px 30px rgba(249,115,22,0.42)';
+              el.style.boxShadow = '0 12px 30px rgba(249,115,22,0.45)';
             }}
             onMouseLeave={(e) => {
               const el = e.currentTarget as HTMLElement;
               el.style.transform = '';
-              el.style.boxShadow = '0 8px 24px rgba(249,115,22,0.32)';
+              el.style.boxShadow = '0 8px 24px rgba(249,115,22,0.35)';
             }}
           >
-            <Mail size={16} /> Hire Me
+            <Mail size={15} /> Start a Project
           </a>
 
-          {/* Download CV */}
+          {/* Secondary CTA: Download CV */}
           <a
             href={CONTACT.cv}
             target="_blank"
@@ -197,69 +286,65 @@ export const HeroLeftPanel = () => {
               display: 'inline-flex',
               alignItems: 'center',
               gap: 8,
-              padding: '13px 22px',
+              padding: '12px 20px',
               borderRadius: 12,
               fontWeight: 700,
-              fontSize: '0.92rem',
-              background: isDark ? 'rgba(245, 158, 11, 0.12)' : 'rgba(245, 158, 11, 0.08)',
-              border: `1.5px solid ${isDark ? 'rgba(245, 158, 11, 0.45)' : 'rgba(245, 158, 11, 0.35)'}`,
-              color: isDark ? '#fbbf24' : '#b45309',
+              fontSize: '0.9rem',
+              background: isDark ? 'rgba(255, 255, 255, 0.05)' : '#f8fafc',
+              border: isDark ? '1px solid rgba(255, 255, 255, 0.12)' : '1px solid #cbd5e1',
+              color: isDark ? '#f8fafc' : '#1e293b',
               textDecoration: 'none',
-              transition: 'all 0.25s',
+              transition: 'all 0.25s ease',
             }}
             onMouseEnter={(e) => {
               const el = e.currentTarget as HTMLElement;
-              el.style.background = isDark ? 'rgba(245, 158, 11, 0.25)' : 'linear-gradient(135deg, #fef3c7 0%, #fde68a 100%)';
-              el.style.borderColor = '#f59e0b';
-              el.style.color = isDark ? '#fff' : '#78350f';
               el.style.transform = 'translateY(-2px)';
+              el.style.borderColor = '#f59e0b';
+              el.style.color = '#f59e0b';
             }}
             onMouseLeave={(e) => {
               const el = e.currentTarget as HTMLElement;
-              el.style.background = isDark ? 'rgba(245, 158, 11, 0.12)' : 'rgba(245, 158, 11, 0.08)';
-              el.style.borderColor = isDark ? 'rgba(245, 158, 11, 0.45)' : 'rgba(245, 158, 11, 0.35)';
-              el.style.color = isDark ? '#fbbf24' : '#b45309';
               el.style.transform = '';
+              el.style.borderColor = isDark ? 'rgba(255, 255, 255, 0.12)' : '#cbd5e1';
+              el.style.color = isDark ? '#f8fafc' : '#1e293b';
             }}
           >
-            <FileText size={16} style={{ color: '#f59e0b' }} /> Download CV
+            <FileText size={15} style={{ color: '#f59e0b' }} /> Download CV
           </a>
 
-          {/* Projects Link */}
+          {/* Tertiary CTA: Projects */}
           <a
-            href="#works"
+            href="#projects"
             style={{
               display: 'inline-flex',
               alignItems: 'center',
               gap: 6,
-              padding: '13px 18px',
+              padding: '12px 18px',
               borderRadius: 12,
               fontWeight: 700,
-              fontSize: '0.92rem',
-              border: isDark ? '1.5px solid rgba(255,255,255,0.12)' : '1.5px solid #e2e8f0',
-              color: isDark ? '#f8fafc' : '#334155',
+              fontSize: '0.9rem',
+              border: isDark ? '1px solid rgba(255,255,255,0.08)' : '1px solid #e2e8f0',
+              color: isDark ? '#cbd5e1' : '#475569',
               textDecoration: 'none',
-              background: isDark ? '#131b2e' : '#fff',
+              background: 'transparent',
               transition: 'all 0.25s',
             }}
             onMouseEnter={(e) => {
               const el = e.currentTarget as HTMLElement;
-              el.style.borderColor = isDark ? 'rgba(255,255,255,0.3)' : '#cbd5e1';
-              el.style.color = isDark ? '#fbbf24' : '#0f172a';
-              el.style.transform = 'translateY(-2px)';
+              el.style.color = '#f59e0b';
+              el.style.borderColor = '#f59e0b';
             }}
             onMouseLeave={(e) => {
               const el = e.currentTarget as HTMLElement;
-              el.style.borderColor = isDark ? 'rgba(255,255,255,0.12)' : '#e2e8f0';
-              el.style.color = isDark ? '#f8fafc' : '#334155';
-              el.style.transform = '';
+              el.style.color = isDark ? '#cbd5e1' : '#475569';
+              el.style.borderColor = isDark ? 'rgba(255,255,255,0.08)' : '#e2e8f0';
             }}
           >
-            Projects <ArrowUpRight size={15} />
+            Projects <ArrowUpRight size={14} />
           </a>
 
-          {/* Social Icons */}
-          <div style={{ display: 'flex', gap: 8 }}>
+          {/* Social Icons Dock */}
+          <div style={{ display: 'flex', gap: 8, marginLeft: 'auto' }}>
             {[
               { href: CONTACT.github.url, icon: <Github size={16} />, label: 'GitHub' },
               { href: CONTACT.linkedin.url, icon: <Linkedin size={16} />, label: 'LinkedIn' },
@@ -271,11 +356,11 @@ export const HeroLeftPanel = () => {
                 rel="noopener noreferrer"
                 title={label}
                 style={{
-                  width: 44,
-                  height: 44,
-                  borderRadius: 11,
-                  border: isDark ? '1.5px solid rgba(255,255,255,0.12)' : '1.5px solid #e2e8f0',
-                  background: isDark ? '#131b2e' : '#fff',
+                  width: 40,
+                  height: 40,
+                  borderRadius: 10,
+                  border: isDark ? '1px solid rgba(255,255,255,0.1)' : '1px solid #e2e8f0',
+                  background: isDark ? 'rgba(255,255,255,0.03)' : '#f8fafc',
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
@@ -291,7 +376,7 @@ export const HeroLeftPanel = () => {
                 }}
                 onMouseLeave={(e) => {
                   const el = e.currentTarget as HTMLElement;
-                  el.style.borderColor = isDark ? 'rgba(255,255,255,0.12)' : '#e2e8f0';
+                  el.style.borderColor = isDark ? 'rgba(255,255,255,0.1)' : '#e2e8f0';
                   el.style.color = isDark ? '#cbd5e1' : '#64748b';
                   el.style.transform = '';
                 }}
@@ -301,128 +386,57 @@ export const HeroLeftPanel = () => {
             ))}
           </div>
         </div>
-
-        {/* ── Key Metrics Strip ── */}
-        <div
-          style={{
-            display: 'grid',
-            gridTemplateColumns: 'repeat(3, 1fr)',
-            gap: 16,
-            borderTop: isDark ? '1px solid rgba(255,255,255,0.08)' : '1px solid #f1f5f9',
-            borderBottom: isDark ? '1px solid rgba(255,255,255,0.08)' : '1px solid #f1f5f9',
-            padding: '18px 0',
-            marginBottom: 20,
-          }}
-        >
-          {STATS.map((s, i) => (
-            <div key={s.label}>
-              <div
-                style={{
-                  fontSize: '2.1rem',
-                  fontWeight: 900,
-                  color: i === 0 ? '#f59e0b' : isDark ? '#f8fafc' : '#0f172a',
-                  lineHeight: 1,
-                  letterSpacing: '-0.03em',
-                }}
-              >
-                <CountUp to={s.number} suffix={s.suffix} />
-              </div>
-              <div style={{ fontSize: '0.75rem', color: isDark ? '#94a3b8' : '#64748b', marginTop: 6, fontWeight: 600 }}>
-                {s.label}
-              </div>
-            </div>
-          ))}
-        </div>
-
-        {/* ── Contact Email Pill ── */}
-        <div
-          style={{
-            display: 'inline-flex',
-            alignItems: 'center',
-            gap: 10,
-            padding: '8px 14px',
-            borderRadius: 10,
-            background: isDark ? 'rgba(255,255,255,0.04)' : '#f8fafc',
-            border: isDark ? '1px solid rgba(255,255,255,0.08)' : '1px solid #e2e8f0',
-          }}
-        >
-          <Mail size={13} style={{ color: '#f59e0b' }} />
-          <a
-            href={`mailto:${CONTACT.email}`}
-            style={{ fontSize: '0.84rem', color: isDark ? '#cbd5e1' : '#334155', fontWeight: 700, textDecoration: 'none' }}
-          >
-            {CONTACT.email}
-          </a>
-        </div>
       </div>
 
-
-      {/* ── Engineering Highlights Bar ── */}
+      {/* ── Bottom Metric Cards Deck ── */}
       <div
         style={{
-          marginTop: 20,
-          background: 'linear-gradient(135deg, #0f172a 0%, #1e293b 100%)',
-          borderRadius: 16,
-          padding: '16px 20px',
-          color: '#fff',
-          border: '1px solid rgba(255,255,255,0.08)',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'space-between',
-          flexWrap: 'wrap',
-          gap: 12,
-          boxShadow: '0 10px 25px rgba(15,23,42,0.12)',
+          display: 'grid',
+          gridTemplateColumns: 'repeat(3, 1fr)',
+          gap: 14,
+          paddingTop: 18,
+          borderTop: isDark ? '1px solid rgba(255,255,255,0.08)' : '1px solid #e2e8f0',
         }}
       >
-        <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+        {[
+          { label: 'Production Projects', num: 9, suffix: '+', color: '#f59e0b' },
+          { label: 'Certifications Earned', num: 15, suffix: '+', color: '#8b5cf6' },
+          { label: 'Responsive & Accessible', num: 100, suffix: '%', color: '#10b981' },
+        ].map((item) => (
           <div
+            key={item.label}
             style={{
-              width: 32,
-              height: 32,
-              borderRadius: 8,
-              background: 'rgba(245,158,11,0.15)',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              color: '#f59e0b',
+              padding: '12px 14px',
+              borderRadius: 14,
+              background: isDark ? 'rgba(255, 255, 255, 0.02)' : '#f8fafc',
+              border: isDark ? '1px solid rgba(255, 255, 255, 0.05)' : '1px solid #f1f5f9',
+              transition: 'all 0.25s ease',
             }}
           >
-            <Sparkles size={16} />
-          </div>
-          <div>
-            <div style={{ fontSize: '0.62rem', color: '#94a3b8', textTransform: 'uppercase', letterSpacing: '0.12em', fontWeight: 700 }}>
-              Specialization
+            <div
+              style={{
+                fontSize: 'clamp(1.4rem, 2.4vw, 1.85rem)',
+                fontWeight: 900,
+                color: item.color,
+                lineHeight: 1.1,
+                letterSpacing: '-0.03em',
+              }}
+            >
+              <CountUp to={item.num} suffix={item.suffix} />
             </div>
-            <div style={{ fontSize: '0.88rem', fontWeight: 800, color: '#f8fafc' }}>
-              Front-End AI Engineering & Full-Stack Apps
+            <div
+              style={{
+                fontSize: '0.72rem',
+                color: isDark ? '#94a3b8' : '#64748b',
+                fontWeight: 600,
+                marginTop: 4,
+                lineHeight: 1.3,
+              }}
+            >
+              {item.label}
             </div>
           </div>
-        </div>
-
-        <a
-          href="#works"
-          style={{
-            display: 'inline-flex',
-            alignItems: 'center',
-            gap: 5,
-            background: 'linear-gradient(135deg, #f59e0b, #f97316)',
-            color: '#0f172a',
-            fontWeight: 800,
-            fontSize: '0.75rem',
-            padding: '7px 14px',
-            borderRadius: 8,
-            textDecoration: 'none',
-            transition: 'all 0.2s',
-          }}
-          onMouseEnter={(e) => {
-            (e.currentTarget as HTMLElement).style.transform = 'translateY(-1px)';
-          }}
-          onMouseLeave={(e) => {
-            (e.currentTarget as HTMLElement).style.transform = '';
-          }}
-        >
-          View Works <ArrowUpRight size={12} />
-        </a>
+        ))}
       </div>
     </div>
   );
